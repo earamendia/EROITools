@@ -1,0 +1,8 @@
+^EROITools\.Rproj$
+^\.Rproj\.user$
+^codecov\.yml$
+^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^data-raw$
