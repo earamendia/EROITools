@@ -289,7 +289,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       Product.Group = stringr::str_remove(Product.Group, " \\(.*\\)")
     ) %>%
     dplyr::inner_join(
-      indirect_energy_per_output_primary_final %>% dplyr::filter(str_detect(Energy.stage, "Final")) %>% dplyr::select(-Energy.stage),
+      indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(Energy.stage, "Final")) %>% dplyr::select(-Energy.stage),
       by = c("Country", "Year", "Product.Group")
     ) %>%
     dplyr::mutate(
@@ -443,6 +443,8 @@ summarise_useful_stage_erois <- function(.tidy_erois_df,
     )
   
   # (2) Calculating tidy shares by product at the final (elec) stage:
+  # THIS CHUNK SHOULD BE SQUEEZED IN THE calc_shares_elec_by_ff_group() FUNCTION
+  # BUT WE NEED TESTS TO DO THAT...
   elec_by_product_shares_df <- .tidy_erois_df %>%
     dplyr::filter(
       stringr::str_remove(.data[[product]], "\\{.*\\}_") %in% c("Electricity [from Coal products]", "Electricity [from Oil products]", "Electricity [from Natural gas]")
@@ -472,6 +474,8 @@ summarise_useful_stage_erois <- function(.tidy_erois_df,
     )
   
   # (3) Calculating tidy shares by product at the final (heat) stage:
+  # THIS CHUNK SHOULD BE SQUEEZED IN THE calc_shares_heat_by_ff_group() FUNCTION
+  # BUT WE NEED TESTS TO DO THAT...
   heat_by_product_shares_df <- .tidy_erois_df %>%
     dplyr::filter(
       stringr::str_remove(.data[[product]], "\\{.*\\}_") %in% c("Heat [from Coal products]", "Heat [from Oil products]", "Heat [from Natural gas]")
