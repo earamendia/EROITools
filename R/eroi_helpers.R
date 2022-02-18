@@ -1095,8 +1095,15 @@ calc_share_ff_use_by_product <- function(.tidy_iea_df,
 }
 
 
-# Calculates the share of electricity uses by fossil fuel group (oil and gas, and all fossil fuels)
-#' Title
+
+#' Calculates the share of electricity supplied by each fossil fuel within each fossil fuel group
+#' 
+#' This function calculates the share of electricity supplied by each fossil fuel within each fossil fuel group,
+#' for the two following fossil fuel groups "Oil and gas products", and "All fossil fuels". So it gives the share supplied
+#' by respectively Coal products, Oil products, and Natural gas, in each of those groups. The shares then add up to unity necessarily.
+#' 
+#' The plan is then to update this function so it also does the same for the "Coal products", "Oil products", and "Natural gas".
+#' This would be trivial (respectively 1 for Coal products, Oil products, and Natural gas), but it would be very convenient.
 #'
 #' @param .tidy_iea_df
 #' @param supply_mats_list
@@ -1206,9 +1213,15 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
 }
 
 
-# Calculates the share of heat uses by fossil fuel group (oil and gas, and all fossil fuels)
-#' Title
-#'
+#' Calculates the share of heat supplied by each fossil fuel within each fossil fuel group
+#' 
+#' This function calculates the share of heat supplied by each fossil fuel within each fossil fuel group,
+#' for the two following fossil fuel groups "Oil and gas products", and "All fossil fuels". So it gives the share supplied
+#' by respectively Coal products, Oil products, and Natural gas, in each of those groups. The shares then add up to unity necessarily.
+#' 
+#' The plan is then to update this function so it also does the same for the "Coal products", "Oil products", and "Natural gas".
+#' This would be trivial (respectively 1 for Coal products, Oil products, and Natural gas), but it would be very convenient.
+#' 
 #' @param .tidy_iea_df
 #' @param supply_mats_list
 #' @param matnames
