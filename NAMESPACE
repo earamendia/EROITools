@@ -2,6 +2,7 @@
 
 export(add_indirect_energy_to_erois)
 export(aggregate_final_stage_erois)
+export(aggregate_primary_stage_erois)
 export(aggregate_useful_stage_erois)
 export(calc_all_products_use_by_group)
 export(calc_fec_from_ff_as_elec_by_group)

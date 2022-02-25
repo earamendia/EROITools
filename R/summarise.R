@@ -100,14 +100,14 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
   ### (3) Determining average primary stage EROIs (so, aggregating) from here
   
   # Sum of shares from the anti_join
-  antijoined_erois <- tidy_shares_primary_df %>%
-    dplyr::anti_join(.tidy_erois_df %>%
-                       dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                    .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
-    dplyr::summarise(
-      sum_antijoined_shares = sum(.data[[share]])
-    )
+  # antijoined_erois <- tidy_shares_primary_df %>%
+  #   dplyr::anti_join(.tidy_erois_df %>%
+  #                      dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+  #   dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+  #                   .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
+  #   dplyr::summarise(
+  #     sum_antijoined_shares = sum(.data[[share]])
+  #   )
   
   # Determine aggregated primary stage EROIs
   aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
@@ -115,17 +115,25 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
                         dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                     .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
+    # dplyr::summarise(
+    #   Group.eroi.inversed_prelim = sum(.data[[share]] * (1/.data[[eroi]]))
+    # ) %>%
     dplyr::summarise(
-      Group.eroi.inversed_prelim = sum(.data[[share]] * (1/.data[[eroi]]))
-    ) %>%
-    dplyr::left_join(antijoined_erois, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group}, {non_energy_uses}, {energy.stage})) %>%
+      Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+    ) %>% 
     dplyr::mutate(
-      sum_antijoined_shares = tidyr::replace_na(sum_antijoined_shares, 0)
-    ) %>%
-    dplyr::mutate(
-      "{group.eroi}" := 1/(.data[["Group.eroi.inversed_prelim"]] / (1 - sum_antijoined_shares))
-    ) %>%
-    dplyr::select(-Group.eroi.inversed_prelim, -sum_antijoined_shares)
+      "{group.eroi}" := 1 / Group.eroi.inversed
+    ) %>% 
+    dplyr::select(-Group.eroi.inversed)
+    
+    # dplyr::left_join(antijoined_erois, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group}, {non_energy_uses}, {energy.stage})) %>%
+    # dplyr::mutate(
+    #   sum_antijoined_shares = tidyr::replace_na(sum_antijoined_shares, 0)
+    # ) %>%
+    # dplyr::mutate(
+    #   "{group.eroi}" := 1/(.data[["Group.eroi.inversed_prelim"]] / (1 - sum_antijoined_shares))
+    # ) %>%
+    #dplyr::select(-Group.eroi.inversed_prelim, -sum_antijoined_shares)
   
   return(aggregated_primary_stage_erois)
 }
@@ -308,14 +316,14 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
   ### Big second step - Determining average EROIs from there ###
   
   # Sum of shares from the anti_join
-  antijoined_erois <- tidy_shares_df %>%
-    dplyr::anti_join(.tidy_erois_df %>%
-                       dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                    .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
-    dplyr::summarise(
-      sum_antijoined_shares = sum(.data[[share]])
-    )
+  # antijoined_erois <- tidy_shares_df %>%
+  #   dplyr::anti_join(.tidy_erois_df %>%
+  #                      dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+  #   dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+  #                   .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
+  #   dplyr::summarise(
+  #     sum_antijoined_shares = sum(.data[[share]])
+  #   )
   
   # Determine aggregated final stage EROIs
   aggregated_final_stage_erois <- tidy_shares_df %>%
@@ -324,16 +332,23 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                     .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
     dplyr::summarise(
-      Group.eroi.inversed_prelim = sum(.data[[share]] * (1/.data[[eroi]]))
-    ) %>%
-    dplyr::left_join(antijoined_erois, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group}, {non_energy_uses}, {energy.stage})) %>%
+      Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+    ) %>% 
     dplyr::mutate(
-      sum_antijoined_shares = tidyr::replace_na(sum_antijoined_shares, 0)
-    ) %>%
-    dplyr::mutate(
-      "{group.eroi}" := 1/(.data[["Group.eroi.inversed_prelim"]] / (1 - sum_antijoined_shares))
-    ) %>%
-    dplyr::select(-Group.eroi.inversed_prelim, -sum_antijoined_shares)
+      "{group.eroi}" := 1 / Group.eroi.inversed
+    ) %>% 
+    dplyr::select(-Group.eroi.inversed)
+    # dplyr::summarise(
+    #   Group.eroi.inversed_prelim = sum(.data[[share]] * (1/.data[[eroi]]))
+    # ) %>%
+    # dplyr::left_join(antijoined_erois, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group}, {non_energy_uses}, {energy.stage})) %>%
+    # dplyr::mutate(
+    #   sum_antijoined_shares = tidyr::replace_na(sum_antijoined_shares, 0)
+    # ) %>%
+    # dplyr::mutate(
+    #   "{group.eroi}" := 1/(.data[["Group.eroi.inversed_prelim"]] / (1 - sum_antijoined_shares))
+    # ) %>%
+    # dplyr::select(-Group.eroi.inversed_prelim, -sum_antijoined_shares)
   
   return(aggregated_final_stage_erois)
 }
@@ -535,13 +550,13 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
   ### Big second step - Determining average EROIs from there ###
   
   # Sum of shares from the anti_join
-  antijoined_erois <- tidy_shares_df %>%
-    dplyr::anti_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                    .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
-    dplyr::summarise(
-      sum_antijoined_shares = sum(.data[[share]])
-    )
+  # antijoined_erois <- tidy_shares_df %>%
+  #   dplyr::anti_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+  #   dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+  #                   .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
+  #   dplyr::summarise(
+  #     sum_antijoined_shares = sum(.data[[share]])
+  #   )
   
   # Create a tidy_shares_df first
   aggregated_useful_erois <- tidy_shares_df %>%
@@ -549,16 +564,23 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                     .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
     dplyr::summarise(
-      Group.eroi.inversed_prelim = sum(.data[[share]] * (1/.data[[useful_stage_eroi]]))
-    ) %>%
-    dplyr::left_join(antijoined_erois, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group}, {non_energy_uses}, {energy.stage})) %>%
+      Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+    ) %>% 
     dplyr::mutate(
-      sum_antijoined_shares = tidyr::replace_na(sum_antijoined_shares, 0)
-    ) %>%
-    dplyr::mutate(
-      "{group.eroi}" := 1/(.data[["Group.eroi.inversed_prelim"]] / (1 - sum_antijoined_shares))
-    ) %>%
-    dplyr::select(-Group.eroi.inversed_prelim, -sum_antijoined_shares)
+      "{group.eroi}" := 1 / Group.eroi.inversed
+    ) %>% 
+    dplyr::select(-Group.eroi.inversed)
+    # dplyr::summarise(
+    #   Group.eroi.inversed_prelim = sum(.data[[share]] * (1/.data[[useful_stage_eroi]]))
+    # ) %>%
+    # dplyr::left_join(antijoined_erois, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group}, {non_energy_uses}, {energy.stage})) %>%
+    # dplyr::mutate(
+    #   sum_antijoined_shares = tidyr::replace_na(sum_antijoined_shares, 0)
+    # ) %>%
+    # dplyr::mutate(
+    #   "{group.eroi}" := 1/(.data[["Group.eroi.inversed_prelim"]] / (1 - sum_antijoined_shares))
+    # ) %>%
+    # dplyr::select(-Group.eroi.inversed_prelim, -sum_antijoined_shares)
   
   return(aggregated_useful_erois)
 }
