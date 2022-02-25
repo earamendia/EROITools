@@ -1,5 +1,7 @@
 
 # This function aggregates final stage EROIs per main groups
+# This function aggregates using the shares of each product in the primary production of each country, within a given fossil fuel group.
+# So it uses the make matrix V on which it filters for primary energy products to calculate the shares.
 
 #' Title
 #'
