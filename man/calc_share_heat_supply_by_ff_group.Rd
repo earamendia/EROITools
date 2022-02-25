@@ -2,7 +2,7 @@
 % Please edit documentation in R/idE_eroi_helpers.R
 \name{calc_share_heat_supply_by_ff_group}
 \alias{calc_share_heat_supply_by_ff_group}
-\title{Title}
+\title{Calculates the share of heat provided by each fossil fuel group}
 \usage{
 calc_share_heat_supply_by_ff_group(
   .tidy_iea_df,
@@ -35,5 +35,11 @@ calc_share_heat_supply_by_ff_group(
 
 }
 \description{
-Title
+This function calculates, for each country, the share of heat that has been supplied by each fossil fuel group,
+out of the domestically produced heat. So, shares don't have to add up to unity -
+indeed they won't if any heat is supplied by renewables or nuclear.
+}
+\details{
+Fossil fuel groups used are "All fossil fuels", "Oil and gas products", "Oil products", "Natural gas", and "Coal products",
+so they are obviously not exclusive.
 }
