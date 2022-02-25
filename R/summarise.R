@@ -1,6 +1,35 @@
 
 
-
+#' Title
+#'
+#' @param .tidy_erois_df 
+#' @param .tidy_iea_df 
+#' @param include_non_energy_uses 
+#' @param primary_production_mats 
+#' @param list_primary_oil_products 
+#' @param list_primary_coal_products 
+#' @param list_primary_gas_products 
+#' @param product.group 
+#' @param country 
+#' @param method 
+#' @param energy_type 
+#' @param last_stage 
+#' @param year 
+#' @param product 
+#' @param non_energy_uses 
+#' @param eroi.method 
+#' @param type 
+#' @param boundary 
+#' @param share 
+#' @param eroi 
+#' @param group.eroi 
+#' @param energy.stage 
+#' @param product_without_origin 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                           .tidy_iea_df,
                                           # Whether you want to include non-energy uses products in the EROI calculation
