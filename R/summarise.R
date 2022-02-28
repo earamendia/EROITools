@@ -84,21 +84,29 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
   
   
   ### (2) Calculating tidy shares by product at the primary stage ###
-  tidy_shares_primary_df <- dplyr::bind_rows(
+  # Group also includes "All fossil fuels".
+  tidy_shares_primary_df <- calc_share_primary_ff_supply_by_product_by_group(.tidy_iea_df,
+                                                                          include_non_energy_uses = include_non_energy_uses,
+                                                                          primary_production_mats = primary_production_mats,
+                                                                          list_primary_oil_products = list_primary_oil_products,
+                                                                          list_primary_coal_products = list_primary_coal_products,
+                                                                          list_primary_gas_products = list_primary_gas_products)
+    
+    #dplyr::bind_rows(
     # First, shares of primary fossil fuel use by product, by main group:
-    calc_share_primary_ff_use_by_product_by_group(.tidy_iea_df,
-                                                  include_non_energy_uses = include_non_energy_uses,
-                                                  primary_production_mats = primary_production_mats,
-                                                  list_primary_oil_products = list_primary_oil_products,
-                                                  list_primary_coal_products = list_primary_coal_products,
-                                                  list_primary_gas_products = list_primary_gas_products),
-    calc_share_primary_ff_use_by_product(.tidy_iea_df,
-                                         include_non_energy_uses = include_non_energy_uses,
-                                         primary_production_mats = primary_production_mats,
-                                         list_primary_oil_products = list_primary_oil_products,
-                                         list_primary_coal_products = list_primary_coal_products,
-                                         list_primary_gas_products = list_primary_gas_products)
-  )
+  #   calc_share_primary_ff_use_by_product_by_group(.tidy_iea_df,
+  #                                                 include_non_energy_uses = include_non_energy_uses,
+  #                                                 primary_production_mats = primary_production_mats,
+  #                                                 list_primary_oil_products = list_primary_oil_products,
+  #                                                 list_primary_coal_products = list_primary_coal_products,
+  #                                                 list_primary_gas_products = list_primary_gas_products),
+  #   calc_share_primary_ff_use_by_product(.tidy_iea_df,
+  #                                        include_non_energy_uses = include_non_energy_uses,
+  #                                        primary_production_mats = primary_production_mats,
+  #                                        list_primary_oil_products = list_primary_oil_products,
+  #                                        list_primary_coal_products = list_primary_coal_products,
+  #                                        list_primary_gas_products = list_primary_gas_products)
+  # )
   
   ### (3) Determining average primary stage EROIs (so, aggregating) from here
   
@@ -544,9 +552,9 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
   
   # Working out primary energy supply, and final energy consumption by fossil fuel group (including energy / heat coming grom fossil fuels)
   total_output_per_group <- dplyr::bind_rows(
-    calc_primary_products_use_by_group(.tidy_iea_df,
+    calc_primary_products_supply_by_group(.tidy_iea_df,
                                        include_non_energy_uses = include_non_energy_uses),
-    calc_primary_ff_use(.tidy_iea_df,
+    calc_primary_ff_supply(.tidy_iea_df,
                         include_non_energy_uses = include_non_energy_uses),
     calc_fec_from_ff_by_group(.tidy_iea_df,
                               include_non_energy_uses = include_non_energy_uses) %>%
