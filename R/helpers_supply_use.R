@@ -314,10 +314,7 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
           .data[[product_without_origin]] %in% list_coal_products ~ "Coal products"
         ),
         "{energy.stage}" := "Final (fuel)",
-        "{e_dot}" := dplyr::case_when(
-          .data[[e_dot]] < 0 ~ -.data[[e_dot]],
-          TRUE ~ .data[[e_dot]]
-        )
+        "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                       .data[[energy.stage]], .data[[unit]]) %>%
@@ -340,10 +337,7 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
           .data[[product_without_origin]] %in% list_coal_products ~ "Coal products"
         ),
         "{energy.stage}" := "Final (fuel)",
-        "{e_dot}" := dplyr::case_when(
-          .data[[e_dot]] < 0 ~ -.data[[e_dot]],
-          TRUE ~ .data[[e_dot]]
-        )
+        "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                       .data[[energy.stage]], .data[[unit]]) %>%
@@ -374,10 +368,7 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
           .data[[product_without_origin]] %in% list_coal_products ~ "Coal products"
         ),
         "{energy.stage}" := "Final (fuel)",
-        "{e_dot}" := dplyr::case_when(
-          .data[[e_dot]] < 0 ~ -.data[[e_dot]],
-          TRUE ~ .data[[e_dot]]
-        )
+        "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                       .data[[energy.stage]], .data[[unit]]) %>%
@@ -399,10 +390,7 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
           .data[[product_without_origin]] %in% list_coal_products ~ "Coal products"
         ),
         "{energy.stage}" := "Final (fuel)",
-        "{e_dot}" := dplyr::case_when(
-          .data[[e_dot]] < 0 ~ -.data[[e_dot]],
-          TRUE ~ .data[[e_dot]]
-        )
+        "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                       .data[[energy.stage]], .data[[unit]]) %>%
