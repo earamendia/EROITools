@@ -341,6 +341,9 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]], .data[[product]]) %>%
+    dplyr::mutate(
+      "{e.dot}" := abs(.data[[e.dot]])
+    ) %>% 
     dplyr::summarise(
       "{e.dot}" := sum(.data[[e.dot]])
     ) %>%
@@ -368,6 +371,9 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]], .data[[product]]) %>%
+    dplyr::mutate(
+      "{e.dot}" := abs(.data[[e.dot]])
+    ) %>% 
     dplyr::summarise(
       "{e.dot}" := sum(.data[[e.dot]])
     ) %>%
@@ -479,6 +485,9 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]], .data[[product]]) %>%
+    dplyr::mutate(
+      "{e.dot}" := abs(.data[[e.dot]])
+    ) %>% 
     dplyr::summarise(
       "{e.dot}" := sum(.data[[e.dot]])
     ) %>%
@@ -506,6 +515,9 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]], .data[[product]]) %>%
+    dplyr::mutate(
+      "{e.dot}" := abs(.data[[e.dot]])
+    ) %>% 
     dplyr::summarise(
       "{e.dot}" := sum(.data[[e.dot]])
     ) %>%
