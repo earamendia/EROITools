@@ -95,7 +95,7 @@ calc_total_use_by_product <- function(.tidy_iea_df,
       ) %>%
       dplyr::filter(matnames %in% total_use_mats) %>%
       dplyr::mutate(
-        "{e_dot}" = abs(.data[[e_dot]])
+        "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) %>%
       dplyr::summarise(
@@ -192,10 +192,7 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
           .data[[product_without_origin]] %in% list_primary_coal_products ~ "Coal products"
         ),
         "{energy.stage}" := "Primary",
-        "{e_dot}" := dplyr::case_when(
-          .data[[e_dot]] < 0 ~ -.data[[e_dot]],
-          TRUE ~ .data[[e_dot]]
-        )
+        "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                       .data[[energy.stage]], .data[[unit]]) %>%
@@ -219,10 +216,7 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
           .data[[product_without_origin]] %in% list_primary_coal_products ~ "Coal products"
         ),
         "{energy.stage}" := "Primary",
-        "{e_dot}" := dplyr::case_when(
-          .data[[e_dot]] < 0 ~ -.data[[e_dot]],
-          TRUE ~ .data[[e_dot]]
-        )
+        "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                       .data[[energy.stage]], .data[[unit]]) %>%
