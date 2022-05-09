@@ -88,6 +88,9 @@ calc_fec_from_ff_by_group <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
       .data[[product.group]], .data[[energy.stage]]
     ) %>%
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     )
@@ -314,6 +317,9 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]],
       .data[[flow]], .data[[product]], .data[[unit]], .data[[matnames]], .data[[product_without_origin]]
     ) %>% 
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise("{e_dot}" := sum(.data[[e_dot]])) %>% 
     dplyr::left_join(
       calc_share_elec_supply_by_ff_group(.tidy_iea_df,
@@ -418,6 +424,9 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]]) %>%
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
@@ -443,6 +452,9 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]]) %>%
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
@@ -469,6 +481,9 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]]) %>%
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
@@ -577,6 +592,9 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]],
       .data[[flow]], .data[[product]], .data[[unit]], .data[[matnames]], .data[[product_without_origin]]
     ) %>% 
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise("{e_dot}" := sum(.data[[e_dot]])) %>% 
     dplyr::left_join(
       calc_share_heat_supply_by_ff_group(.tidy_iea_df,
@@ -681,6 +699,9 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]]) %>%
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
@@ -706,6 +727,9 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]]) %>%
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
@@ -732,6 +756,9 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]],
                     .data[[product.group]], .data[[energy.stage]]) %>%
+    dplyr::mutate(
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>% 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
