@@ -1,32 +1,44 @@
-# This script provides helpers for summarising EROIs
 
-# This script defines helpers functions for the EROI summaries.
-
-# Note it excludes exports, it excludes U_feed.
-#' Title
+#' Calculates total energy use by product
+#' 
+#' This function calculates, for each country, year, method, the total energy use by product (for fossil fuels),
+#' where the matrices containing energy use flows can be specified in the `total_use_mats` argument. 
+#' By default, these matrices are U_EIOU and Y, and excludes energy flows used as feedstock. 
+#' Exports and losses are also excluded from the total energy use. See details for more explanations.
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function),
+#' and the energy use by product will be returned as the pair (Origin_Country, Product).
+#' Non-energy use flows can be included or excluded from the calculations using the `include_non_energy_uses` boolean.
+#' 
+#' @param .tidy_iea_df Tidy data frame for which to calculate total energy use by product
+#' @param include_non_energy_uses A boolean defining whether non-energy uses should be included
+#'                                in the calculation of total energy uses. Default is FALSE.
+#' @param total_use_mats A list describing from which matrices should total final energy uses be calculated.
+#'                       Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_oil_products A list of oil products.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products A list of coal products.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products A list of natural gas products.
+#'                          Default is `IEATools::primary_gas_products`.
+#' @param list_non_energy_flows A list containing the names of non-energy flows in IEA data.
+#'                              Default is `IEATools::non_energy_flows`.
+#' @param exports A string identifying Exports flows.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param losses A string identifying Losses flows.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param country,method,energy_type,last_stage,year,product,unit,flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name of the column having matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param total_product_use Column name containing total energy use by product.
+#'                          Default is "Total_Product_Use".
+#' @param product_without_origin Column name containing the name of the product excluding the country of origin.
+#'                               Helpful for doing calculations with Global Market Assumption.
+#'                               Default is "product_without_origin".
 #'
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param total_use_mats
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param list_non_energy_flows
-#' @param exports
-#' @param losses
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param product
-#' @param unit
-#' @param flow
-#' @param e_dot
-#' @param matnames
-#' @param total_product_use
-#'
-#' @return
+#' @return A data frame containing the values of total energy use by product.
 #' @export
 #'
 #' @examples

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_supply_use.R
 \name{calc_total_use_by_product}
 \alias{calc_total_use_by_product}
-\title{Title}
+\title{Calculates total energy use by product}
 \usage{
 calc_total_use_by_product(
   .tidy_iea_df,
@@ -29,11 +29,57 @@ calc_total_use_by_product(
 )
 }
 \arguments{
-\item{total_product_use}{}
+\item{.tidy_iea_df}{Tidy data frame for which to calculate total energy use by product}
+
+\item{include_non_energy_uses}{A boolean defining whether non-energy uses should be included
+in the calculation of total energy uses. Default is FALSE.}
+
+\item{total_use_mats}{A list describing from which matrices should total final energy uses be calculated.
+Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}
+
+\item{list_oil_products}{A list of oil products.
+Default is \code{IEATools::oil_and_oil_products}.}
+
+\item{list_coal_products}{A list of coal products.
+Default is \code{IEATools::coal_and_coal_products}.}
+
+\item{list_gas_products}{A list of natural gas products.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{list_non_energy_flows}{A list containing the names of non-energy flows in IEA data.
+Default is \code{IEATools::non_energy_flows}.}
+
+\item{exports}{A string identifying Exports flows.
+Default is \code{IEATools::interface_industries$exports}.}
+
+\item{losses}{A string identifying Losses flows.
+Default is \code{IEATools::tfc_compare_flows$losses}.}
+
+\item{country, method, energy_type, last_stage, year, product, unit, flow, e_dot}{See \code{IEATools::iea_cols}.}
+
+\item{matnames}{The column name of the column having matrices names.
+Default is \code{IEATools::mat_meta_cols$matnames}.}
+
+\item{total_product_use}{Column name containing total energy use by product.
+Default is "Total_Product_Use".}
+
+\item{product_without_origin}{Column name containing the name of the product excluding the country of origin.
+Helpful for doing calculations with Global Market Assumption.
+Default is "product_without_origin".}
 }
 \value{
-
+A data frame containing the values of total energy use by product.
 }
 \description{
-Title
+This function calculates, for each country, year, method, the total energy use by product (for fossil fuels),
+where the matrices containing energy use flows can be specified in the \code{total_use_mats} argument.
+By default, these matrices are U_EIOU and Y, and excludes energy flows used as feedstock.
+Exports and losses are also excluded from the total energy use. See details for more explanations.
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function),
+and the energy use by product will be returned as the pair (Origin_Country, Product).
+Non-energy use flows can be included or excluded from the calculations using the \code{include_non_energy_uses} boolean.
 }
