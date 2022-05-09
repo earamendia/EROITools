@@ -270,6 +270,8 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
                                               method = IEATools::iea_cols$method,
                                               energy_type = IEATools::iea_cols$energy_type,
                                               last_stage = IEATools::iea_cols$last_stage,
+                                              ledger_side = IEATools::iea_cols$ledger_side,
+                                              flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                               year = IEATools::iea_cols$year,
                                               product = IEATools::iea_cols$product,
                                               unit = IEATools::iea_cols$unit,
@@ -300,8 +302,19 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
     dplyr::filter(
       (.data[[matnames]] %in% list_use_mats & (stringr::str_detect(.data[[product]], "Electricity")))
     ) %>%
+    dplyr::mutate(
+      "{product}" := dplyr::case_when(
+        stringr::str_detect(.data[[product]], "\\{.*\\}_") ~ stringr::str_replace(.data[[product]], "\\{.*\\}", stringr::str_c("\\{", .data[[country]], "\\}")),
+        TRUE ~ .data[[product]]
+      )
+    ) %>% 
     dplyr::filter(.data[[flow]] != losses) %>%
     dplyr::filter(! stringr::str_detect(.data[[flow]], exports)) %>%
+    dplyr::group_by(
+      .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]],
+      .data[[flow]], .data[[product]], .data[[unit]], .data[[matnames]], .data[[product_without_origin]]
+    ) %>% 
+    dplyr::summarise("{e_dot}" := sum(.data[[e_dot]])) %>% 
     dplyr::left_join(
       calc_share_elec_supply_by_ff_group(.tidy_iea_df,
                                          list_supply_mats = list_supply_mats,
@@ -520,6 +533,8 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
                                               method = IEATools::iea_cols$method,
                                               energy_type = IEATools::iea_cols$energy_type,
                                               last_stage = IEATools::iea_cols$last_stage,
+                                              ledger_side = IEATools::iea_cols$ledger_side,
+                                              flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                               year = IEATools::iea_cols$year,
                                               product = IEATools::iea_cols$product,
                                               unit = IEATools::iea_cols$unit,
@@ -550,8 +565,19 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
     dplyr::filter(
       (.data[[matnames]] %in% list_use_mats & (stringr::str_detect(.data[[product]], "Heat")))
     ) %>%
+    dplyr::mutate(
+      "{product}" := dplyr::case_when(
+        stringr::str_detect(.data[[product]], "\\{.*\\}_") ~ stringr::str_replace(.data[[product]], "\\{.*\\}", stringr::str_c("\\{", .data[[country]], "\\}")),
+        TRUE ~ .data[[product]]
+      )
+    ) %>% 
     dplyr::filter(.data[[flow]] != losses) %>%
     dplyr::filter(! stringr::str_detect(.data[[flow]], exports)) %>%
+    dplyr::group_by(
+      .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]],
+      .data[[flow]], .data[[product]], .data[[unit]], .data[[matnames]], .data[[product_without_origin]]
+    ) %>% 
+    dplyr::summarise("{e_dot}" := sum(.data[[e_dot]])) %>% 
     dplyr::left_join(
       calc_share_heat_supply_by_ff_group(.tidy_iea_df,
                                          list_supply_mats = list_supply_mats,

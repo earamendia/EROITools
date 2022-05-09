@@ -17,6 +17,8 @@ calc_fec_from_ff_as_heat_by_group(
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
   last_stage = IEATools::iea_cols$last_stage,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   year = IEATools::iea_cols$year,
   product = IEATools::iea_cols$product,
   unit = IEATools::iea_cols$unit,

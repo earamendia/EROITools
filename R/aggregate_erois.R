@@ -91,22 +91,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                                                              list_primary_oil_products = list_primary_oil_products,
                                                                              list_primary_coal_products = list_primary_coal_products,
                                                                              list_primary_gas_products = list_primary_gas_products)
-  
-  #dplyr::bind_rows(
-  # First, shares of primary fossil fuel use by product, by main group:
-  #   calc_share_primary_ff_use_by_product_by_group(.tidy_iea_df,
-  #                                                 include_non_energy_uses = include_non_energy_uses,
-  #                                                 primary_production_mats = primary_production_mats,
-  #                                                 list_primary_oil_products = list_primary_oil_products,
-  #                                                 list_primary_coal_products = list_primary_coal_products,
-  #                                                 list_primary_gas_products = list_primary_gas_products),
-  #   calc_share_primary_ff_use_by_product(.tidy_iea_df,
-  #                                        include_non_energy_uses = include_non_energy_uses,
-  #                                        primary_production_mats = primary_production_mats,
-  #                                        list_primary_oil_products = list_primary_oil_products,
-  #                                        list_primary_coal_products = list_primary_coal_products,
-  #                                        list_primary_gas_products = list_primary_gas_products)
-  # )
+
   
   ### (3) Determining average primary stage EROIs (so, aggregating) from here
   
@@ -221,78 +206,13 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
                                                                      list_oil_products = list_oil_products,
                                                                      list_coal_products = list_coal_products,
                                                                      list_gas_products = list_gas_products)
-  #   dplyr::bind_rows(
-  #   # First, shares of all fossil fuel use by product, by main group
-  #   calc_share_ff_use_by_product_by_group(.tidy_iea_df,
-  #                                         include_non_energy_uses = include_non_energy_uses,
-  #                                         final_use_mats = final_use_mats,
-  #                                         list_oil_products = list_oil_products,
-  #                                         list_coal_products = list_coal_products,
-  #                                         list_gas_products = list_gas_products),
-  #   # Second, shares of all fossil fuel use, by product
-  #   calc_share_ff_use_by_product(.tidy_iea_df,
-  #                                include_non_energy_uses = include_non_energy_uses,
-  #                                final_use_mats = final_use_mats,
-  #                                list_oil_products = list_oil_products,
-  #                                list_coal_products = list_coal_products,
-  #                                list_gas_products = list_gas_products)
-  # )
+
   
   # (2) Calculating tidy shares by product at the final (elec) stage:
   tidy_shares_final_elec_df <- calc_shares_elec_by_ff_group(.tidy_iea_df)
   
-  # elec_by_product_shares_df <- .tidy_erois_df %>%
-  #   dplyr::filter(
-  #     stringr::str_remove(.data[[product]], "\\{.*\\}_") %in% c("Electricity [from Coal products]", "Electricity [from Oil products]", "Electricity [from Natural gas]")
-  #   ) %>%
-  #   dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
-  #   dplyr::mutate(
-  #     "{product.group}" := stringr::str_extract(.data[[product]], "\\[.*\\]") %>%
-  #       stringr::str_remove("\\[from ") %>%
-  #       stringr::str_remove("\\]"),
-  #     "{energy.stage}" := "Final (electricity)",
-  #     "{share}" := 1,
-  #     "{country}" := dplyr::case_when(
-  #       stringr::str_detect(.data[[product]], "\\{.*\\}_") ~ stringr::str_extract(.data[[product]], "\\{.*\\}") %>%
-  #         stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
-  #       TRUE ~ .data[[country]]
-  #     )
-  #   ) %>%
-  #   dplyr::filter(.data[[country]] %in% list_countries_in_tidy_df) %>%
-  #   dplyr::distinct()
-  
-  # tidy_shares_final_elec_df <- dplyr::bind_rows(
-  #   elec_by_product_shares_df,
-  #   calc_shares_elec_by_ff_group(.tidy_iea_df)
-  # )
-  
   # (3) Calculating tidy shares by product at the final (heat) stage:
   tidy_shares_final_heat_df <- calc_shares_heat_by_ff_group(.tidy_iea_df)
-  
-  # heat_by_product_shares_df <- .tidy_erois_df %>%
-  #   dplyr::filter(
-  #     stringr::str_remove(.data[[product]], "\\{.*\\}_") %in% c("Heat [from Coal products]", "Heat [from Oil products]", "Heat [from Natural gas]")
-  #   ) %>%
-  #   dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
-  #   dplyr::mutate(
-  #     "{product.group}" := stringr::str_extract(.data[[product]], "\\[.*\\]") %>%
-  #       stringr::str_remove("\\[from ") %>%
-  #       stringr::str_remove("\\]"),
-  #     "{energy.stage}" := "Final (heat)",
-  #     "{share}" := 1,
-  #     "{country}" := dplyr::case_when(
-  #       stringr::str_detect(.data[[product]], "\\{.*\\}_") ~ stringr::str_extract(.data[[product]], "\\{.*\\}") %>%
-  #         stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
-  #       TRUE ~ .data[[country]]
-  #     )
-  #   ) %>%
-  #   dplyr::filter(.data[[country]] %in% list_countries_in_tidy_df) %>%
-  #   dplyr::distinct()
-  
-  # tidy_shares_final_heat_df <- dplyr::bind_rows(
-  #   heat_by_product_shares_df,
-  #   calc_shares_heat_by_ff_group(.tidy_iea_df)
-  # )
   
   # (4) Calculating tidy shares by product at the final (fuel+elec+heat) stage:
   tidy_shares_ff_by_group_inc_elec_heat <- calc_shares_ff_by_group_inc_elec_heat(.tidy_iea_df,
@@ -429,22 +349,6 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
     dplyr::mutate(
       "{energy.stage}" := "Useful (fuel)"
     )
-  #   dplyr::bind_rows(
-  #   # First, shares of all fossil fuel use by product, by main group
-  #   calc_share_ff_use_by_product_by_group(.tidy_iea_df,
-  #                                         include_non_energy_uses = include_non_energy_uses,
-  #                                         final_use_mats = final_use_mats,
-  #                                         list_oil_products = list_oil_products,
-  #                                         list_coal_products = list_coal_products,
-  #                                         list_gas_products = list_gas_products),
-  #   # Second, shares of all fossil fuel use, by product
-  #   calc_share_ff_use_by_product(.tidy_iea_df,
-  #                                include_non_energy_uses = include_non_energy_uses,
-  #                                final_use_mats = final_use_mats,
-  #                                list_oil_products = list_oil_products,
-  #                                list_coal_products = list_coal_products,
-  #                                list_gas_products = list_gas_products)
-  # )
   
   # (2) Calculating tidy shares by product at the final (elec) stage:
   # THIS CHUNK SHOULD BE SQUEEZED IN THE calc_shares_elec_by_ff_group() FUNCTION
@@ -454,34 +358,6 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
       "{energy.stage}" := "Useful (electricity)"
     )
   
-  #   .tidy_erois_df %>%
-  #   dplyr::filter(
-  #     stringr::str_remove(.data[[product]], "\\{.*\\}_") %in% c("Electricity [from Coal products]", "Electricity [from Oil products]", "Electricity [from Natural gas]")
-  #   ) %>%
-  #   dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
-  #   dplyr::mutate(
-  #     "{product.group}" := stringr::str_extract(.data[[product]], "\\[.*\\]") %>%
-  #       stringr::str_remove("\\[from ") %>%
-  #       stringr::str_remove("\\]"),
-  #     "{energy.stage}" := "Final (electricity)",
-  #     "{share}" := 1,
-  #     "{country}" := dplyr::case_when(
-  #       stringr::str_detect(.data[[product]], "\\{.*\\}_") ~ stringr::str_extract(.data[[product]], "\\{.*\\}") %>%
-  #         stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
-  #       TRUE ~ .data[[country]]
-  #     )
-  #   ) %>%
-  #   dplyr::filter(.data[[country]] %in% list_countries_in_tidy_df) %>%
-  #   dplyr::distinct()
-  # 
-  # tidy_shares_final_elec_df <- dplyr::bind_rows(
-  #   elec_by_product_shares_df,
-  #   calc_shares_elec_by_ff_group(.tidy_iea_df)
-  # ) %>%
-  #   dplyr::mutate(
-  #     "{energy.stage}" := "Useful (electricity)"
-  #   )
-  
   # (3) Calculating tidy shares by product at the final (heat) stage:
   # THIS CHUNK SHOULD BE SQUEEZED IN THE calc_shares_heat_by_ff_group() FUNCTION
   # BUT WE NEED TESTS TO DO THAT...
@@ -489,34 +365,6 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
     dplyr::mutate(
       "{energy.stage}" := "Useful (heat)"
     )
-  
-  # .tidy_erois_df %>%
-  # dplyr::filter(
-  #   stringr::str_remove(.data[[product]], "\\{.*\\}_") %in% c("Heat [from Coal products]", "Heat [from Oil products]", "Heat [from Natural gas]")
-  # ) %>%
-  # dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
-  # dplyr::mutate(
-  #   "{product.group}" := stringr::str_extract(.data[[product]], "\\[.*\\]") %>%
-  #     stringr::str_remove("\\[from ") %>%
-  #     stringr::str_remove("\\]"),
-  #   "{energy.stage}" := "Final (heat)",
-  #   "{share}" := 1,
-  #   "{country}" := dplyr::case_when(
-  #     stringr::str_detect(.data[[product]], "\\{.*\\}_") ~ stringr::str_extract(.data[[product]], "\\{.*\\}") %>%
-  #       stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
-  #     TRUE ~ .data[[country]]
-  #   )
-  # ) %>%
-  # dplyr::filter(.data[[country]] %in% list_countries_in_tidy_df) %>%
-  # dplyr::distinct()
-  
-  # tidy_shares_final_heat_df <- dplyr::bind_rows(
-  #   heat_by_product_shares_df,
-  #   calc_shares_heat_by_ff_group(.tidy_iea_df)
-  # ) %>%
-  #   dplyr::mutate(
-  #     "{energy.stage}" := "Useful (heat)"
-  #   )
   
   # (4) Calculating tidy shares by product at the final (fuel+elec+heat) stage:
   tidy_shares_ff_by_group_inc_elec_heat <- calc_shares_ff_by_group_inc_elec_heat(.tidy_iea_df,
