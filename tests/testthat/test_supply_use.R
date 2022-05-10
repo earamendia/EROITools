@@ -445,7 +445,7 @@ test_that("calc_all_products_use_by_group works",{
                                select_dta_observations = FALSE) %>% 
     calc_all_products_use_by_group()
   
-  # Checking coke oven coke
+  # Checking coal products
   res_dta_excl_non_energy %>% 
     dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
     magrittr::extract2("Total_Group_Use") %>% 
@@ -457,7 +457,7 @@ test_that("calc_all_products_use_by_group works",{
                                select_dta_observations = FALSE) %>% 
     calc_all_products_use_by_group(include_non_energy_uses = TRUE)
   
-  # Checking coke oven coke
+  # Checking coal products
   res_dta_incl_non_energy %>% 
     dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
     magrittr::extract2("Total_Group_Use") %>% 
