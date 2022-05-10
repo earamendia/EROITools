@@ -109,7 +109,8 @@ calc_total_use_by_product <- function(.tidy_iea_df,
       dplyr::mutate(
         "{e_dot}" := abs(.data[[e_dot]])
       ) %>%
-      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) %>%
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], 
+                      .data[[unit]], .data[[product_without_origin]]) %>%
       dplyr::summarise(
         "{total_product_use}" := sum(.data[[e_dot]])
       )
