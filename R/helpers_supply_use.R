@@ -416,14 +416,10 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
 #'
 #' @examples
 calc_primary_ff_supply <- function(.tidy_iea_df,
-                                   include_non_energy_uses = FALSE,
                                    primary_production_mats = c(IEATools::psut_cols$V),
                                    list_primary_oil_products = IEATools::primary_oil_products,
                                    list_primary_coal_products = IEATools::primary_coal_products,
                                    list_primary_gas_products = IEATools::primary_gas_products,
-                                   list_non_energy_flows = IEATools::non_energy_flows,
-                                   exports = IEATools::interface_industries$exports,
-                                   losses = IEATools::tfc_compare_flows$losses,
                                    country = IEATools::iea_cols$country,
                                    method = IEATools::iea_cols$method,
                                    energy_type = IEATools::iea_cols$energy_type,
@@ -452,55 +448,22 @@ calc_primary_ff_supply <- function(.tidy_iea_df,
       )
     )
   
-  if (isFALSE(include_non_energy_uses)){
-    
-    to_return <- .tidy_iea_df %>%
-      dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
-      dplyr::filter(
-        ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
-      ) %>%
-      dplyr::filter(matnames %in% primary_production_mats) %>%
-      dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
-      dplyr::mutate(
-        "{product.group}" := "All fossil fuels",
-        "{energy.stage}" := "Primary",
-        "{e_dot}" := abs(.data[[e_dot]])
-      ) %>%
-      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
-                      .data[[energy.stage]], .data[[unit]]) %>%
-      dplyr::summarise(
-        "{total_group_use}" := sum(.data[[e_dot]])
-      )
+  # Calculating and returning total primary energy supply for all fossil fuels together
+  to_return <- .tidy_iea_df %>%
+    dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
+    dplyr::filter(matnames %in% primary_production_mats) %>%
+    dplyr::mutate(
+      "{product.group}" := "All fossil fuels",
+      "{energy.stage}" := "Primary",
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
+                    .data[[energy.stage]], .data[[unit]]) %>%
+    dplyr::summarise(
+      "{total_group_use}" := sum(.data[[e_dot]])
+    )
     
     return(to_return)
-    
-    
-    
-  } else if (isTRUE(include_non_energy_uses)){
-    
-    to_return <- .tidy_iea_df %>%
-      dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
-      dplyr::filter(
-        ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
-      ) %>%
-      dplyr::filter(matnames %in% primary_production_mats) %>%
-      dplyr::mutate(
-        "{product.group}" := "All fossil fuels",
-        "{energy.stage}" := "Primary",
-        "{e_dot}" := abs(.data[[e_dot]])
-      ) %>%
-      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
-                      .data[[energy.stage]], .data[[unit]]) %>%
-      dplyr::summarise(
-        "{total_group_use}" := sum(.data[[e_dot]])
-      )
-    
-    return(to_return)
-    
-    
-  } else {
-    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
-  }
 }
 
 # Calculates total fossil fuel use

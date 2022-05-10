@@ -6,14 +6,10 @@
 \usage{
 calc_primary_ff_supply(
   .tidy_iea_df,
-  include_non_energy_uses = FALSE,
   primary_production_mats = c(IEATools::psut_cols$V),
   list_primary_oil_products = IEATools::primary_oil_products,
   list_primary_coal_products = IEATools::primary_coal_products,
   list_primary_gas_products = IEATools::primary_gas_products,
-  list_non_energy_flows = IEATools::non_energy_flows,
-  exports = IEATools::interface_industries$exports,
-  losses = IEATools::tfc_compare_flows$losses,
   country = IEATools::iea_cols$country,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
