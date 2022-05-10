@@ -32,7 +32,7 @@ calc_total_use_by_product(
 \item{.tidy_iea_df}{Tidy data frame for which to calculate total energy use by product}
 
 \item{include_non_energy_uses}{A boolean defining whether non-energy uses should be included
-in the calculation of total energy uses. Default is FALSE.}
+in the calculation of total final energy use. Default is FALSE.}
 
 \item{total_use_mats}{A list describing from which matrices should total final energy uses be calculated.
 Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}

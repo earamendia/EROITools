@@ -29,13 +29,17 @@ calc_primary_products_supply_by_group(
 \arguments{
 \item{.tidy_iea_df}{A tidy iea data frame for which the primary energy supply needs to be calculated.}
 
-\item{primary_production_mats}{A list containing the names of matrices containing primary production flows.}
+\item{primary_production_mats}{A list containing the names of matrices containing primary production flows.
+Default is \code{c(IEATools::psut_cols$V)}.}
 
-\item{list_primary_oil_products}{A list containing the names of primary oil products.}
+\item{list_primary_oil_products}{A list containing the names of primary oil products.
+Default is \code{IEATools::primary_oil_products}.}
 
-\item{list_primary_coal_products}{A list containing the names of primary coal products.}
+\item{list_primary_coal_products}{A list containing the names of primary coal products.
+Default is \verb{IEATools::primary_coal_products,}.}
 
-\item{list_primary_gas_products}{A list containing the names of primary gas products.}
+\item{list_primary_gas_products}{A list containing the names of primary gas products.
+Default is \verb{IEATools::primary_gas_products,}.}
 
 \item{country, method, energy_type, last_stage, year, product, unit, flow, e_dot}{See \code{IEATools::iea_cols}.}
 
@@ -48,7 +52,7 @@ Default is "Product.Group".}
 \item{energy.stage}{The column name of the column defining the energy stage.
 Default is "Energy.stage".}
 
-\item{total_group_supply}{Column name containing total energy supply by product.
+\item{total_group_supply}{Column name containing total energy supply by product group.
 Default is "Total_Group_Supply".}
 
 \item{product_without_origin}{Column name containing the name of the product excluding the country of origin.
@@ -62,4 +66,5 @@ A tidy data frame returning the total primary energy supply by fossil fuel group
 The function calculates primary energy supply for the coal products and oil and gas products group. It does not disaggregate
 the oil and gas products group because they are jointly extracted, so it is not robust to separate them in EROI calculations,
 at least from the IEA data we use here.
+By default, it uses flows in the V matrix and selects primary energy products to determine primary energy production flows.
 }

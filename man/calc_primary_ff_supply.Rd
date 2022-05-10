@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_supply_use.R
 \name{calc_primary_ff_supply}
 \alias{calc_primary_ff_supply}
-\title{Title}
+\title{Calculates total primary fossil fuel energy supply}
 \usage{
 calc_primary_ff_supply(
   .tidy_iea_df,
@@ -27,11 +27,47 @@ calc_primary_ff_supply(
 )
 }
 \arguments{
-\item{energy.stage}{}
+\item{.tidy_iea_df}{The tidy iea data frame for which the total primary fossil fuel energy supply needs to be calculated.}
+
+\item{primary_production_mats}{A list containing the names of matrices containing primary production flows.
+Default is \code{c(IEATools::psut_cols$V)}.}
+
+\item{list_primary_oil_products}{A list containing the names of primary oil products.
+Default is \code{IEATools::primary_oil_products}.}
+
+\item{list_primary_coal_products}{A list containing the names of primary coal products.
+Default is \verb{IEATools::primary_coal_products,}.}
+
+\item{list_primary_gas_products}{A list containing the names of primary gas products.
+Default is \verb{IEATools::primary_gas_products,}.}
+
+\item{country, method, energy_type, last_stage, year, product, unit, flow, e_dot}{See \code{IEATools::iea_cols}.}
+
+\item{matnames}{The column name of the column having matrices names.
+Default is \code{IEATools::mat_meta_cols$matnames}.}
+
+\item{product.group}{The column name of the column defining the fossil fuel group.
+Default is "Product.Group".}
+
+\item{total_group_use}{Column name containing total energy use by product group.
+Default is "Total_Group_Use".}
+
+\item{energy.stage}{The column name of the column defining the energy stage.
+Default is "Energy.stage".}
+
+\item{product_without_origin}{Column name containing the name of the product excluding the country of origin.
+Helpful for doing calculations with Global Market Assumption.
+Default is "product_without_origin".}
 }
 \value{
-
+A tidy data frame with the total fossil fuel primary energy supply for each observation (country, year, method, last stage).
 }
 \description{
-Title
+The function calculates total fossil fuel primary energy supply for each observation (country, year, method, last stage).
+By default, it uses flows in the V matrix and selects primary energy products to determine primary energy production flows.
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case.
 }
