@@ -140,32 +140,46 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
 
 
 
-# Calculates shares of each product in all the fossil fuel consumption by group
-
-#' Title
+#' Calculates the shares of each product use within each fossil fuel group
+#' 
+#' This function calculates the shares of each product use within each fossil fuel group.
+#' The matrices containing energy use flows can be specified in the `final_use_mats` argument. 
+#' By default, these matrices are U_EIOU and Y, and excludes energy flows used as feedstock. 
+#' Exports and losses are also excluded from the total energy use. See details for more explanations.
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function),
+#' and the energy use by product will be returned as the pair (Origin_Country, Product).
+#' Non-energy use flows can be included or excluded from the calculations using the `include_non_energy_uses` boolean.
 #'
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param final_use_mats
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param product.group
-#' @param total_product_use
-#' @param total_group_use
-#' @param non_energy_uses
-#' @param share
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param unit
-#' @param product
-#' @param boolean_non_energy_uses
-#' @param energy.stage
+#' @param .tidy_iea_df The tidy iea data frame for which the shares of each product use within each fossil fuel group need to be calculated.
+#' @param include_non_energy_uses A boolean indicating whether non-energy uses should be included in the calculation.
+#'                                Default is FALSE.
+#' @param final_use_mats A list describing from which matrices should total final energy uses be calculated.
+#'                       Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_oil_products A list containing the names of oil products.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products A list containing the names of coal products.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products A list containing the names of gas products.
+#'                          Default is `IEATools::primary_gas_products`.
+#' @param product.group The column name of the column defining the fossil fuel group.
+#'                      Default is "Product.Group".
+#' @param total_product_use Column name containing total energy use by product.
+#'                          Default is "Total_Product_Use".
+#' @param total_group_use Column name containing total energy use by product group.
+#'                        Default is "Total_Group_Use".
+#' @param non_energy_uses The name of the column stating whether non-energy use flows are included when computing the shares.
+#'                        Default is "Non_Energy_Uses".
+#' @param share The name of the column returning the shares of each product use within each fossil fuel group.
+#' @param country,method,energy_type,last_stage,year,unit,product See `IEATools::iea_cols`.
+#' @param boolean_non_energy_uses A temporary column name stating whether non-energy flows are included.
+#'                                Default is "Boolean_Non_Energy_Uses".
+#' @param energy.stage The column name of the column defining the energy stage.
+#'                     Default is "Energy.stage".
 #'
-#' @return
+#' @return A tidy data frame reporting the shares of each product use within each fossil fuel group.
 #' @export
 #'
 #' @examples
