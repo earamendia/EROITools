@@ -122,7 +122,7 @@ calc_total_use_by_product <- function(.tidy_iea_df,
 }
 
 
-# Calculate primary products use for each main group: coal products and oil&gas products
+# Calculate primary products supply for each main group: coal products and oil&gas products
 #' Title
 #'
 #' @param .tidy_iea_df
