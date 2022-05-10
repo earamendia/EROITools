@@ -540,13 +540,128 @@ test_that("calc_primary_ff_supply works",{
 
 
 
-# test_that("calc_ff_use works",{
-#   
-#   
-#   
-#   
-#   
-#   
-#   
-# })
+test_that("calc_ff_use works",{
+
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
+  
+  # Loading data
+  tidy_AB_data <- A_B_path %>% 
+    IEATools::load_tidy_iea_df() %>% 
+    IEATools::specify_all() %>% 
+    ECCTools::specify_elect_heat_renewables() %>% 
+    ECCTools::specify_elect_heat_fossil_fuels() %>% 
+    ECCTools::specify_elect_heat_nuclear() %>% 
+    ECCTools::specify_other_elec_heat_production() %>% 
+    ECCTools::specify_elect_heat_markets() %>% 
+    IEATools::add_psut_matnames() %>% 
+    ECCTools::stat_diffs_to_balancing() %>% 
+    ECCTools::stock_changes_to_balancing()
+  
+  
+  # FIRST, WE TEST THE DTA APPROACH
+  
+  # Calculating total energy use by product group
+  tidy_AB_dta <- tidy_AB_data %>% 
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE)
+  
+  res_dta <- tidy_AB_dta %>% 
+    calc_ff_use()
+  
+  # Testing
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(5700)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(3950)
+  
+
+  # SECOND, WE TEST THE GMA APPROACH
+  
+  # Calculating total energy use by product group
+  tidy_AB_data_gma <- tidy_AB_data %>%
+    ECCTools::transform_to_gma()
+  
+  tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+    dplyr::mutate(
+      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+        stringr::str_remove("\\{") %>% 
+        stringr::str_remove("\\}"),
+      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    )
+  
+  res_gma <- tidy_AB_data_gma_prepared %>% 
+    calc_ff_use()
+
+  # Testing
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(5700)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(3950)
+  
+  
+  # THIRD,TRYING WITH NON-ENERGY USES FLOWS
+  
+  # Adding a non-energy use flow
+  tidy_AB_data_non_energy <- tidy_AB_data %>% 
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Consumption",
+      Flow.aggregation.point = "Industry",
+      Flow = IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+      Product = "Coke oven coke",
+      Unit = "ktoe",
+      E.dot = 300,
+      matnames = "Y"
+    )
+  
+  # Calculating energy use by product excluding non-energy uses:
+  res_dta_excl_non_energy <- tidy_AB_data_non_energy %>% 
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE) %>% 
+    calc_ff_use()
+  
+  # Testing
+  res_dta_excl_non_energy %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(5700)
+  
+  res_dta_excl_non_energy %>% 
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(3950)
+  
+  # Calculating energy use by product including non-energy uses:
+  res_dta_incl_non_energy <- tidy_AB_data_non_energy %>% 
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE) %>% 
+    calc_ff_use(include_non_energy_uses = TRUE)
+  
+  # Testing
+  res_dta_incl_non_energy %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(6000)
+  
+  res_dta_incl_non_energy %>% 
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Total_Group_Use") %>% 
+    expect_equal(3950)
+})
 
