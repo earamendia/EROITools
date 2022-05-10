@@ -204,6 +204,7 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
 
 
 # Calculates use of products by main group (coal vs oil&gas)
+
 #' Title
 #'
 #' @param .tidy_iea_df
