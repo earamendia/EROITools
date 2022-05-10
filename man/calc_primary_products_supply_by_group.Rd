@@ -6,7 +6,6 @@
 \usage{
 calc_primary_products_supply_by_group(
   .tidy_iea_df,
-  include_non_energy_uses = FALSE,
   primary_production_mats = c(IEATools::psut_cols$V),
   list_primary_oil_products = IEATools::primary_oil_products,
   list_primary_coal_products = IEATools::primary_coal_products,

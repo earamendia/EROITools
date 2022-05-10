@@ -153,7 +153,6 @@ calc_total_use_by_product <- function(.tidy_iea_df,
 #'
 #' @examples
 calc_primary_products_supply_by_group <- function(.tidy_iea_df,
-                                                  include_non_energy_uses = FALSE,
                                                   primary_production_mats = c(IEATools::psut_cols$V),
                                                   list_primary_oil_products = IEATools::primary_oil_products,
                                                   list_primary_coal_products = IEATools::primary_coal_products,
@@ -189,58 +188,23 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
       )
     )
   
-  if (isFALSE(include_non_energy_uses)){
-    
-    to_return <- .tidy_iea_df %>%
-      dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
-      dplyr::filter(
-        ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
-      ) %>%
-      dplyr::filter(matnames %in% primary_production_mats) %>%
-      dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
-      dplyr::mutate(
-        "{product.group}" := dplyr::case_when(
-          .data[[product_without_origin]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ "Oil and gas products",
-          .data[[product_without_origin]] %in% list_primary_coal_products ~ "Coal products"
-        ),
-        "{energy.stage}" := "Primary",
-        "{e_dot}" := abs(.data[[e_dot]])
-      ) %>%
-      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
-                      .data[[energy.stage]], .data[[unit]]) %>%
-      dplyr::summarise(
-        "{total_group_use}" := sum(.data[[e_dot]])
-      )
-    
-    return(to_return)
-    
-  } else if (isTRUE(include_non_energy_uses)){
-    
-    to_return <- .tidy_iea_df %>%
-      dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
-      dplyr::filter(
-        ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
-      ) %>%
-      dplyr::filter(matnames %in% primary_production_mats) %>%
-      dplyr::mutate(
-        "{product.group}" := dplyr::case_when(
-          .data[[product_without_origin]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ "Oil and gas products",
-          .data[[product_without_origin]] %in% list_primary_coal_products ~ "Coal products"
-        ),
-        "{energy.stage}" := "Primary",
-        "{e_dot}" := abs(.data[[e_dot]])
-      ) %>%
-      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
-                      .data[[energy.stage]], .data[[unit]]) %>%
-      dplyr::summarise(
-        "{total_group_use}" := sum(.data[[e_dot]])
-      )
-    
-    return(to_return)
-    
-  } else {
-    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
-  }
+  # Calculating primary energy supply by product group:
+  to_return <- .tidy_iea_df %>%
+    dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
+    dplyr::filter(matnames %in% primary_production_mats) %>%
+    dplyr::mutate(
+      "{product.group}" := dplyr::case_when(
+        .data[[product_without_origin]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ "Oil and gas products",
+        .data[[product_without_origin]] %in% list_primary_coal_products ~ "Coal products"
+      ),
+      "{energy.stage}" := "Primary",
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
+                    .data[[energy.stage]], .data[[unit]]) %>%
+    dplyr::summarise("{total_group_use}" := sum(.data[[e_dot]]))
+  
+  return(to_return)
 }
 
 
