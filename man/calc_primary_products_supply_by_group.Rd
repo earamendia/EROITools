@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_supply_use.R
 \name{calc_primary_products_supply_by_group}
 \alias{calc_primary_products_supply_by_group}
-\title{Title}
+\title{Calculates primary energy supply for the coal products and oil and gas products group}
 \usage{
 calc_primary_products_supply_by_group(
   .tidy_iea_df,
@@ -10,9 +10,6 @@ calc_primary_products_supply_by_group(
   list_primary_oil_products = IEATools::primary_oil_products,
   list_primary_coal_products = IEATools::primary_coal_products,
   list_primary_gas_products = IEATools::primary_gas_products,
-  list_non_energy_flows = IEATools::non_energy_flows,
-  exports = IEATools::interface_industries$exports,
-  losses = IEATools::tfc_compare_flows$losses,
   country = IEATools::iea_cols$country,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -25,16 +22,44 @@ calc_primary_products_supply_by_group(
   matnames = IEATools::mat_meta_cols$matnames,
   product.group = "Product.Group",
   energy.stage = "Energy.stage",
-  total_group_use = "Total_Group_Use",
+  total_group_supply = "Total_Group_Supply",
   product_without_origin = "product_without_origin"
 )
 }
 \arguments{
-\item{total_group_use}{}
+\item{.tidy_iea_df}{A tidy iea data frame for which the primary energy supply needs to be calculated.}
+
+\item{primary_production_mats}{A list containing the names of matrices containing primary production flows.}
+
+\item{list_primary_oil_products}{A list containing the names of primary oil products.}
+
+\item{list_primary_coal_products}{A list containing the names of primary coal products.}
+
+\item{list_primary_gas_products}{A list containing the names of primary gas products.}
+
+\item{country, method, energy_type, last_stage, year, product, unit, flow, e_dot}{See \code{IEATools::iea_cols}.}
+
+\item{matnames}{The column name of the column having matrices names.
+Default is \code{IEATools::mat_meta_cols$matnames}.}
+
+\item{product.group}{The column name of the column defining the fossil fuel group.
+Default is "Product.Group".}
+
+\item{energy.stage}{The column name of the column defining the energy stage.
+Default is "Energy.stage".}
+
+\item{total_group_supply}{Column name containing total energy supply by product.
+Default is "Total_Group_Supply".}
+
+\item{product_without_origin}{Column name containing the name of the product excluding the country of origin.
+Helpful for doing calculations with Global Market Assumption.
+Default is "product_without_origin".}
 }
 \value{
-
+A tidy data frame returning the total primary energy supply by fossil fuel group.
 }
 \description{
-Title
+The function calculates primary energy supply for the coal products and oil and gas products group. It does not disaggregate
+the oil and gas products group because they are jointly extracted, so it is not robust to separate them in EROI calculations,
+at least from the IEA data we use here.
 }

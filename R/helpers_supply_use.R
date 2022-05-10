@@ -122,33 +122,31 @@ calc_total_use_by_product <- function(.tidy_iea_df,
 }
 
 
-# Calculate primary products supply for each main group: coal products and oil&gas products
-#' Title
+#' Calculates primary energy supply for the coal products and oil and gas products group
+#' 
+#' The function calculates primary energy supply for the coal products and oil and gas products group. It does not disaggregate
+#' the oil and gas products group because they are jointly extracted, so it is not robust to separate them in EROI calculations,
+#' at least from the IEA data we use here.
 #'
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param primary_production_mats
-#' @param list_primary_oil_products
-#' @param list_primary_coal_products
-#' @param list_primary_gas_products
-#' @param list_non_energy_flows
-#' @param exports
-#' @param losses
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param product
-#' @param unit
-#' @param flow
-#' @param e_dot
-#' @param matnames
-#' @param product.group
-#' @param energy.stage
-#' @param total_group_use
+#' @param .tidy_iea_df A tidy iea data frame for which the primary energy supply needs to be calculated.
+#' @param primary_production_mats A list containing the names of matrices containing primary production flows.
+#' @param list_primary_oil_products A list containing the names of primary oil products.
+#' @param list_primary_coal_products A list containing the names of primary coal products.
+#' @param list_primary_gas_products A list containing the names of primary gas products.
+#' @param country,method,energy_type,last_stage,year,product,unit,flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name of the column having matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param product.group The column name of the column defining the fossil fuel group.
+#'                      Default is "Product.Group".
+#' @param energy.stage The column name of the column defining the energy stage.
+#'                      Default is "Energy.stage".
+#' @param total_group_supply Column name containing total energy supply by product.
+#'                           Default is "Total_Group_Supply".
+#' @param product_without_origin Column name containing the name of the product excluding the country of origin.
+#'                               Helpful for doing calculations with Global Market Assumption.
+#'                               Default is "product_without_origin".
 #'
-#' @return
+#' @return A tidy data frame returning the total primary energy supply by fossil fuel group.
 #' @export
 #'
 #' @examples
@@ -157,9 +155,6 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
                                                   list_primary_oil_products = IEATools::primary_oil_products,
                                                   list_primary_coal_products = IEATools::primary_coal_products,
                                                   list_primary_gas_products = IEATools::primary_gas_products,
-                                                  list_non_energy_flows = IEATools::non_energy_flows,
-                                                  exports = IEATools::interface_industries$exports,
-                                                  losses = IEATools::tfc_compare_flows$losses,
                                                   country = IEATools::iea_cols$country,
                                                   method = IEATools::iea_cols$method,
                                                   energy_type = IEATools::iea_cols$energy_type,
@@ -172,7 +167,7 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
                                                   matnames = IEATools::mat_meta_cols$matnames,
                                                   product.group = "Product.Group",
                                                   energy.stage = "Energy.stage",
-                                                  total_group_use = "Total_Group_Use",
+                                                  total_group_supply = "Total_Group_Supply",
                                                   product_without_origin = "product_without_origin"){
   
   ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
@@ -202,7 +197,7 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                     .data[[energy.stage]], .data[[unit]]) %>%
-    dplyr::summarise("{total_group_use}" := sum(.data[[e_dot]]))
+    dplyr::summarise("{total_group_supply}" := sum(.data[[e_dot]]))
   
   return(to_return)
 }
