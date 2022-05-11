@@ -734,7 +734,7 @@ test_that("calc_shares_heat_by_ff_group works",{
 })
 
 
-
+# ADD SOME TEST WITH NON-ENERGY USES?????
 test_that("calc_shares_ff_by_group_inc_elec_heat works",{
 
   # Path to dummy AB data

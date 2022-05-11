@@ -562,14 +562,7 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
 #' @param total_group_use
 #' @param non_energy_uses
 #' @param share
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param unit
-#' @param e_dot
-#' @param product
+#' @param country,method,energy_type,last_stage,year,unit,e_dot,product See `IEATools::iea_cols`.
 #' @param boolean_non_energy_uses
 #' @param energy.stage
 #'

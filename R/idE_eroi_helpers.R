@@ -2,6 +2,7 @@
 # Calculates all the final energy consumption, whatever the form (fuel, elect, heat)
 # that is provided from fossil fuels, by fossil fuel group.
 # We need that function for adding indirect energy and to have EROIs with idE.
+
 #' Title
 #'
 #' @param .tidy_iea_df

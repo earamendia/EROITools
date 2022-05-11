@@ -30,6 +30,8 @@ calc_shares_ff_by_group_inc_elec_heat(
 )
 }
 \arguments{
+\item{country, method, energy_type, last_stage, year, unit, e_dot, product}{See \code{IEATools::iea_cols}.}
+
 \item{energy.stage}{}
 }
 \value{
