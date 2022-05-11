@@ -499,7 +499,7 @@ test_that("calc_primary_ff_supply works",{
   # Testing
   res_dta %>% 
     dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
-    magrittr::extract2("Total_Group_Use") %>% 
+    magrittr::extract2("Total_Group_Supply") %>% 
     expect_equal(17600)
 
   res_dta %>% 
@@ -529,7 +529,7 @@ test_that("calc_primary_ff_supply works",{
   # Testing
   res_dta %>% 
     dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
-    magrittr::extract2("Total_Group_Use") %>% 
+    magrittr::extract2("Total_Group_Supply") %>% 
     expect_equal(17600)
   
   res_dta %>% 

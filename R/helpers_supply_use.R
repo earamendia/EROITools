@@ -429,8 +429,8 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param product.group The column name of the column defining the fossil fuel group.
 #'                      Default is "Product.Group".
-#' @param total_group_use Column name containing total energy use by product group.
-#'                        Default is "Total_Group_Use".
+#' @param total_group_supply Column name containing total energy use by product group.
+#'                           Default is "Total_Group_Supply".
 #' @param energy.stage The column name of the column defining the energy stage.
 #'                     Default is "Energy.stage".
 #' @param product_without_origin Column name containing the name of the product excluding the country of origin.
@@ -457,7 +457,7 @@ calc_primary_ff_supply <- function(.tidy_iea_df,
                                    e_dot = IEATools::iea_cols$e_dot,
                                    matnames = IEATools::mat_meta_cols$matnames,
                                    product.group = "Product.Group",
-                                   total_group_use = "Total_Group_Use",
+                                   total_group_supply = "Total_Group_Supply",
                                    energy.stage = "Energy.stage",
                                    product_without_origin = "product_without_origin"){
   
@@ -486,7 +486,7 @@ calc_primary_ff_supply <- function(.tidy_iea_df,
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                     .data[[energy.stage]], .data[[unit]]) %>%
     dplyr::summarise(
-      "{total_group_use}" := sum(.data[[e_dot]])
+      "{total_group_supply}" := sum(.data[[e_dot]])
     )
     
     return(to_return)

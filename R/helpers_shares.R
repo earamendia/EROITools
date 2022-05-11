@@ -3,43 +3,50 @@
 # Calculates shares of each product in the primary fossil fuel supply by group, by default using the V matrix
 # Where the groups are: "All fossil fuels", "Oil and gas products", and "Coal products".
 
-#' Title
+#' Calculates the primary energy supply shares of each product within each fossil fuel group
+#' 
+#' This function calculates the primary energy supply shares of each product within each fossil fuel group.
+#' By default, it uses flows in the "V" matrix and selects only primary energy products for each fossil fuel group,
+#' which are "All fossil fuels", "Oil and gas products", and "Coal products". Oil products and natural gas are not
+#' differentiated at this point because their primary extraction is not differentiated in IEA data.
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case.
 #'
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param primary_production_mats
-#' @param list_primary_oil_products
-#' @param list_primary_coal_products
-#' @param list_primary_gas_products
-#' @param product.group
-#' @param total_product_use
-#' @param total_group_use
-#' @param non_energy_uses
-#' @param share
-#' @param energy.stage
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param unit
-#' @param product
-#' @param boolean_non_energy_uses
+#' @param .tidy_iea_df The tidy iea data frame for which the supply shares of each product within each fossil fuel group need to be calculated.
+#' @param primary_production_mats A list containing the names of matrices containing primary production flows.
+#'                                Default is `c(IEATools::psut_cols$V)`.
+#' @param list_primary_oil_products A list containing the names of primary oil products.
+#'                                  Default is `IEATools::primary_oil_products`.
+#' @param list_primary_coal_products A list containing the names of primary coal products.
+#'                                   Default is `IEATools::primary_coal_products,`.
+#' @param list_primary_gas_products A list containing the names of primary gas products.
+#'                                  Default is `IEATools::primary_gas_products,`.
+#' @param product.group The column name of the column defining the fossil fuel group.
+#'                      Default is "Product.Group".
+#' @param total_product_supply Column name containing total primary energy supply by product.
+#'                            Default is "Total_Product_Supply".
+#' @param total_group_supply Column name containing total primary energy use by product group.
+#'                           Default is "Total_Group_Supply".
+#' @param share The name of the column returning the shares of each product use within each fossil fuel group.
+#'              Default is "Share".
+#' @param energy.stage The column name of the column defining the energy stage.
+#'                     Default is "Energy.stage".
+#' @param country,method,energy_type,last_stage,year,unit,product See `IEATools::iea_cols`.
 #'
-#' @return
+#' @return A tidy data frame returning the primary energy supply shares of each product within each fossil fuel group.
 #' @export
 #'
 #' @examples
 calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
-                                                             include_non_energy_uses = FALSE,
                                                              primary_production_mats = c(IEATools::psut_cols$V),
                                                              list_primary_oil_products = IEATools::primary_oil_products,
                                                              list_primary_coal_products = IEATools::primary_coal_products,
                                                              list_primary_gas_products = IEATools::primary_gas_products,
                                                              product.group = "Product.Group",
-                                                             total_product_use = "Total_Product_Use",
-                                                             total_group_use = "Total_Group_Use",
-                                                             non_energy_uses = "Non_Energy_Uses",
+                                                             total_product_supply = "Total_Product_Supply",
+                                                             total_group_supply = "Total_Group_Supply",
                                                              share = "Share",
                                                              energy.stage = "Energy.stage",
                                                              country = IEATools::iea_cols$country,
@@ -67,22 +74,14 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
     )
   
   
-  if (! (isTRUE(include_non_energy_uses) | isFALSE(include_non_energy_uses))){
-    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
-  }
-  
-  
   ### Building up production by product, for each fossil fuel group ###
   # FIRST AND SECOND STEPS COULD BE MERGED WITH A TIDYR::EXPAND_GRID AND APPROPRIATE FILTER AFTER.
   # BUT IT WOULD DEMAND A PROPER TESTING STRATEGY...!
   
   # First by group
   supply_ff_by_product_by_ff_group <- calc_total_use_by_product(.tidy_iea_df,
-                                                                include_non_energy_uses = include_non_energy_uses,
-                                                                total_use_mats = primary_production_mats) %>%
-    dplyr::filter(
-      .data[[product_without_origin]] %in% c(list_primary_oil_products, list_primary_coal_products, list_primary_gas_products)
-    ) %>%
+                                                                total_use_mats = primary_production_mats,
+                                                                total_product_use = total_product_supply) %>%
     dplyr::filter(
       .data[[product_without_origin]] %in% c(list_primary_oil_products, list_primary_coal_products, list_primary_gas_products)
     ) %>%
@@ -96,8 +95,8 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
   
   # Second for all fossil fuels together
   supply_ff_by_product_all_ffs <- calc_total_use_by_product(.tidy_iea_df,
-                                                            include_non_energy_uses = include_non_energy_uses,
-                                                            total_use_mats = primary_production_mats) %>%
+                                                            total_use_mats = primary_production_mats,
+                                                            total_product_use = total_product_supply) %>%
     dplyr::filter(
       .data[[product_without_origin]] %in% c(list_primary_oil_products, list_primary_coal_products, list_primary_gas_products)
     ) %>%
@@ -116,24 +115,16 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
   ### Last, calculating the shares ###
   
   share_primary_ff_supply_by_product_by_group <- calc_primary_products_supply_by_group(.tidy_iea_df,
-                                                                                       include_non_energy_uses = include_non_energy_uses,
                                                                                        primary_production_mats = primary_production_mats) %>%
     # Ideally, this here should be merged back within calc_primary_products_supply_by_group() function, too.
     dplyr::bind_rows(
       calc_primary_ff_supply(.tidy_iea_df,
-                             include_non_energy_uses = include_non_energy_uses,
                              primary_production_mats = primary_production_mats)
     ) %>% 
     dplyr::left_join(supply_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group}, {energy.stage})) %>%
     dplyr::mutate(
-      "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
-      "{boolean_non_energy_uses}" := include_non_energy_uses,
-      "{non_energy_uses}" := dplyr::case_when(
-        .data[[boolean_non_energy_uses]] == TRUE ~ "Included",
-        .data[[boolean_non_energy_uses]] == FALSE ~ "Excluded"
-      )
-    ) %>%
-    dplyr::select(-.data[[boolean_non_energy_uses]])
+      "{share}" := .data[[total_product_supply]] / .data[[total_group_supply]]
+    )
   
   return(share_primary_ff_supply_by_product_by_group)
 }
@@ -173,6 +164,7 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
 #' @param non_energy_uses The name of the column stating whether non-energy use flows are included when computing the shares.
 #'                        Default is "Non_Energy_Uses".
 #' @param share The name of the column returning the shares of each product use within each fossil fuel group.
+#'              Default is "Share".
 #' @param country,method,energy_type,last_stage,year,unit,product See `IEATools::iea_cols`.
 #' @param boolean_non_energy_uses A temporary column name stating whether non-energy flows are included.
 #'                                Default is "Boolean_Non_Energy_Uses".

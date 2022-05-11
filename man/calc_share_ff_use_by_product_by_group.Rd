@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_shares.R
 \name{calc_share_ff_use_by_product_by_group}
 \alias{calc_share_ff_use_by_product_by_group}
-\title{Title}
+\title{Calculates the shares of each product use within each fossil fuel group}
 \usage{
 calc_share_ff_use_by_product_by_group(
   .tidy_iea_df,
@@ -29,11 +29,58 @@ calc_share_ff_use_by_product_by_group(
 )
 }
 \arguments{
-\item{energy.stage}{}
+\item{.tidy_iea_df}{The tidy iea data frame for which the shares of each product use within each fossil fuel group need to be calculated.}
+
+\item{include_non_energy_uses}{A boolean indicating whether non-energy uses should be included in the calculation.
+Default is FALSE.}
+
+\item{final_use_mats}{A list describing from which matrices should total final energy uses be calculated.
+Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}
+
+\item{list_oil_products}{A list containing the names of oil products.
+Default is \code{IEATools::oil_and_oil_products}.}
+
+\item{list_coal_products}{A list containing the names of coal products.
+Default is \code{IEATools::coal_and_coal_products}.}
+
+\item{list_gas_products}{A list containing the names of gas products.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{product.group}{The column name of the column defining the fossil fuel group.
+Default is "Product.Group".}
+
+\item{total_product_use}{Column name containing total energy use by product.
+Default is "Total_Product_Use".}
+
+\item{total_group_use}{Column name containing total energy use by product group.
+Default is "Total_Group_Use".}
+
+\item{non_energy_uses}{The name of the column stating whether non-energy use flows are included when computing the shares.
+Default is "Non_Energy_Uses".}
+
+\item{share}{The name of the column returning the shares of each product use within each fossil fuel group.}
+
+\item{country, method, energy_type, last_stage, year, unit, product}{See \code{IEATools::iea_cols}.}
+
+\item{boolean_non_energy_uses}{A temporary column name stating whether non-energy flows are included.
+Default is "Boolean_Non_Energy_Uses".}
+
+\item{energy.stage}{The column name of the column defining the energy stage.
+Default is "Energy.stage".}
 }
 \value{
-
+A tidy data frame reporting the shares of each product use within each fossil fuel group.
 }
 \description{
-Title
+This function calculates the shares of each product use within each fossil fuel group.
+The matrices containing energy use flows can be specified in the \code{final_use_mats} argument.
+By default, these matrices are U_EIOU and Y, and excludes energy flows used as feedstock.
+Exports and losses are also excluded from the total energy use. See details for more explanations.
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function),
+and the energy use by product will be returned as the pair (Origin_Country, Product).
+Non-energy use flows can be included or excluded from the calculations using the \code{include_non_energy_uses} boolean.
 }

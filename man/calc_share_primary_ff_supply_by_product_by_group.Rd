@@ -6,14 +6,13 @@
 \usage{
 calc_share_primary_ff_supply_by_product_by_group(
   .tidy_iea_df,
-  include_non_energy_uses = FALSE,
   primary_production_mats = c(IEATools::psut_cols$V),
   list_primary_oil_products = IEATools::primary_oil_products,
   list_primary_coal_products = IEATools::primary_coal_products,
   list_primary_gas_products = IEATools::primary_gas_products,
   product.group = "Product.Group",
-  total_product_use = "Total_Product_Use",
-  total_group_use = "Total_Group_Use",
+  total_product_supply = "Total_Product_Supply",
+  total_group_supply = "Total_Group_Supply",
   non_energy_uses = "Non_Energy_Uses",
   share = "Share",
   energy.stage = "Energy.stage",
@@ -29,6 +28,8 @@ calc_share_primary_ff_supply_by_product_by_group(
 )
 }
 \arguments{
+\item{country, method, energy_type, last_stage, year, unit, product}{See \code{IEATools::iea_cols}.}
+
 \item{boolean_non_energy_uses}{}
 }
 \value{

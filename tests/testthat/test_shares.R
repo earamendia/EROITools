@@ -1,9 +1,124 @@
 
-# I think there is a big design issue with this calc_share_primary_ff_supply_by_product_by_group() function.
-# test_that("calc_share_primary_ff_supply_by_product_by_group works",{
-# 
-# 
-# })
+
+test_that("calc_share_primary_ff_supply_by_product_by_group works",{
+
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
+  
+  # Loading data
+  tidy_AB_data <- A_B_path %>% 
+    IEATools::load_tidy_iea_df() %>% 
+    IEATools::specify_all() %>% 
+    ECCTools::specify_elect_heat_renewables() %>% 
+    ECCTools::specify_elect_heat_fossil_fuels() %>% 
+    ECCTools::specify_elect_heat_nuclear() %>% 
+    ECCTools::specify_other_elec_heat_production() %>% 
+    ECCTools::specify_elect_heat_markets() %>% 
+    IEATools::add_psut_matnames() %>% 
+    ECCTools::stat_diffs_to_balancing() %>% 
+    ECCTools::stock_changes_to_balancing()
+  
+  
+  # FIRST, WE TEST THE DTA APPROACH
+  
+  # Calculating total use of each product
+  tidy_AB_dta <- tidy_AB_data %>% 
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE)
+  
+  res_dta <- tidy_AB_dta %>% 
+    calc_share_primary_ff_supply_by_product_by_group()
+  
+  # Testing
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product == "Coking coal", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(1)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product == "Crude oil", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.6746032, tolerance = 1e-5)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product == "Natural gas", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.3253968, tolerance = 1e-5)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product == "Coking coal", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.2840909, tolerance = 1e-5)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product == "Crude oil", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.4829545, tolerance = 1e-5)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product == "Natural gas", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.2329545, tolerance = 1e-5)
+  
+  res_dta %>% 
+    dplyr::filter(Country == "B") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  
+  # SECOND, WE TEST THE GMA APPROACH
+  
+  tidy_AB_data_gma <- tidy_AB_data %>%
+    ECCTools::transform_to_gma()
+  
+  tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+    dplyr::mutate(
+      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+        stringr::str_remove("\\{") %>% 
+        stringr::str_remove("\\}"),
+      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    )
+  
+  res_gma <- tidy_AB_data_gma_prepared %>% 
+    calc_share_primary_ff_supply_by_product_by_group()
+  
+  # Testing
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product == "{A}_Coking coal", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(1)
+  
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product == "{A}_Crude oil", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.6746032, tolerance = 1e-5)
+  
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product == "{A}_Natural gas", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.3253968, tolerance = 1e-5)
+  
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product == "{A}_Coking coal", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.2840909, tolerance = 1e-5)
+  
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product == "{A}_Crude oil", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.4829545, tolerance = 1e-5)
+  
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product == "{A}_Natural gas", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.2329545, tolerance = 1e-5)
+  
+  res_gma %>% 
+    dplyr::filter(Country == "B") %>% 
+    nrow() %>% 
+    expect_equal(0)
+})
 
 
 test_that("calc_share_ff_use_by_product_by_group works",{

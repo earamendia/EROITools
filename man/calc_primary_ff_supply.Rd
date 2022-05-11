@@ -21,7 +21,7 @@ calc_primary_ff_supply(
   e_dot = IEATools::iea_cols$e_dot,
   matnames = IEATools::mat_meta_cols$matnames,
   product.group = "Product.Group",
-  total_group_use = "Total_Group_Use",
+  total_group_supply = "Total_Group_Supply",
   energy.stage = "Energy.stage",
   product_without_origin = "product_without_origin"
 )
@@ -49,8 +49,8 @@ Default is \code{IEATools::mat_meta_cols$matnames}.}
 \item{product.group}{The column name of the column defining the fossil fuel group.
 Default is "Product.Group".}
 
-\item{total_group_use}{Column name containing total energy use by product group.
-Default is "Total_Group_Use".}
+\item{total_group_supply}{Column name containing total energy use by product group.
+Default is "Total_Group_Supply".}
 
 \item{energy.stage}{The column name of the column defining the energy stage.
 Default is "Energy.stage".}
