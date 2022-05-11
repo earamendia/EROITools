@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_shares.R
 \name{calc_share_primary_ff_supply_by_product_by_group}
 \alias{calc_share_primary_ff_supply_by_product_by_group}
-\title{Title}
+\title{Calculates the primary energy supply shares of each product within each fossil fuel group}
 \usage{
 calc_share_primary_ff_supply_by_product_by_group(
   .tidy_iea_df,
@@ -13,7 +13,6 @@ calc_share_primary_ff_supply_by_product_by_group(
   product.group = "Product.Group",
   total_product_supply = "Total_Product_Supply",
   total_group_supply = "Total_Group_Supply",
-  non_energy_uses = "Non_Energy_Uses",
   share = "Share",
   energy.stage = "Energy.stage",
   country = IEATools::iea_cols$country,
@@ -28,13 +27,48 @@ calc_share_primary_ff_supply_by_product_by_group(
 )
 }
 \arguments{
-\item{country, method, energy_type, last_stage, year, unit, product}{See \code{IEATools::iea_cols}.}
+\item{.tidy_iea_df}{The tidy iea data frame for which the supply shares of each product within each fossil fuel group need to be calculated.}
 
-\item{boolean_non_energy_uses}{}
+\item{primary_production_mats}{A list containing the names of matrices containing primary production flows.
+Default is \code{c(IEATools::psut_cols$V)}.}
+
+\item{list_primary_oil_products}{A list containing the names of primary oil products.
+Default is \code{IEATools::primary_oil_products}.}
+
+\item{list_primary_coal_products}{A list containing the names of primary coal products.
+Default is \verb{IEATools::primary_coal_products,}.}
+
+\item{list_primary_gas_products}{A list containing the names of primary gas products.
+Default is \verb{IEATools::primary_gas_products,}.}
+
+\item{product.group}{The column name of the column defining the fossil fuel group.
+Default is "Product.Group".}
+
+\item{total_product_supply}{Column name containing total primary energy supply by product.
+Default is "Total_Product_Supply".}
+
+\item{total_group_supply}{Column name containing total primary energy use by product group.
+Default is "Total_Group_Supply".}
+
+\item{share}{The name of the column returning the shares of each product use within each fossil fuel group.
+Default is "Share".}
+
+\item{energy.stage}{The column name of the column defining the energy stage.
+Default is "Energy.stage".}
+
+\item{country, method, energy_type, last_stage, year, unit, product}{See \code{IEATools::iea_cols}.}
 }
 \value{
-
+A tidy data frame returning the primary energy supply shares of each product within each fossil fuel group.
 }
 \description{
-Title
+This function calculates the primary energy supply shares of each product within each fossil fuel group.
+By default, it uses flows in the "V" matrix and selects only primary energy products for each fossil fuel group,
+which are "All fossil fuels", "Oil and gas products", and "Coal products". Oil products and natural gas are not
+differentiated at this point because their primary extraction is not differentiated in IEA data.
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case.
 }

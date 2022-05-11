@@ -23,7 +23,7 @@ calc_shares_heat_by_ff_group(
 )
 }
 \arguments{
-\item{e.dot}{}
+\item{country, method, energy_type, last_stage, year, unit, product, e_dot}{See \code{IEATools::iea_cols}.}
 }
 \value{
 

@@ -58,7 +58,8 @@ Default is "Total_Group_Use".}
 \item{non_energy_uses}{The name of the column stating whether non-energy use flows are included when computing the shares.
 Default is "Non_Energy_Uses".}
 
-\item{share}{The name of the column returning the shares of each product use within each fossil fuel group.}
+\item{share}{The name of the column returning the shares of each product use within each fossil fuel group.
+Default is "Share".}
 
 \item{country, method, energy_type, last_stage, year, unit, product}{See \code{IEATools::iea_cols}.}
 

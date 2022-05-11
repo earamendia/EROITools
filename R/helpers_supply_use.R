@@ -101,7 +101,7 @@ calc_total_use_by_product <- function(.tidy_iea_df,
   } else if (isTRUE(include_non_energy_uses)){
     
     to_return <- .tidy_iea_df %>%
-      dplyr::filter(.data[[product]] %in% c(list_coal_products, list_oil_products, list_gas_products)) %>%
+      dplyr::filter(.data[[product_without_origin]] %in% c(list_coal_products, list_oil_products, list_gas_products)) %>%
       dplyr::filter(
         ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
       ) %>%

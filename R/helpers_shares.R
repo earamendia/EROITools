@@ -283,9 +283,6 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
 #' This function calculates the share of electricity supplied by each fossil fuel within each fossil fuel group,
 #' for the two following fossil fuel groups "Oil and gas products", and "All fossil fuels". So it gives the share supplied
 #' by respectively Coal products, Oil products, and Natural gas, in each of those groups. The shares then add up to unity necessarily.
-#' 
-#' The plan is then to update this function so it also does the same for the "Coal products", "Oil products", and "Natural gas".
-#' This would be trivial (respectively 1 for Coal products, Oil products, and Natural gas), but it would be very convenient.
 #'
 #' @param .tidy_iea_df
 #' @param supply_mats_list
@@ -293,14 +290,7 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
 #' @param product.group
 #' @param share
 #' @param energy.stage
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param unit
-#' @param product
-#' @param e.dot
+#' @param country,method,energy_type,last_stage,year,unit,product,e_dot See `IEATools::iea_cols`.
 #'
 #' @return
 #' @export
@@ -437,14 +427,7 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
 #' @param product.group
 #' @param share
 #' @param energy.stage
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param unit
-#' @param product
-#' @param e.dot
+#' @param country,method,energy_type,last_stage,year,unit,product,e_dot See `IEATools::iea_cols`.
 #'
 #' @return
 #' @export
