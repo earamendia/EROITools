@@ -330,17 +330,69 @@ test_that("calc_fec_from_ff_as_heat_by_group",{
   res_dta <- tidy_AB_dta %>%
     calc_fec_from_ff_as_heat_by_group()
   
-  # Testing
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  # Testing; first country A iron and steel
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(40)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(7.272727, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(7.272727, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Coal products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(32.72727, tolerance = 1e-5)
+  # Second country A, oil refineries
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(80)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(14.54545, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(14.54545, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Coal products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(65.45455, tolerance = 1e-4)
+  # Third country B, oil refineries
+  res_dta %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(60)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(52.94118, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(52.94118, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Coal products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(7.058824, tolerance = 1e-5)
   
   
   # SECOND, WE TEST THE GMA APPROACH
@@ -360,15 +412,206 @@ test_that("calc_fec_from_ff_as_heat_by_group",{
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_fec_from_ff_as_heat_by_group()
   
-
-
+  # Testing; first country A iron and steel
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(40)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(7.272727, tolerance = 1e-5)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(7.272727, tolerance = 1e-5)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Coal products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(32.72727, tolerance = 1e-5)
+  # Second country A, oil refineries
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(80)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(14.54545, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(14.54545, tolerance = 1e4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product.Group == "Coal products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(65.45455, tolerance = 1e-4)
+  # Third country B, oil refineries
+  res_gma %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(60)
+  res_gma %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_gma %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(52.94118, tolerance = 1e-5)
+  res_gma %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(52.94118, tolerance = 1e-5)
+  res_gma %>% 
+    dplyr::filter(Country == "B", Flow == "Oil refineries", Product.Group == "Coal products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(7.058824, tolerance = 1e-5)
 })
 
 
 test_that("calc_share_heat_supply_by_ff_group",{
 
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
+  
+  # Loading data
+  tidy_AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    IEATools::specify_all() %>%
+    ECCTools::specify_elect_heat_renewables() %>%
+    ECCTools::specify_elect_heat_fossil_fuels() %>%
+    ECCTools::specify_elect_heat_nuclear() %>%
+    ECCTools::specify_other_elec_heat_production() %>%
+    ECCTools::specify_elect_heat_markets() %>%
+    IEATools::add_psut_matnames() %>%
+    ECCTools::stat_diffs_to_balancing() %>%
+    ECCTools::stock_changes_to_balancing()
+  
+  
+  # FIRST, WE TEST THE DTA APPROACH
+  
+  # Calculating total use of each product
+  tidy_AB_dta <- tidy_AB_data %>%
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE)
+  
+  res_dta <- tidy_AB_dta %>%
+    calc_share_heat_supply_by_ff_group()
 
-
+  # Country A
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.8)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1454545, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1454545, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.6545455, tolerance = 1e-5)
+  
+  # Country B
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.6)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.5294118, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.5294118, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.07058824, tolerance = 1e-5)
+  
+  
+  # SECOND, WE TEST THE GMA APPROACH
+  
+  tidy_AB_data_gma <- tidy_AB_data %>%
+    ECCTools::transform_to_gma()
+  
+  tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+    dplyr::mutate(
+      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+        stringr::str_remove("\\{") %>% 
+        stringr::str_remove("\\}"),
+      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    )
+  
+  res_gma <- tidy_AB_data_gma_prepared %>% 
+    calc_share_heat_supply_by_ff_group()
+  
+  # Country A
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.8)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1454545, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1454545, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.6545455, tolerance = 1e-4)
+  
+  # Country B
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.6)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.5294118, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.5294118, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.07058824, tolerance = 1e-5)
 })
 
 

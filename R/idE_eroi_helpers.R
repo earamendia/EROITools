@@ -576,7 +576,7 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
     )
   
   
-  # Figuring out elec consumption by fossil fuel group:
+  # Figuring out heat consumption by fossil fuel group:
   heat_consumption_by_ff_group <- .tidy_iea_df %>%
     dplyr::filter(
       (.data[[matnames]] %in% list_use_mats & (stringr::str_detect(.data[[product]], "Heat")))
