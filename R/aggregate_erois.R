@@ -94,7 +94,6 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 
   
   ### (3) Determining average primary stage EROIs (so, aggregating) from here
-  
   aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
     dplyr::inner_join(.tidy_erois_df %>%
                         dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
