@@ -28,7 +28,7 @@ test_that("aggregate_primary_stage_erois works",{
   
   tidy_io_AB_dta <- tidy_AB_data %>% 
     IEATools::prep_psut() %>% 
-    Recca::calc_io_mats()
+    Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
   
   tidy_AB_erois_dta <- tidy_io_AB_dta %>% 
     Recca::calc_E_EIOU() %>% 
@@ -56,23 +56,23 @@ test_that("aggregate_primary_stage_erois works",{
   res_dta %>% 
     dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Type == "Gross", Boundary == "Feedstock") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(35.53828, tolerance = 1e-4)
+    expect_equal(34.97828, tolerance = 1e-4)
   res_dta %>% 
     dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Type == "Gross", Boundary == "Feedstock") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(43.50542, tolerance = 1e-4)
+    expect_equal(42.89933, tolerance = 1e-4)
   res_dta %>% 
     dplyr::filter(Country == "A", Product.Group == "Coal products", Type == "Gross", Boundary == "All") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(92.56202851, tolerance = 1e-4)
+    expect_equal(92.54219032, tolerance = 1e-4)
   res_dta %>% 
     dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Type == "Gross", Boundary == "All") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(33.81819, tolerance = 1e-4)
+    expect_equal(33.27742, tolerance = 1e-4)
   res_dta %>% 
     dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Type == "Gross", Boundary == "All") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(41.25661, tolerance = 1e-4)
+    expect_equal(40.6743, tolerance = 1e-4)
   
   
   # SECOND, WE TEST THE GMA APPROACH
@@ -112,7 +112,6 @@ test_that("aggregate_primary_stage_erois works",{
   res_gma %>% 
     dplyr::filter(Country == "B") %>% nrow() %>%
     expect_equal(0)
-  
   res_gma %>% 
     dplyr::filter(Country == "A", Product.Group == "Coal products", Type == "Gross", Boundary == "Feedstock") %>% 
     magrittr::extract2("Group.eroi") %>% 
@@ -120,23 +119,23 @@ test_that("aggregate_primary_stage_erois works",{
   res_gma %>% 
     dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Type == "Gross", Boundary == "Feedstock") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(35.53828, tolerance = 1e-4)
+    expect_equal(34.97828, tolerance = 1e-4)
   res_gma %>% 
     dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Type == "Gross", Boundary == "Feedstock") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(43.50542, tolerance = 1e-4)
+    expect_equal(42.89933, tolerance = 1e-4)
   res_gma %>% 
     dplyr::filter(Country == "A", Product.Group == "Coal products", Type == "Gross", Boundary == "All") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(92.56202851, tolerance = 1e-4)
+    expect_equal(88.4716400, tolerance = 1e-4)
   res_gma %>% 
     dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Type == "Gross", Boundary == "All") %>% 
     magrittr::extract2("Group.eroi") %>% 
-  expect_equal(33.81819, tolerance = 1e-4)
+  expect_equal(33.09121, tolerance = 1e-4)
   res_gma %>% 
     dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Type == "Gross", Boundary == "All") %>% 
     magrittr::extract2("Group.eroi") %>% 
-    expect_equal(41.25661, tolerance = 1e-4)
+    expect_equal(40.24497, tolerance = 1e-4)
 })
 
 

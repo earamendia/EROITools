@@ -55,8 +55,9 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                           group.eroi = "Group.eroi",
                                           energy.stage = "Energy.stage",
                                           product_without_origin = "product_without_origin",
-                                          eroi_calc_method = "dta"){
+                                          eroi_calc_method = c("dta", "gma")){
   
+  eroi_calc_method <- match.arg(eroi_calc_method)
   
   ### (1) Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
   # which will be equal to "product" when we are not using a MR-PSUT framework
@@ -123,8 +124,6 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
     
     return(aggregated_primary_stage_erois)
     
-  } else {
-    stop("The eroi calculation method should be either dta or gma.")
   }
 }
 
