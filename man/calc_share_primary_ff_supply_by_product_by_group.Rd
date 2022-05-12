@@ -22,7 +22,6 @@ calc_share_primary_ff_supply_by_product_by_group(
   year = IEATools::iea_cols$year,
   unit = IEATools::iea_cols$unit,
   product = IEATools::iea_cols$product,
-  boolean_non_energy_uses = "Boolean_Non_Energy_Uses",
   product_without_origin = "product_without_origin"
 )
 }

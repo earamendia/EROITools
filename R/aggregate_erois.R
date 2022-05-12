@@ -7,7 +7,6 @@
 #'
 #' @param .tidy_erois_df 
 #' @param .tidy_iea_df 
-#' @param include_non_energy_uses 
 #' @param primary_production_mats 
 #' @param list_primary_oil_products 
 #' @param list_primary_coal_products 
@@ -19,7 +18,6 @@
 #' @param last_stage 
 #' @param year 
 #' @param product 
-#' @param non_energy_uses 
 #' @param eroi.method 
 #' @param type 
 #' @param boundary 
@@ -35,8 +33,6 @@
 #' @examples
 aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                           .tidy_iea_df,
-                                          # Whether you want to include non-energy uses products in the EROI calculation
-                                          include_non_energy_uses = FALSE,
                                           # Which matrices flows to use for calculating shares
                                           primary_production_mats = c(IEATools::psut_cols$V),
                                           # Lists defining each product group
@@ -51,7 +47,6 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                           last_stage = IEATools::iea_cols$last_stage,
                                           year = IEATools::iea_cols$year,
                                           product = IEATools::iea_cols$product,
-                                          non_energy_uses = "Non_Energy_Uses",
                                           eroi.method = "Eroi.method",
                                           type = "Type",
                                           boundary = "Boundary",
@@ -59,7 +54,8 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                           eroi = "EROI",
                                           group.eroi = "Group.eroi",
                                           energy.stage = "Energy.stage",
-                                          product_without_origin = "product_without_origin"){
+                                          product_without_origin = "product_without_origin",
+                                          eroi_calc_method = "dta"){
   
   
   ### (1) Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
@@ -86,7 +82,6 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
   ### (2) Calculating tidy shares by product at the primary stage ###
   # Group also includes "All fossil fuels".
   tidy_shares_primary_df <- calc_share_primary_ff_supply_by_product_by_group(.tidy_iea_df,
-                                                                             include_non_energy_uses = include_non_energy_uses,
                                                                              primary_production_mats = primary_production_mats,
                                                                              list_primary_oil_products = list_primary_oil_products,
                                                                              list_primary_coal_products = list_primary_coal_products,
@@ -94,20 +89,43 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 
   
   ### (3) Determining average primary stage EROIs (so, aggregating) from here
-  aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
-    dplyr::inner_join(.tidy_erois_df %>%
-                        dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                    .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
-    dplyr::summarise(
-      Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
-    ) %>% 
-    dplyr::mutate(
-      "{group.eroi}" := 1 / Group.eroi.inversed
-    ) %>% 
-    dplyr::select(-Group.eroi.inversed)
-  
-  return(aggregated_primary_stage_erois)
+  if (eroi_calc_method == "dta"){
+    
+    aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
+      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+                      .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[product.group]], .data[[energy.stage]]) %>%
+      dplyr::summarise(
+        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+      ) %>% 
+      dplyr::mutate(
+        "{group.eroi}" := 1 / Group.eroi.inversed
+      ) %>% 
+      dplyr::select(-Group.eroi.inversed)
+    
+    return(aggregated_primary_stage_erois)
+    
+  } else if (eroi_calc_method == "gma"){
+    
+    aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
+      #dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::inner_join(.tidy_erois_df %>%
+                          dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+                      .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[product.group]], .data[[energy.stage]]) %>%
+      dplyr::summarise(
+        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+      ) %>% 
+      dplyr::mutate(
+        "{group.eroi}" := 1 / Group.eroi.inversed
+      ) %>% 
+      dplyr::select(-Group.eroi.inversed)
+    
+    return(aggregated_primary_stage_erois)
+    
+  } else {
+    stop("The eroi calculation method should be either dta or gma.")
+  }
 }
 
 

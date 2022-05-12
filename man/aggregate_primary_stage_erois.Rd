@@ -7,7 +7,6 @@
 aggregate_primary_stage_erois(
   .tidy_erois_df,
   .tidy_iea_df,
-  include_non_energy_uses = FALSE,
   primary_production_mats = c(IEATools::psut_cols$V),
   list_primary_oil_products = IEATools::primary_oil_products,
   list_primary_coal_products = IEATools::primary_coal_products,
@@ -19,7 +18,6 @@ aggregate_primary_stage_erois(
   last_stage = IEATools::iea_cols$last_stage,
   year = IEATools::iea_cols$year,
   product = IEATools::iea_cols$product,
-  non_energy_uses = "Non_Energy_Uses",
   eroi.method = "Eroi.method",
   type = "Type",
   boundary = "Boundary",
@@ -27,15 +25,14 @@ aggregate_primary_stage_erois(
   eroi = "EROI",
   group.eroi = "Group.eroi",
   energy.stage = "Energy.stage",
-  product_without_origin = "product_without_origin"
+  product_without_origin = "product_without_origin",
+  eroi_calc_method = "dta"
 )
 }
 \arguments{
 \item{.tidy_erois_df}{}
 
 \item{.tidy_iea_df}{}
-
-\item{include_non_energy_uses}{}
 
 \item{primary_production_mats}{}
 
@@ -58,8 +55,6 @@ aggregate_primary_stage_erois(
 \item{year}{}
 
 \item{product}{}
-
-\item{non_energy_uses}{}
 
 \item{eroi.method}{}
 
