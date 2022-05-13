@@ -30,7 +30,8 @@ aggregate_useful_stage_erois(
   useful_stage_eroi = "Useful_Stage_EROI",
   group.eroi = "Group.eroi",
   energy.stage = "Energy.stage",
-  product_without_origin = "product_without_origin"
+  product_without_origin = "product_without_origin",
+  eroi_calc_method = c("dta", "gma")
 )
 }
 \arguments{

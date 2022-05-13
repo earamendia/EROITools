@@ -491,62 +491,113 @@ test_that("aggregate_useful_stage_erois works",{
     dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
     dplyr::distinct() %>% 
     dplyr::mutate(
-      Average_Efficiency_Global = seq(0, 1, 1/(length_to_use-1))
+      Average_Efficiency_Global = seq(0.15, 1, 0.85/(length_to_use-1))
+    ) %>% 
+    # Making sure one product efficiency is zero, but only one.
+    dplyr::mutate(
+      Average_Efficiency_Global = dplyr::case_when(
+        Product == "Heat [from Coal products]" ~ 0,
+        TRUE ~ Average_Efficiency_Global
+      )
     )
   
-  #tidy_useful_erois_dta <- 
+  tidy_useful_erois_dta <- tidy_AB_erois_dta %>% 
+    dplyr::left_join(tidy_FU_efficiencies_dta,
+                     by = c("Country", "Method", "Energy.type", "Year", "Product")) %>%
+    dplyr::mutate(
+      Useful_Stage_EROI = Average_Efficiency_Global * EROI
+    ) %>% 
+    dplyr::filter(! is.na(Useful_Stage_EROI))
   
+  # Calculating aggregated EROIs:
+  res_dta <- aggregate_useful_stage_erois(
+    .tidy_erois_df = tidy_useful_erois_dta,
+    .tidy_iea_df = tidy_AB_dta,
+    eroi_calc_method = "dta"
+  )
+      
+  
+  # Testing:
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      
+  
+  # SECOND, WE TEST THE GMA APPROACH
+  
+  tidy_AB_data_gma <- tidy_AB_data %>%
+    ECCTools::transform_to_gma()
+  
+  # Calculates IO mats - GMA
+  tidy_io_AB_gma <- tidy_AB_data_gma %>% 
+    IEATools::prep_psut() %>% 
+    Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+  
+  # Calculates tidy IO erois - GMA
+  tidy_AB_erois_gma <- tidy_io_AB_gma %>% 
+    Recca::calc_E_EIOU() %>% 
+    Recca::calc_erois() %>% 
+    EROITools::extract_tidy_product_erois() %>% 
+    dplyr::mutate(
+      Eroi.method = "DTA"
+    ) %>% 
+    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+  
+  # Prepare GMA data frame for shares calculations
+  tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+    dplyr::mutate(
+      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+        stringr::str_remove("\\{") %>% 
+        stringr::str_remove("\\}"),
+      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    )
+  
+  # Pushing to tidy useful stage EROIs
+  length_to_use <- tidy_AB_erois_gma %>% 
+    dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+    dplyr::distinct() %>% 
+    nrow()
+  
+  tidy_FU_efficiencies_gma <- tidy_AB_erois_gma %>% 
+    dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+    dplyr::distinct() %>% 
+    dplyr::mutate(
+      Average_Efficiency_Global = seq(0.15, 1, 0.85/(length_to_use-1))
+    ) %>% 
+    # Making sure one product efficiency is zero, but only one.
+    dplyr::mutate(
+      Average_Efficiency_Global = dplyr::case_when(
+        Product == "{A}_Heat [from Coal products]" ~ 0,
+        TRUE ~ Average_Efficiency_Global
+      )
+    ) %>% 
+    print()
+  
+  tidy_useful_erois_gma <- tidy_AB_erois_gma %>% 
+    dplyr::left_join(tidy_FU_efficiencies_gma,
+                     by = c("Country", "Method", "Energy.type", "Year", "Product")) %>%
+    dplyr::mutate(
+      Useful_Stage_EROI = Average_Efficiency_Global * EROI
+    ) %>% 
+    dplyr::filter(! is.na(Useful_Stage_EROI))
+  
+  # Calculating aggregated EROIs:
+  res_gma <- aggregate_useful_stage_erois(
+    .tidy_erois_df = tidy_useful_erois_gma,
+    .tidy_iea_df = tidy_AB_data_gma_prepared,
+    eroi_calc_method = "gma"
+  )
     
-    
-    
-    
-    
-    # Calculating useful stage EROIs for each product
-    # useful_erois_df <- tidy_io_global_erois_df %>% 
-    # dplyr::left_join(FU_global_efficiencies_df, 
-    #                  by = c("Country", "Method", "Energy.type", "Year", "Product")) %>% 
-    # dplyr::mutate(
-    #   Useful_Stage_EROI = EROI * .data[[Average_Efficiency_Col]]
-    # ) %>% 
-    # # This should get rid of "RoW" rows for national level calcs.
-    # dplyr::filter(! is.na(Useful_Stage_EROI))
-  
-  
-  
-  # Adapt national IO erois to add a product without origin column
-  # tidy_national_io_erois_adapted <- tidy_io_national_erois_df %>% 
-  #   dplyr::mutate(product_without_origin = stringr::str_remove(Product, "\\{.*\\}_")) %>% 
-  #   dplyr::select(-Country)
-  
-  # Calculates tidy_national_useful_stage_erois
-  # tidy_national_useful_stage_erois <- FU_national_efficiencies_df %>%
-  #   dplyr::rename(product_without_origin = Product) %>% 
-  #   dplyr::left_join(
-  #     tidy_national_io_erois_adapted,
-  #     by = c("Method", "Energy.type", "Year", "product_without_origin")
-  #   ) %>% 
-  #   dplyr::mutate(
-  #     Useful_Stage_EROI = Average_Efficiency_By_Country * EROI
-  #   ) %>% 
-  #   dplyr::select(-product_without_origin)
-  
-  
-  
-  
-  # res_dta <- aggregate_useful_stage_erois(
-  #   .tidy_erois_df = tidy_AB_erois_dta,
-  #   .tidy_iea_df = tidy_AB_dta#,
-  #   #eroi_calc_method = "dta"
-  # )
-
 })
-
-
-
-
-
-
-
-
 
 
