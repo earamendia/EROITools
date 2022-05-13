@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_supply_use.R
 \name{calc_primary_products_supply_by_group}
 \alias{calc_primary_products_supply_by_group}
-\title{Calculates primary energy supply for the coal products and oil and gas products group}
+\title{Calculates primary energy supply for each fossil fuel group}
 \usage{
 calc_primary_products_supply_by_group(
   .tidy_iea_df,
@@ -63,8 +63,8 @@ Default is "product_without_origin".}
 A tidy data frame returning the total primary energy supply by fossil fuel group.
 }
 \description{
-The function calculates primary energy supply for the coal products and oil and gas products group. It does not disaggregate
-the oil and gas products group because they are jointly extracted, so it is not robust to separate them in EROI calculations,
-at least from the IEA data we use here.
+The function calculates primary energy supply for each primary stage fossil fuel group (coal products, oil and gas products, all fossil fuels).
+It does not disaggregate the oil and gas products group because they are jointly extracted, so it is not robust to separate them
+in EROI calculations, at least from the IEA data we use here.
 By default, it uses flows in the V matrix and selects primary energy products to determine primary energy production flows.
 }

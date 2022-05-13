@@ -79,7 +79,7 @@ Default is "product_without_origin".}
 A tidy data frame indicating the final energy use for each product group.
 }
 \description{
-This function calculates the use of energy products by group for coal products, oil products, natural gas, and oil and gas products.
+This function calculates the use of energy products by group for each fossil fuel group.
 The matrices containing energy use flows can be specified in the \code{total_use_mats} argument.
 By default, these matrices are U_EIOU and Y, and excludes energy flows used as feedstock.
 Exports and losses are also excluded from the total energy use. See details for more explanations.

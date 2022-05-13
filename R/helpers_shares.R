@@ -258,11 +258,11 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
   share_ff_use_by_product_by_group <- calc_all_products_use_by_group(.tidy_iea_df,
                                                                      include_non_energy_uses = include_non_energy_uses,
                                                                      final_use_mats = final_use_mats) %>%
-    dplyr::bind_rows(
-      share_ff_use_by_product <- calc_ff_use(.tidy_iea_df,
-                                             include_non_energy_uses = include_non_energy_uses,
-                                             final_use_mats = final_use_mats)
-    ) %>% 
+    # dplyr::bind_rows(
+    #   share_ff_use_by_product <- calc_ff_use(.tidy_iea_df,
+    #                                          include_non_energy_uses = include_non_energy_uses,
+    #                                          final_use_mats = final_use_mats)
+    # ) %>% 
     dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group}, {energy.stage})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],

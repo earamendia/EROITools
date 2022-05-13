@@ -7,8 +7,3 @@ EROITools improvements to do:
 * calc_share_primary_ff_supply_by_product_by_group function
 	-> First and second steps can be conducted together with appropriate expand_grid and filter strategy
 
-* Merge calc_primary_products_supply_by_group and calc_primary_ff_supply together. Then adapt calc_share_primary_ff_supply_by_product_by_group function accordingly
-
-* Add calc_ff_use() function to calc_all_products_use_by_group() function and change calc_share_ff_use_by_product_by_group() accordingly. However, don't delete calc_ff_use() function, because we still need it in other places. Actually not sure about this, check it out...
-
-
