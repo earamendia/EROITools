@@ -117,10 +117,10 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
   share_primary_ff_supply_by_product_by_group <- calc_primary_products_supply_by_group(.tidy_iea_df,
                                                                                        primary_production_mats = primary_production_mats) %>%
     # Ideally, this here should be merged back within calc_primary_products_supply_by_group() function, too.
-    dplyr::bind_rows(
-      calc_primary_ff_supply(.tidy_iea_df,
-                             primary_production_mats = primary_production_mats)
-    ) %>% 
+    # dplyr::bind_rows(
+    #   calc_primary_ff_supply(.tidy_iea_df,
+    #                          primary_production_mats = primary_production_mats)
+    # ) %>% 
     dplyr::left_join(supply_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group}, {energy.stage})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_supply]] / .data[[total_group_supply]]

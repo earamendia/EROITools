@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_supply_use.R
 \name{calc_ff_use}
 \alias{calc_ff_use}
-\title{Calculates total final fossil fuel energy use}
+\title{Calculates total primary fossil fuel energy supply}
 \usage{
 calc_ff_use(
   .tidy_iea_df,
@@ -73,18 +73,46 @@ Default is "Energy.stage".}
 \item{product_without_origin}{Column name containing the name of the product excluding the country of origin.
 Helpful for doing calculations with Global Market Assumption.
 Default is "product_without_origin".}
+
+\item{primary_production_mats}{A list containing the names of matrices containing primary production flows.
+Default is \code{c(IEATools::psut_cols$V)}.}
+
+\item{list_primary_oil_products}{A list containing the names of primary oil products.
+Default is \code{IEATools::primary_oil_products}.}
+
+\item{list_primary_coal_products}{A list containing the names of primary coal products.
+Default is \verb{IEATools::primary_coal_products,}.}
+
+\item{list_primary_gas_products}{A list containing the names of primary gas products.
+Default is \verb{IEATools::primary_gas_products,}.}
+
+\item{total_group_supply}{Column name containing total energy use by product group.
+Default is "Total_Group_Supply".}
 }
 \value{
+A tidy data frame with the total fossil fuel primary energy supply for each observation (country, year, method, last stage).
+
 A tidy data frame with the total final fossil fuel energy use for each observation (country, year, method, last stage).
 }
 \description{
-This function calculates total final fossil energy use for each observation (country, year, method, last stage).
-By default, the matrices used to calculate final fossil energy use flows are \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.
-It excludes losses and exports from the calculation.
+The function calculates total fossil fuel primary energy supply for each observation (country, year, method, last stage).
+By default, it uses flows in the V matrix and selects primary energy products to determine primary energy production flows.
 }
 \details{
 The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
 or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
 will have to be slightly adapted in this case.
-Non-energy use flows can be included or excluded from the calculations using the \code{include_non_energy_uses} boolean.
+}
+\examples{
+Calculates total final fossil fuel energy use 
+
+This function calculates total final fossil energy use for each observation (country, year, method, last stage).
+By default, the matrices used to calculate final fossil energy use flows are `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+It excludes losses and exports from the calculation.
+
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case.
+Non-energy use flows can be included or excluded from the calculations using the `include_non_energy_uses` boolean.
+
 }

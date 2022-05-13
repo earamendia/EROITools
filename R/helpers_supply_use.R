@@ -190,7 +190,7 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
     )
   
   # Calculating primary energy supply by product group:
-  to_return <- .tidy_iea_df %>%
+  to_return_supply_by_group <- .tidy_iea_df %>%
     dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
     dplyr::filter(matnames %in% primary_production_mats) %>%
     dplyr::mutate(
@@ -204,6 +204,26 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
                     .data[[energy.stage]], .data[[unit]]) %>%
     dplyr::summarise("{total_group_supply}" := sum(.data[[e_dot]]))
+  
+  # Calculating and returning total primary energy supply for all fossil fuels together
+  to_return_total_ff_supply <- .tidy_iea_df %>%
+    dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
+    dplyr::filter(matnames %in% primary_production_mats) %>%
+    dplyr::mutate(
+      "{product.group}" := "All fossil fuels",
+      "{energy.stage}" := "Primary",
+      "{e_dot}" := abs(.data[[e_dot]])
+    ) %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
+                    .data[[energy.stage]], .data[[unit]]) %>%
+    dplyr::summarise(
+      "{total_group_supply}" := sum(.data[[e_dot]])
+    )
+  
+  to_return <- dplyr::bind_rows(
+    to_return_supply_by_group,
+    to_return_total_ff_supply
+  )
   
   return(to_return)
 }
@@ -441,56 +461,56 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-calc_primary_ff_supply <- function(.tidy_iea_df,
-                                   primary_production_mats = c(IEATools::psut_cols$V),
-                                   list_primary_oil_products = IEATools::primary_oil_products,
-                                   list_primary_coal_products = IEATools::primary_coal_products,
-                                   list_primary_gas_products = IEATools::primary_gas_products,
-                                   country = IEATools::iea_cols$country,
-                                   method = IEATools::iea_cols$method,
-                                   energy_type = IEATools::iea_cols$energy_type,
-                                   last_stage = IEATools::iea_cols$last_stage,
-                                   year = IEATools::iea_cols$year,
-                                   product = IEATools::iea_cols$product,
-                                   unit = IEATools::iea_cols$unit,
-                                   flow = IEATools::iea_cols$flow,
-                                   e_dot = IEATools::iea_cols$e_dot,
-                                   matnames = IEATools::mat_meta_cols$matnames,
-                                   product.group = "Product.Group",
-                                   total_group_supply = "Total_Group_Supply",
-                                   energy.stage = "Energy.stage",
-                                   product_without_origin = "product_without_origin"){
-  
-  ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
-  # which will be equal to "product" when we are not using a MR-PSUT framework
-  cols_to_check <- c(product_without_origin = NA_character_)
-  
-  .tidy_iea_df <- .tidy_iea_df %>%
-    tibble::add_column(!!!cols_to_check[!names(cols_to_check) %in% names(.)]) %>%
-    dplyr::mutate(
-      "{product_without_origin}" := dplyr::case_when(
-        is.na(.data[[product_without_origin]]) ~ .data[[product]],
-        TRUE ~ .data[[product_without_origin]]
-      )
-    )
-  
-  # Calculating and returning total primary energy supply for all fossil fuels together
-  to_return <- .tidy_iea_df %>%
-    dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
-    dplyr::filter(matnames %in% primary_production_mats) %>%
-    dplyr::mutate(
-      "{product.group}" := "All fossil fuels",
-      "{energy.stage}" := "Primary",
-      "{e_dot}" := abs(.data[[e_dot]])
-    ) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
-                    .data[[energy.stage]], .data[[unit]]) %>%
-    dplyr::summarise(
-      "{total_group_supply}" := sum(.data[[e_dot]])
-    )
-    
-    return(to_return)
-}
+# calc_primary_ff_supply <- function(.tidy_iea_df,
+#                                    primary_production_mats = c(IEATools::psut_cols$V),
+#                                    list_primary_oil_products = IEATools::primary_oil_products,
+#                                    list_primary_coal_products = IEATools::primary_coal_products,
+#                                    list_primary_gas_products = IEATools::primary_gas_products,
+#                                    country = IEATools::iea_cols$country,
+#                                    method = IEATools::iea_cols$method,
+#                                    energy_type = IEATools::iea_cols$energy_type,
+#                                    last_stage = IEATools::iea_cols$last_stage,
+#                                    year = IEATools::iea_cols$year,
+#                                    product = IEATools::iea_cols$product,
+#                                    unit = IEATools::iea_cols$unit,
+#                                    flow = IEATools::iea_cols$flow,
+#                                    e_dot = IEATools::iea_cols$e_dot,
+#                                    matnames = IEATools::mat_meta_cols$matnames,
+#                                    product.group = "Product.Group",
+#                                    total_group_supply = "Total_Group_Supply",
+#                                    energy.stage = "Energy.stage",
+#                                    product_without_origin = "product_without_origin"){
+#   
+#   ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
+#   # which will be equal to "product" when we are not using a MR-PSUT framework
+#   cols_to_check <- c(product_without_origin = NA_character_)
+#   
+#   .tidy_iea_df <- .tidy_iea_df %>%
+#     tibble::add_column(!!!cols_to_check[!names(cols_to_check) %in% names(.)]) %>%
+#     dplyr::mutate(
+#       "{product_without_origin}" := dplyr::case_when(
+#         is.na(.data[[product_without_origin]]) ~ .data[[product]],
+#         TRUE ~ .data[[product_without_origin]]
+#       )
+#     )
+#   
+#   # Calculating and returning total primary energy supply for all fossil fuels together
+#   to_return <- .tidy_iea_df %>%
+#     dplyr::filter(.data[[product_without_origin]] %in% c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)) %>%
+#     dplyr::filter(matnames %in% primary_production_mats) %>%
+#     dplyr::mutate(
+#       "{product.group}" := "All fossil fuels",
+#       "{energy.stage}" := "Primary",
+#       "{e_dot}" := abs(.data[[e_dot]])
+#     ) %>%
+#     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]],
+#                     .data[[energy.stage]], .data[[unit]]) %>%
+#     dplyr::summarise(
+#       "{total_group_supply}" := sum(.data[[e_dot]])
+#     )
+#     
+#     return(to_return)
+# }
 
 
 #' Calculates total final fossil fuel energy use 

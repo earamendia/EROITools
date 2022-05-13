@@ -21,8 +21,8 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
   total_output_per_group <- dplyr::bind_rows(
     calc_primary_products_supply_by_group(.tidy_iea_df,
                                           include_non_energy_uses = include_non_energy_uses),
-    calc_primary_ff_supply(.tidy_iea_df,
-                           include_non_energy_uses = include_non_energy_uses),
+    # calc_primary_ff_supply(.tidy_iea_df,
+    #                        include_non_energy_uses = include_non_energy_uses),
     calc_fec_from_ff_by_group(.tidy_iea_df,
                               include_non_energy_uses = include_non_energy_uses) %>%
       dplyr::rename(Total_Group_Use = E.dot)

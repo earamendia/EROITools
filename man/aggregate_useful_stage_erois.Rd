@@ -9,7 +9,6 @@ aggregate_useful_stage_erois(
   .tidy_iea_df,
   include_non_energy_uses = FALSE,
   final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
-  primary_production_mats = c(IEATools::psut_cols$V),
   list_primary_oil_products = IEATools::primary_oil_products,
   list_primary_coal_products = IEATools::primary_coal_products,
   list_primary_gas_products = IEATools::primary_gas_products,
