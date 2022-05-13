@@ -329,7 +329,6 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
                                          include_non_energy_uses = FALSE,
                                          # Which matrices flows to use for calculating shares
                                          final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
-                                         primary_production_mats = c(IEATools::psut_cols$V),
                                          # Lists defining each product group
                                          list_primary_oil_products = IEATools::primary_oil_products,
                                          list_primary_coal_products = IEATools::primary_coal_products,

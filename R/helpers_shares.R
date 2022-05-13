@@ -310,7 +310,8 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
                                          unit = IEATools::iea_cols$unit,
                                          product = IEATools::iea_cols$product,
                                          e.dot = IEATools::iea_cols$e_dot,
-                                         product_without_origin = "product_without_origin"){
+                                         product_without_origin = "product_without_origin",
+                                         non_energy_uses = "Non_Energy_Uses"){
   
   ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
   # which will be equal to "product" when we are not using a MR-PSUT framework
@@ -349,7 +350,10 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
       "{share}" := .data[[e.dot]] / sum(.data[[e.dot]])
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]])
+    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::mutate(
+      "{non_energy_uses}" := "Excluded"
+    )
   
   # Shares for the "Oil and gas products" group
   shares_electricity_by_ff_group <- .tidy_iea_df %>%
@@ -380,7 +384,10 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::filter(.data[[product.group]] != "Coal products") %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]])
+    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::mutate(
+      "{non_energy_uses}" := "Excluded"
+    )
   
   # Shares for the "Coal products", "Oil products", and "Natural gas" groups
   shares_electricity_by_ff_group_2 <- .tidy_iea_df %>%
@@ -399,7 +406,10 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
         TRUE ~ .data[[country]]
       )
     ) %>%
-    dplyr::distinct()
+    dplyr::distinct() %>% 
+    dplyr::mutate(
+      "{non_energy_uses}" := "Excluded"
+    )
   
   
   shares_to_return <- dplyr::bind_rows(
@@ -447,7 +457,8 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
                                          unit = IEATools::iea_cols$unit,
                                          product = IEATools::iea_cols$product,
                                          e.dot = IEATools::iea_cols$e_dot,
-                                         product_without_origin = "product_without_origin"){
+                                         product_without_origin = "product_without_origin",
+                                         non_energy_uses = "Non_Energy_Uses"){
   
   ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
   # which will be equal to "product" when we are not using a MR-PSUT framework
@@ -486,7 +497,10 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
       "{share}" := .data[[e.dot]] / sum(.data[[e.dot]])
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]])
+    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::mutate(
+      "{non_energy_uses}" := "Excluded"
+    )
   
   # Shares for the "Oil and gas products" group
   shares_heat_by_ff_group <- .tidy_iea_df %>%
@@ -517,7 +531,10 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::filter(.data[[product.group]] != "Coal products") %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]])
+    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::mutate(
+      "{non_energy_uses}" := "Excluded"
+    )
   
   # Shares for the "Coal products", "Oil products", and "Natural gas" groups
   shares_heat_by_ff_group_2 <- .tidy_iea_df %>%
@@ -536,7 +553,10 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
         TRUE ~ .data[[country]]
       )
     ) %>%
-    dplyr::distinct()
+    dplyr::distinct() %>% 
+    dplyr::mutate(
+      "{non_energy_uses}" := "Excluded"
+    )
   
   # Binding shares before returning
   shares_to_return <- dplyr::bind_rows(

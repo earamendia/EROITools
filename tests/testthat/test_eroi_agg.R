@@ -141,13 +141,307 @@ test_that("aggregate_primary_stage_erois works",{
 
 
 
-
-
-
-
-
 test_that("aggregate_final_stage_erois works",{
+
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
+
+  # Loading data
+  tidy_AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    IEATools::specify_all() %>%
+    ECCTools::specify_elect_heat_renewables() %>%
+    ECCTools::specify_elect_heat_fossil_fuels() %>%
+    ECCTools::specify_elect_heat_nuclear() %>%
+    ECCTools::specify_other_elec_heat_production() %>%
+    ECCTools::specify_elect_heat_markets() %>%
+    IEATools::add_psut_matnames() %>%
+    ECCTools::stat_diffs_to_balancing() %>%
+    ECCTools::stock_changes_to_balancing()
+
+
+  # FIRST, WE TEST THE DTA APPROACH
+
+  # Calculating total use of each product
+  tidy_AB_dta <- tidy_AB_data %>%
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE)
+
+
+  tidy_io_AB_dta <- tidy_AB_data %>%
+    IEATools::prep_psut() %>%
+    Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+
+  tidy_AB_erois_dta <- tidy_io_AB_dta %>%
+    Recca::calc_E_EIOU() %>%
+    Recca::calc_erois() %>%
+    EROITools::extract_tidy_product_erois() %>%
+    dplyr::mutate(
+      Eroi.method = "DTA"
+    ) %>%
+    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+
+  res_dta <- aggregate_final_stage_erois(
+    .tidy_erois_df = tidy_AB_erois_dta,
+    .tidy_iea_df = tidy_AB_dta,
+    eroi_calc_method = "dta"
+  )
+
+  # Testing
+  res_dta %>%
+    dplyr::filter(is.na(Non_Energy_Uses)) %>% nrow() %>%
+    expect_equal(0)
+
+  # Coal products:
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(10.08925, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(10.82847, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(30.87759814, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(32.52233141, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(30.87759814, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(32.52233141, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(20.25395, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(21.53792, tolerance = 1e-4)
+  # Oil products
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(9.069165, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "All") %>%
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(9.069165, tolerance = 1e-4)
+  # Natural gas
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(31.86586777, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(21.46704485, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(20.52142131, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(26.54106, tolerance = 1e-4)
+  # Oil and gas products
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(10.13798, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(21.46704485, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(20.52142131, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(11.56725, tolerance = 1e-4)
+  # All fossil fuels
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(10.89826, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(28.28256, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(28.28256, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(14.27844, tolerance = 1e-4)
+  # Couple of checks Country B:
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(3.813338, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "B", Product.Group == "Natural gas", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(Inf, tolerance = 1e-4)
+
   
+  # SECOND, WE TEST THE GMA APPROACH
+  
+  tidy_AB_data_gma <- tidy_AB_data %>%
+    ECCTools::transform_to_gma()
+  
+  tidy_io_AB_gma <- tidy_AB_data_gma %>% 
+    IEATools::prep_psut() %>% 
+    Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+  
+  tidy_AB_erois_gma <- tidy_io_AB_gma %>% 
+    Recca::calc_E_EIOU() %>% 
+    Recca::calc_erois() %>% 
+    EROITools::extract_tidy_product_erois() %>% 
+    dplyr::mutate(
+      Eroi.method = "DTA"
+    ) %>% 
+    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+  
+  tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+    dplyr::mutate(
+      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+        stringr::str_remove("\\{") %>% 
+        stringr::str_remove("\\}"),
+      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    )
+  
+  res_gma <- aggregate_final_stage_erois(
+    .tidy_erois_df = tidy_AB_erois_gma,
+    .tidy_iea_df = tidy_AB_data_gma_prepared,
+    eroi_calc_method = "gma"
+  )
+  
+  
+  # Coal products:
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(2.9828, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(26.6218962, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(24.1777691, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(8.607592, tolerance = 1e-4)
+  
+  
+  # Oil products
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(9.0404289, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(9.0404289, tolerance = 1e-4)
+  # Natural gas
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(31.6920549, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(21.4670449, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(20.3968628, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(26.54106, tolerance = 1e-4)
+  # Oil and gas products
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(10.10477, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(21.4670449, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(20.3968628, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(11.56725, tolerance = 1e-4)
+  # All fossil fuels
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(8.079494, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (electricity)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(23.38949, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (heat)", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(23.38949, tolerance = 1e-4)
+  res_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel+elec+heat)", Type == "Gross", Boundary == "Feedstock") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(10.84909, tolerance = 1e-4)
+  
+  
+  # Couple of checks Country B:
+  res_gma %>%
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "All") %>%
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(3.306948, tolerance = 1e-4)
+  res_gma %>%
+    dplyr::filter(Country == "B", Product.Group == "Natural gas", Energy.stage == "Final (fuel)", Type == "Gross", Boundary == "Feedstock") %>%
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(33.5426180, tolerance = 1e-4)
+})
+
+
+
+test_that("aggregate_useful_stage_erois works",{
+
   # Path to dummy AB data
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
   
@@ -173,28 +467,30 @@ test_that("aggregate_final_stage_erois works",{
                                select_dta_observations = FALSE)
   
   
-  tidy_io_AB_dta <- tidy_AB_data %>% 
-    IEATools::prep_psut() %>% 
+  tidy_io_AB_dta <- tidy_AB_data %>%
+    IEATools::prep_psut() %>%
     Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
   
-  tidy_AB_erois_dta <- tidy_io_AB_dta %>% 
-    Recca::calc_E_EIOU() %>% 
-    Recca::calc_erois() %>% 
-    EROITools::extract_tidy_product_erois() %>% 
+  tidy_AB_erois_dta <- tidy_io_AB_dta %>%
+    Recca::calc_E_EIOU() %>%
+    Recca::calc_erois() %>%
+    EROITools::extract_tidy_product_erois() %>%
     dplyr::mutate(
       Eroi.method = "DTA"
-    ) %>% 
+    ) %>%
     dplyr::relocate(.data[["Eroi.method"]], .after = Year)
   
-  res_dta <- aggregate_final_stage_erois(
+  
+  
+  res_dta <- aggregate_useful_stage_erois(
     .tidy_erois_df = tidy_AB_erois_dta,
-    .tidy_iea_df = tidy_AB_dta,
-    eroi_calc_method = "dta"
+    .tidy_iea_df = tidy_AB_dta#,
+    #eroi_calc_method = "dta"
   )
-  
-  
-  
-  
+
+
+
+
 })
 
 
@@ -203,11 +499,6 @@ test_that("aggregate_final_stage_erois works",{
 
 
 
-test_that("aggregate_useful_stage_erois works",{
-  
-  
-  
-  
-  
-  
-})
+
+
+

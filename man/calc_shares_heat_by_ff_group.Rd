@@ -19,7 +19,8 @@ calc_shares_heat_by_ff_group(
   unit = IEATools::iea_cols$unit,
   product = IEATools::iea_cols$product,
   e.dot = IEATools::iea_cols$e_dot,
-  product_without_origin = "product_without_origin"
+  product_without_origin = "product_without_origin",
+  non_energy_uses = "Non_Energy_Uses"
 )
 }
 \arguments{

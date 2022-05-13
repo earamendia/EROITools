@@ -27,7 +27,8 @@ aggregate_final_stage_erois(
   eroi = "EROI",
   group.eroi = "Group.eroi",
   energy.stage = "Energy.stage",
-  product_without_origin = "product_without_origin"
+  product_without_origin = "product_without_origin",
+  eroi_calc_method = c("dta", "gma")
 )
 }
 \arguments{

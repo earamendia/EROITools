@@ -227,7 +227,11 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
     final_ff_energy_excl_elec_heat_1,
     final_ff_energy_excl_elec_heat_2,
     final_ff_energy_excl_elec_heat_3
-  )
+  ) %>% 
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[product.group]], .data[[energy.stage]]) %>% 
+    dplyr::summarise(
+      "{e_dot}" := sum(abs(.data[[e_dot]]))
+    )
   
   return(final_ff_energy_excl_elec_heat)
 }
