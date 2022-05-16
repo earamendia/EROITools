@@ -518,18 +518,96 @@ test_that("aggregate_useful_stage_erois works",{
       
   
   # Testing:
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (fuel)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(1.542919, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (fuel)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(4.658814, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (fuel)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(5.227826, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (fuel)", Boundary == "Feedstock", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(18.75901967, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel)", Boundary == "Feedstock", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(4.019568, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (electricity)", Boundary == "Feedstock", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(9.99760558, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (electricity)", Boundary == "All", Type == "Gross") %>% 
+    nrow() %>% expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (electricity)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(6.95448166, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (electricity)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(6.95448166, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (electricity)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(9.360662, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (heat)", Boundary == "Feedstock", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(0, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (heat)", Boundary == "All", Type == "Gross") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (heat)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(8.89261590, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (heat)", Boundary == "Feedstock", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(9.30238610, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (heat)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(1, tolerance = 1e-4)
+# Actual value is 0 this is an issue.... think about it.
+  # res_dta %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (fuel+elec+heat)", Boundary == "All", Type == "Gross") %>% 
+  #   magrittr::extract2("Group.eroi") %>% 
+  #   expect_equal(, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (fuel+elec+heat)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(4.658814, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (fuel+elec+heat)", Boundary == "Feedstock", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(5.785075, tolerance = 1e-4)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (fuel+elec+heat)", Boundary == "All", Type == "Gross") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(10.37702, tolerance = 1e-4)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel+elec+heat)", Boundary == "All", Type == "Gross") %>% 
+  #   magrittr::extract2("Group.eroi") %>% 
+  #   expect_equal(, tolerance = 1e-4)
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  # Couple of checks Country B:
+  res_dta %>%
+    dplyr::filter(Country == "B", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel)", Type == "Gross", Boundary == "All") %>%
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(2.85176, tolerance = 1e-4)
+  res_dta %>%
+    dplyr::filter(Country == "B", Product.Group == "Natural gas", Energy.stage == "Useful (fuel)", Type == "Gross", Boundary == "Feedstock") %>%
+    magrittr::extract2("Group.eroi") %>%
+    expect_equal(Inf, tolerance = 1e-4)
       
   
   # SECOND, WE TEST THE GMA APPROACH
