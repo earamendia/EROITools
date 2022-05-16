@@ -94,13 +94,7 @@ test_that("aggregate_primary_stage_erois works",{
     dplyr::relocate(.data[["Eroi.method"]], .after = Year)
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- aggregate_primary_stage_erois(
     .tidy_erois_df = tidy_AB_erois_gma,
@@ -323,13 +317,7 @@ test_that("aggregate_final_stage_erois works",{
     dplyr::relocate(.data[["Eroi.method"]], .after = Year)
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- aggregate_final_stage_erois(
     .tidy_erois_df = tidy_AB_erois_gma,
@@ -623,13 +611,7 @@ test_that("aggregate_useful_stage_erois works",{
   
   # Prepare GMA data frame for shares calculations
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   # Pushing to tidy useful stage EROIs
   length_to_use <- tidy_AB_erois_gma %>% 
@@ -642,15 +624,7 @@ test_that("aggregate_useful_stage_erois works",{
     dplyr::distinct() %>% 
     dplyr::mutate(
       Average_Efficiency_Global = seq(0.15, 1, 0.85/(length_to_use-1))
-    ) #%>% 
-    # Making sure one product efficiency is zero, but only one.
-    # dplyr::mutate(
-    #   Average_Efficiency_Global = dplyr::case_when(
-    #     Product == "{A}_Heat [from Coal products]" ~ 0,
-    #     TRUE ~ Average_Efficiency_Global
-    #   )
-    # ) %>% 
-    # print()
+    )
   
   tidy_useful_erois_gma <- tidy_AB_erois_gma %>% 
     dplyr::left_join(tidy_FU_efficiencies_gma,

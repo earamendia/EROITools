@@ -89,13 +89,14 @@ test_that("calc_total_use_by_product works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
+    # dplyr::mutate(
+    #   Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+    #     stringr::str_remove("\\{") %>% 
+    #     stringr::str_remove("\\}"),
+    #   Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+    #   product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    # )
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_total_use_by_product()
@@ -263,13 +264,14 @@ test_that("calc_primary_products_supply_by_group works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
+    # dplyr::mutate(
+    #   Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+    #     stringr::str_remove("\\{") %>% 
+    #     stringr::str_remove("\\}"),
+    #   Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+    #   product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    # )
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_primary_products_supply_by_group()
@@ -387,13 +389,14 @@ test_that("calc_all_products_use_by_group works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
+    # dplyr::mutate(
+    #   Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+    #     stringr::str_remove("\\{") %>% 
+    #     stringr::str_remove("\\}"),
+    #   Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+    #   product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    # )
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_all_products_use_by_group()

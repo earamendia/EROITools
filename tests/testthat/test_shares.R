@@ -72,13 +72,14 @@ test_that("calc_share_primary_ff_supply_by_product_by_group works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
+    # dplyr::mutate(
+    #   Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+    #     stringr::str_remove("\\{") %>% 
+    #     stringr::str_remove("\\}"),
+    #   Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+    #   product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    # )
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_share_primary_ff_supply_by_product_by_group()
@@ -257,13 +258,14 @@ test_that("calc_share_ff_use_by_product_by_group works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
+    # dplyr::mutate(
+    #   Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+    #     stringr::str_remove("\\{") %>% 
+    #     stringr::str_remove("\\}"),
+    #   Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+    #   product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    # )
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_share_ff_use_by_product_by_group()
@@ -443,13 +445,7 @@ test_that("calc_share_ff_use_by_product_by_group works",{
       ECCTools::transform_to_gma()
     
     tidy_AB_data_non_energy_gma_adapted <- tidy_AB_data_non_energy_gma %>% 
-      dplyr::mutate(
-        Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-          stringr::str_remove("\\{") %>% 
-          stringr::str_remove("\\}"),
-        Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-        product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-      )
+      prepare_gma_for_shares()
     
     res_gma_inc_non_energy_uses <- tidy_AB_data_non_energy_gma_adapted %>% 
       calc_share_ff_use_by_product_by_group(include_non_energy_uses = TRUE)
@@ -566,13 +562,8 @@ test_that("calc_shares_elec_by_ff_group works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
+
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_shares_elec_by_ff_group()
@@ -687,13 +678,7 @@ test_that("calc_shares_heat_by_ff_group works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_shares_heat_by_ff_group()
@@ -887,13 +872,7 @@ test_that("calc_shares_ff_by_group_inc_elec_heat works",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_shares_ff_by_group_inc_elec_heat()

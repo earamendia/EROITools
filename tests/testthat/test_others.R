@@ -106,13 +106,7 @@ test_that("calc_fec_from_ff_as_elec_by_group",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_fec_from_ff_as_elec_by_group()
@@ -254,13 +248,7 @@ test_that("calc_share_elec_supply_by_ff_group",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_share_elec_supply_by_ff_group()
@@ -401,13 +389,7 @@ test_that("calc_fec_from_ff_as_heat_by_group",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_fec_from_ff_as_heat_by_group()
@@ -558,13 +540,7 @@ test_that("calc_share_heat_supply_by_ff_group",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_share_heat_supply_by_ff_group()
@@ -697,13 +673,7 @@ test_that("calc_fec_from_ff_by_group",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_fec_from_ff_by_group()
@@ -836,13 +806,7 @@ test_that("calc_fec_from_ff_as_fuel_by_group",{
     ECCTools::transform_to_gma()
   
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% 
-        stringr::str_remove("\\}"),
-      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
-      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
-    )
+    prepare_gma_for_shares()
   
   res_gma <- tidy_AB_data_gma_prepared %>% 
     calc_fec_from_ff_as_fuel_by_group()
