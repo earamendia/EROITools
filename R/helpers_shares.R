@@ -838,3 +838,36 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
   # Returning values:
   return(share_ff_use_by_product)
 }
+
+
+#' Prepares tidy iea data frame with Global Market Assumption for shares calculations
+#' 
+#' This function prepares a tidy iea data frame following the Global Market Assumption for the calculation
+#' of shares of product use within each fossil fuel group. To do this, the country of location is removed from each flow,
+#' and is relocated in the country column, and a column of product without origin is added to the data frame.
+#'
+#' @param .tidy_iea_df The tidy iea data frame with Global Market Assumption that needs to be prepared for shares calculation.
+#' @param country,flow See `IEATools::iea_cols`.
+#' @param product_without_origin The name of the column containing the product names without the country of production.
+#'
+#' @return A tidy data frame with Global Market Assumption ready for shares calculations.
+#' @export
+#'
+#' @examples
+prepare_gma_for_shares <- function(.tidy_iea_df,
+                                   country = IEATools::iea_cols$country,
+                                   flow = IEATools::iea_cols$flow,
+                                   product_without_origin = "product_without_origin"){
+  
+  to_return <- .tidy_iea_df %>% 
+    dplyr::mutate(
+      "{country}" := stringr::str_extract(.data[[flow]], "\\{.*\\}") %>% 
+        stringr::str_remove("\\{") %>% 
+        stringr::str_remove("\\}"),
+      "{flow}" := stringr::str_remove(.data[[flow]], "\\{.*\\}_"),
+      "{product_without_origin}" := stringr::str_remove(.data[[product]], "\\{.*\\}_")
+    )
+  
+  return(to_return)
+}
+
