@@ -1028,3 +1028,48 @@ test_that("calc_shares_ff_by_group_inc_elec_heat works",{
     dplyr::filter(Country == "B", Product == "{A}_Kerosene type jet fuel excl. biofuels", Product.Group == "Oil and gas products") %>% 
     nrow() %>% expect_equal(0)
 })
+
+
+
+test_that("prepare_gma_for_shares function works",{
+  
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
+  
+  # Loading data
+  tidy_AB_data <- A_B_path %>% 
+    IEATools::load_tidy_iea_df() %>% 
+    IEATools::specify_all() %>% 
+    ECCTools::specify_elect_heat_renewables() %>% 
+    ECCTools::specify_elect_heat_fossil_fuels() %>% 
+    ECCTools::specify_elect_heat_nuclear() %>% 
+    ECCTools::specify_other_elec_heat_production() %>% 
+    ECCTools::specify_elect_heat_markets() %>% 
+    IEATools::add_psut_matnames() %>% 
+    ECCTools::stat_diffs_to_balancing() %>% 
+    ECCTools::stock_changes_to_balancing()
+  
+  # Converting to gma:
+  tidy_AB_data_gma <- tidy_AB_data %>%
+    ECCTools::transform_to_gma()
+  
+  # Plain code version of df:
+  tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+    dplyr::mutate(
+      Country = stringr::str_extract(Flow, "\\{.*\\}") %>% 
+        stringr::str_remove("\\{") %>% 
+        stringr::str_remove("\\}"),
+      Flow = stringr::str_remove(Flow, "\\{.*\\}_"),
+      product_without_origin = stringr::str_remove(Product, "\\{.*\\}_"),
+    )
+  
+  # Function version of df:
+  tidy_AB_data_gma_prepared_bis <- prepare_gma_for_shares(tidy_AB_data_gma)
+  
+  # Comparing and expecting the same df:
+  expect_true(all(tidy_AB_data_gma_prepared == tidy_AB_data_gma_prepared_bis))
+})
+
+
+
+
