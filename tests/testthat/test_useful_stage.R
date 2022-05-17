@@ -82,6 +82,36 @@ test_that("push_to_useful_erois works",{
     magrittr::extract2("Useful_Stage_EROI") %>% 
     expect_equal(7.274943, tolerance = 1e-3)
   
+  # Check what happens if two end uses:
+  tidy_FU_efficiencies_dta_end_uses <- tidy_FU_efficiencies_dta %>% 
+    expand_grid(End_Use = c("EU1", "EU2", "EU3"))
+  
+  tidy_useful_erois_dta_end_uses <- push_to_useful_erois(
+    .tidy_io_erois = tidy_AB_erois_dta,
+    tidy_FU_efficiencies = tidy_FU_efficiencies_dta_end_uses,
+    eroi_calc_method = "dta"
+  )
+  
+  expect_equal(tidy_useful_erois_dta_with_function %>% nrow() * 3,
+               tidy_useful_erois_dta_end_uses %>% nrow())
+  
+  tidy_useful_erois_dta_end_uses %>% 
+    dplyr::filter(Country == "A", Product == "Blast furnace gas", Type == "Gross", Boundary == "All", End_Use == "EU1") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(1.342899763, tolerance = 1e-3)
+  tidy_useful_erois_dta_end_uses %>% 
+    dplyr::filter(Country == "A", Product == "Electricity [from Natural gas]", Type == "Gross", Boundary == "Feedstock", End_Use == "EU1") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(7.274943, tolerance = 1e-3)
+  tidy_useful_erois_dta_end_uses %>% 
+    dplyr::filter(Country == "A", Product == "Electricity [from Natural gas]", Type == "Gross", Boundary == "Feedstock", End_Use == "EU2") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(7.274943, tolerance = 1e-3)
+  tidy_useful_erois_dta_end_uses %>% 
+    dplyr::filter(Country == "A", Product == "Electricity [from Natural gas]", Type == "Gross", Boundary == "Feedstock", End_Use == "EU3") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(7.274943, tolerance = 1e-3)
+  
   
   # SECOND, WE TEST THE GMA APPROACH
   
@@ -165,6 +195,34 @@ test_that("push_to_useful_erois works",{
     expect_equal(1.873112, tolerance = 1e-4)
   tidy_useful_erois_gma_with_function %>% 
     dplyr::filter(Country == "B", Product == "{B}_Blast furnace gas", Type == "Gross", Boundary == "All") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(0.919706, tolerance = 1e-4)
+  
+  # With end uses:
+  tidy_FU_efficiencies_gma_end_uses <- tidy_FU_efficiencies_gma %>% 
+    expand_grid(End_Use = c("EU1", "EU2", "EU3"))
+  
+  tidy_useful_erois_gma_end_uses <- push_to_useful_erois(
+    .tidy_io_erois = tidy_AB_erois_gma,
+    tidy_FU_efficiencies = tidy_FU_efficiencies_gma_end_uses,
+    eroi_calc_method = "gma"
+  )
+  
+  # Check couple of values:
+  tidy_useful_erois_gma_end_uses %>% 
+    dplyr::filter(Country == "A", Product == "{A}_Blast furnace gas", Type == "Gross", Boundary == "All", End_Use == "EU1") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(0.4350455, tolerance = 1e-4)
+  tidy_useful_erois_gma_end_uses %>% 
+    dplyr::filter(Country == "A", Product == "{B}_Blast furnace gas", Type == "Gross", Boundary == "All", End_Use == "EU2") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(0.2136091, tolerance = 1e-4)
+  tidy_useful_erois_gma_end_uses %>% 
+    dplyr::filter(Country == "B", Product == "{A}_Blast furnace gas", Type == "Gross", Boundary == "All", End_Use == "EU3") %>% 
+    magrittr::extract2("Useful_Stage_EROI") %>% 
+    expect_equal(1.873112, tolerance = 1e-4)
+  tidy_useful_erois_gma_end_uses %>% 
+    dplyr::filter(Country == "B", Product == "{B}_Blast furnace gas", Type == "Gross", Boundary == "All", End_Use == "EU1") %>% 
     magrittr::extract2("Useful_Stage_EROI") %>% 
     expect_equal(0.919706, tolerance = 1e-4)
 })
