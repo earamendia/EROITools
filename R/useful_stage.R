@@ -34,6 +34,18 @@ push_to_useful_erois <- function(.tidy_io_erois,
   eroi_calc_method <- match.arg(eroi_calc_method)
   
   if (eroi_calc_method == "dta"){
+    # Bind and calculate useful stage EROIs:
+    tidy_useful_erois <- .tidy_io_erois %>% 
+      dplyr::left_join(
+        tidy_FU_efficiencies,
+        by = c({country}, {method}, {energy_type}, {year}, {product})
+      ) %>% 
+      dplyr::mutate(
+        "{useful_stage_eroi}" := .data[[eroi]] * .data[[average_efficiency]]
+      ) %>% 
+      dplyr::filter(! is.na(.data[[useful_stage_eroi]]))
+    
+  } else if (eroi_calc_method == "gma"){
     # Adapt EROI data frame to add a product without origin column:
     tidy_io_erois_adapted <- .tidy_io_erois %>% 
       dplyr::mutate(
@@ -41,27 +53,16 @@ push_to_useful_erois <- function(.tidy_io_erois,
       ) %>% 
       dplyr::select(-.data[[country]])
     
-    # Bind and calculate useful stage EROIs:
+    # Calculate useful stage EROIs data frame
     tidy_useful_erois <- tidy_FU_efficiencies %>% 
       dplyr::rename(
         "{product_without_origin}" := .data[[product]]
       ) %>% 
-      dplyr::left_join(
-        tidy_io_erois_adapted,
-        by = c({method}, {energy_type}, {year}, {product_without_origin})
-      ) %>% 
+      dplyr::left_join(tidy_io_erois_adapted, by = c({method}, {energy_type}, {year}, {product_without_origin})) %>% 
       dplyr::mutate(
         "{useful_stage_eroi}" := .data[[eroi]] * .data[[average_efficiency]]
       ) %>% 
-      dplyr::select(-.data[[product_without_origin]])
-    
-  } else if (eroi_calc_method == "gma"){
-    # Calculate useful stage EROIs data frame
-    tidy_useful_erois <- .tidy_io_erois %>% 
-      dplyr::left_join(tidy_FU_efficiencies, by = c({country}, {method}, {energy_type}, {year}, {product})) %>% 
-      dplyr::mutate(
-        "{useful_stage_eroi}" := .data[[eroi]] * .data[[average_efficiency]]
-      ) %>% 
+      dplyr::select(-.data[[product_without_origin]]) %>% 
       dplyr::filter(! is.na(.data[[useful_stage_eroi]]))
   }
   
