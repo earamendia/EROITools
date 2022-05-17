@@ -239,6 +239,9 @@ test_that("calc_avg_efficiency_by_ff_group works",{
       Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
     )
   
+  # NEED TO ADAPT ECC FOR SHARES CALCULATIONS!!
+  
+  
   
   
 })

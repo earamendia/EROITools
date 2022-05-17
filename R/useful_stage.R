@@ -135,6 +135,8 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
                                             group.eroi = "Group.eroi",
                                             energy.stage = "Energy.stage",
                                             product_without_origin = "product_without_origin",
+                                            average_efficiency = "Average_Efficiency_Col",
+                                            aggregated_efficiency = "Aggregated_Efficiency",
                                             calc_method = c("dta", "gma")){
   
   ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
@@ -204,22 +206,46 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
     tidy_shares_final_elec_df,
     tidy_shares_final_heat_df,
     tidy_shares_ff_by_group_inc_elec_heat
-  )
+  ) #%>%
+    #dplyr::select(-Last.stage, -Unit, -Total_Group_Use, -product_without_origin, -Total_Product_Use, -Non_Energy_Uses)
+  
+  
+  # %>% 
+  #   dplyr::ungroup() %>% 
+  #   dplyr::select(-Total_Product_Use, -Total_Group_Use, -Non_Energy_Uses, -product_without_origin, -Unit, -Last.stage) %>% 
+  #   dplyr::mutate(
+  #     Product = stringr::str_remove(Product, "\\{.*\\}_")
+  #   )
   
   
   ### Big second step - Determining average FU efficiencies from there ###
   
   if (calc_method == "dta"){
     
-    average_FU_efficiencies <- 1
-    
+    average_FU_efficiencies <- tidy_shares_df %>% 
+      dplyr::ungroup() %>% 
+      # Those joins that fail are primary energy products
+      # which are systematically ascribed to non-energy uses in the PFU database.
+      # very careful here is this changes in the future in the PFU database....!
+      dplyr::inner_join(.tidy_efficiencies_df, by = c({country}, {method}, {energy_type}, {year}, {product})) %>% 
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[energy.stage]], .data[[year]], .data[[product.group]]) %>% 
+      dplyr::summarise(
+        "{aggregated_efficiency}" := sum(.data[[share]] * .data[[average_efficiency]]) / sum(.data[[share]])
+      )
     
   } else if (calc_method == "gma"){
     
-    average_FU_efficiencies <- 2
-    
+    average_FU_efficiencies <- tidy_shares_df %>% 
+      dplyr::ungroup() %>% 
+      # Those joins that fail are primary energy products
+      # which are systematically ascribed to non-energy uses in the PFU database.
+      # very careful here is this changes in the future in the PFU database....!
+      dplyr::inner_join(.tidy_efficiencies_df, by = c({country}, {method}, {energy_type}, {year}, {product})) %>% 
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[energy.stage]], .data[[year]], .data[[product.group]])
+      dplyr::summarise(
+        "{aggregated_efficiency}" := sum(.data[[share]] * .data[[average_efficiency]]) / sum(.data[[share]])
+      )
   }
-  
   return(average_FU_efficiencies)
 }
 
