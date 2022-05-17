@@ -84,7 +84,7 @@ test_that("push_to_useful_erois works",{
   
   # Check what happens if two end uses:
   tidy_FU_efficiencies_dta_end_uses <- tidy_FU_efficiencies_dta %>% 
-    expand_grid(End_Use = c("EU1", "EU2", "EU3"))
+    tidyr::expand_grid(End_Use = c("EU1", "EU2", "EU3"))
   
   tidy_useful_erois_dta_end_uses <- push_to_useful_erois(
     .tidy_io_erois = tidy_AB_erois_dta,
@@ -200,7 +200,7 @@ test_that("push_to_useful_erois works",{
   
   # With end uses:
   tidy_FU_efficiencies_gma_end_uses <- tidy_FU_efficiencies_gma %>% 
-    expand_grid(End_Use = c("EU1", "EU2", "EU3"))
+    tidyr::expand_grid(End_Use = c("EU1", "EU2", "EU3"))
   
   tidy_useful_erois_gma_end_uses <- push_to_useful_erois(
     .tidy_io_erois = tidy_AB_erois_gma,
