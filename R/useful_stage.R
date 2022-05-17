@@ -206,16 +206,10 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
     tidy_shares_final_elec_df,
     tidy_shares_final_heat_df,
     tidy_shares_ff_by_group_inc_elec_heat
-  ) #%>%
-    #dplyr::select(-Last.stage, -Unit, -Total_Group_Use, -product_without_origin, -Total_Product_Use, -Non_Energy_Uses)
-  
-  
-  # %>% 
-  #   dplyr::ungroup() %>% 
-  #   dplyr::select(-Total_Product_Use, -Total_Group_Use, -Non_Energy_Uses, -product_without_origin, -Unit, -Last.stage) %>% 
-  #   dplyr::mutate(
-  #     Product = stringr::str_remove(Product, "\\{.*\\}_")
-  #   )
+  ) %>% 
+    dplyr::mutate(
+      "{product_without_origin}" := stringr::str_remove(.data[[product]], "\\{.*\\}_")
+    )
   
   
   ### Big second step - Determining average FU efficiencies from there ###
@@ -250,9 +244,4 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
   }
   return(average_FU_efficiencies)
 }
-
-
-
-
-
 
