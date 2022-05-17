@@ -31,6 +31,8 @@ calc_avg_efficiency_by_ff_group(
   group.eroi = "Group.eroi",
   energy.stage = "Energy.stage",
   product_without_origin = "product_without_origin",
+  average_efficiency = "Average_Efficiency_Col",
+  aggregated_efficiency = "Aggregated_Efficiency",
   calc_method = c("dta", "gma")
 )
 }

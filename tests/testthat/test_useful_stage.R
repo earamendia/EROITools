@@ -195,24 +195,111 @@ test_that("calc_avg_efficiency_by_ff_group works",{
   
   # FIRST, WE TEST THE DTA APPROACH
   
-  # Calculating total use of each product
   tidy_AB_dta <- tidy_AB_data %>%
     ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
                                select_dta_observations = FALSE)
   
-  
-  length_to_use <- tidy_AB_erois_dta %>% 
+  # Building efficiencies data frame:
+  length_to_use <- tidy_AB_data %>% 
     dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
     dplyr::distinct() %>% 
     nrow()
   
-  tidy_FU_efficiencies_dta <- tidy_AB_erois_dta %>% 
+  tidy_FU_efficiencies <- tidy_AB_data %>% 
     dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
     dplyr::distinct() %>% 
     dplyr::mutate(
       Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
     )
   
+  # Calculating aggregated efficiencies
+  aggregated_efficiencies_dta <- calc_avg_efficiency_by_ff_group(
+    .tidy_efficiencies_df = tidy_FU_efficiencies,
+    .tidy_iea_df = tidy_AB_dta,
+    calc_method = "dta"
+  )
+  
+  # Testing:
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.1825334, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2419002, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2787879, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2473364, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2365364, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5363636, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (electricity)") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5621212, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5621212, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5410463, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.5878788, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (heat)") %>%
+    nrow() %>% 
+    expect_equal(0)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.6136364, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.6136364, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.5925614, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.4485493, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.2419002, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.4130826, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.283935, tolerance = 1e-4)
+  aggregated_efficiencies_dta %>%
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.3514432, tolerance = 1e-4)
   
   
   # SECOND, WE TEST THE GMA APPROACH
@@ -222,33 +309,109 @@ test_that("calc_avg_efficiency_by_ff_group works",{
   
   # Prepare GMA data frame for shares calculations
   # Pushing to tidy useful stage EROIs
-  length_to_use <- tidy_AB_erois_gma %>% 
-    dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
-    dplyr::distinct() %>% 
-    nrow()
+  # length_to_use <- tidy_AB_data %>% 
+  #   dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+  #   dplyr::distinct() %>% 
+  #   nrow()
+  # 
+  # tidy_FU_efficiencies_gma <- tidy_AB_data %>% 
+  #   dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+  #   dplyr::distinct() %>% 
+  #   dplyr::mutate(
+  #     Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
+  #   ) %>% 
+  #   print()
   
-  tidy_FU_efficiencies_gma <- tidy_AB_erois_gma %>% 
-    dplyr::mutate(
-      Country = stringr::str_extract(Product, "\\{.*\\}") %>% 
-        stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
-      Product = stringr::str_remove(Product, "\\{.*\\}_")
-    ) %>% 
-    dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
-    dplyr::distinct() %>% 
-    dplyr::mutate(
-      Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
-    )
+  # Adapting ECC for shares calculations:
+  tidy_AB_data_gma_prepared <- prepare_gma_for_shares(tidy_AB_data_gma)
   
-  # NEED TO ADAPT ECC FOR SHARES CALCULATIONS!!
+  # Calculating aggregated efficiencies
+  aggregated_efficiencies_gma <- calc_avg_efficiency_by_ff_group(
+    .tidy_efficiencies_df = tidy_FU_efficiencies,
+    .tidy_iea_df = tidy_AB_data_gma_prepared,
+    calc_method = "gma"
+  )
   
-  
-  
-  
+  # Testing:
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.1825334, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2419002, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2787879, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2473364, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.2365364, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5363636, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (electricity)") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5621212, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5621212, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (electricity)") %>% 
+    magrittr::extract2("Aggregated_Efficiency") %>% 
+    expect_equal(0.5410463, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.5878788, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (heat)") %>%
+    nrow() %>% 
+    expect_equal(0)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.6136364, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.6136364, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.5925614, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Coal products", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.4485493, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil products", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.2419002, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Natural gas", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.4130826, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.283935, tolerance = 1e-4)
+  aggregated_efficiencies_gma %>%
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel+elec+heat)") %>%
+    magrittr::extract2("Aggregated_Efficiency") %>%
+    expect_equal(0.3514432, tolerance = 1e-4)
 })
-
-
-
-
-
-
 
