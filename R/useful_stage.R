@@ -16,6 +16,7 @@
 #' @param useful_stage_eroi The name of the column containing the useful stage EROI values.
 #'                          Default is "Useful_Stage_EROI".
 #' @param eroi_calc_method The calculation method being used, either DTA if working on single country, or GMA if working with a multi-regional framework.
+#'                         Default is "dta".
 #'
 #' @return The `.tidy_io_erois` data frame with useful stage EROIs added.
 #' @export
@@ -74,37 +75,40 @@ push_to_useful_erois <- function(.tidy_io_erois,
 
 
 
-#' Title
+#' Calculates average final-to-useful efficiency by fossil fuel group
+#' 
+#' This function calculates the average final-to-useful efficiencies for each fossil fuel group using the average efficiency of each energy product
+#' and the shares of use of each energy product within each fossil fuel group.
 #'
-#' @param .tidy_efficiencies_df 
-#' @param .tidy_iea_df 
-#' @param include_non_energy_uses 
-#' @param final_use_mats 
-#' @param list_primary_oil_products 
-#' @param list_primary_coal_products 
-#' @param list_primary_gas_products 
-#' @param list_oil_products 
-#' @param list_coal_products 
-#' @param list_gas_products 
-#' @param product.group 
-#' @param country 
-#' @param method 
-#' @param energy_type 
-#' @param last_stage 
-#' @param year 
-#' @param product 
-#' @param non_energy_uses 
-#' @param eroi.method 
-#' @param type 
-#' @param boundary 
-#' @param share 
-#' @param useful_stage_eroi 
-#' @param group.eroi 
-#' @param energy.stage 
-#' @param product_without_origin 
-#' @param calc_method 
+#' @param .tidy_efficiencies_df The tidy efficiencies data frame which provides the efficiencies to use for each energy product.
+#' @param .tidy_iea_df The `.tidy_iea_df`, from which the shares of use of each energy product will be determined.
+#' @param include_non_energy_uses A boolean stating whether non_energy_uses should be used in the calculation of the use shares of each energy product/
+#'                                Default is FALSE.
+#' @param final_use_mats The list of matrices that should be used for the calculation of the use shares of each energy product.
+#'                       Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_oil_products The list of oil products to use for the calculation of the use shares of each energy product.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products The list of coal products to use for the calculation of the use shares of each energy product.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products The list of gas products to use for the calculation of the use shares of each energy product.
+#'                           Default is `IEATools::primary_gas_products`.
+#' @param product.group The name of the column containing the name of the product group.
+#'                      Default is "Product.Group".
+#' @param country,method,energy_type,last_stage,year,product See `IEATools::iea_cols`.
+#' @param share The name of the column name containing the shares of use of each energy product.
+#'              Default is "Share".
+#' @param useful_stage_eroi The name of the column containing the useful stage EROI.
+#'                          Default is "Useful_Stage_EROI".
+#' @param group.eroi The name of the column containing the group level EROI.
+#'                   Default is "Group.eroi".
+#' @param energy.stage The name of the column containing the energy stage for which the efficiencies are calculated.
+#'                     Default is "Energy.stage".
+#' @param product_without_origin The name of the column containing the product name excluding its origin.
+#'                               Default is "product_without_origin".
+#' @param calc_method The calculation method being used, either DTA if working on single country, or GMA if working with a multi-regional framework.
+#'                    Default is "dta".
 #'
-#' @return
+#' @return A tidy data frame with average final-to-useful efficiencies calculated for each fossil fuel group.
 #' @export
 #'
 #' @examples
@@ -115,9 +119,6 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
                                             # Which matrices flows to use for calculating shares
                                             final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                                             # Lists defining each product group
-                                            list_primary_oil_products = IEATools::primary_oil_products,
-                                            list_primary_coal_products = IEATools::primary_coal_products,
-                                            list_primary_gas_products = IEATools::primary_gas_products,
                                             list_oil_products = IEATools::oil_and_oil_products,
                                             list_coal_products = IEATools::coal_and_coal_products,
                                             list_gas_products = IEATools::primary_gas_products,
@@ -130,9 +131,6 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
                                             year = IEATools::iea_cols$year,
                                             product = IEATools::iea_cols$product,
                                             non_energy_uses = "Non_Energy_Uses",
-                                            eroi.method = "Eroi.method",
-                                            type = "Type",
-                                            boundary = "Boundary",
                                             share = "Share",
                                             useful_stage_eroi = "Useful_Stage_EROI",
                                             group.eroi = "Group.eroi",
