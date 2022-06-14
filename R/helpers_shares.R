@@ -579,24 +579,39 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
 }
 
 
-#' Title
+#' Calculates the share of use of each energy product within each fossil fuel group, including electricity and heat uses
+#' 
+#' This function calculates the share of use of each energy product within each fossil fuel group, 
+#' when including electricity and heat of fossil fuel origin in the calculations.
 #'
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param final_use_mats
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param product.group
-#' @param total_product_use
-#' @param total_group_use
-#' @param non_energy_uses
-#' @param share
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the share of uses should be calculated.
+#' @param include_non_energy_uses A boolean indicating whether non-energy uses should be included in the calculation of the share of uses.
+#'                                Default is FALSE.
+#' @param final_use_mats The list of matrices to be used to calculate the share of uses.
+#'                       Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_oil_products The list of oil products to be used for the shares calculations.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products The list of coal products to be used for the shares calculations.
+#'                          Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products The list of gas products to be used for the shares calculations.
+#'                          Default is `IEATools::primary_gas_products`.
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param total_product_use The name of the column containing the total energy use by product.
+#'                          Default is "Total_Product_Use".
+#' @param total_group_use The name of the column containing the total energy use by fossil fuel group.
+#'                        Default is "Total_Group_Use".
+#' @param non_energy_uses The name of the column stating whether non-energy uses are included in the shares calculations.
+#'                        Default is "Non_Energy_Uses".
+#' @param share The name of the column containing the shares of each fossil fuel within the electricity supply.
+#'              Default is "Share".
 #' @param country,method,energy_type,last_stage,year,unit,e_dot,product See `IEATools::iea_cols`.
-#' @param boolean_non_energy_uses
-#' @param energy.stage
+#' @param boolean_non_energy_uses The column name of a column containing a boolean stating whether non-energy uses are included in the shares calculations.
+#'                                Default is "Boolean_Non_Energy_Uses".
+#' @param energy.stage The name of the column containing the energy stage.
+#'                     Default is "Energy.stage".
 #'
-#' @return
+#' @return A `.tidy_iea_df` with the shares of use of each energy product within each fossil fuel group.
 #' @export
 #'
 #' @examples

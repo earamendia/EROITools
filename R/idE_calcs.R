@@ -1,17 +1,5 @@
 
 
-# Function to add indirect energy
-#' Title
-#'
-#' @param .tidy_summarised_erois_df
-#' @param .tidy_indirect_energy
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#'
-#' @return
-#' @export
-#'
-#' @examples
 add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
                                          .tidy_indirect_energy,
                                          .tidy_iea_df,
