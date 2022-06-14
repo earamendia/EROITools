@@ -1,20 +1,23 @@
 
-#' Title
+#' Push final stage EROIs to useful stage EROIs
+#' 
+#' This function calculates the useful stage EROIs based on the final stage EROIs and on the average final-to-useful efficiencies provided for each energy product.
+#' It also works if the efficiencies are provided by end-use, or by sector - then end-use or sector specific useful stage EROIs are returned.
 #'
-#' @param .tidy_io_erois 
-#' @param tidy_FU_efficiencies 
-#' @param country 
-#' @param method 
-#' @param energy_type 
-#' @param year 
-#' @param product 
-#' @param product_without_origin 
-#' @param average_efficiency 
-#' @param eroi 
-#' @param useful_stage_eroi 
-#' @param eroi_calc_method 
+#' @param .tidy_io_erois The `.tidy_io_erois` data frame for which useful stage EROIs need to be calculated.
+#' @param tidy_FU_efficiencies A tidy data frame containing the final-to-useful efficiencies to use for the calculation of useful stage EROIs.
+#' @param country,method,energy_type,year,product See `IEATools::iea_cols`.
+#' @param product_without_origin The name of the column containing the product name excluding the product origin.
+#'                               Default is "product_without_origin".
+#' @param average_efficiency The name of the column containing the average final-to-useful efficiency to apply to each energy product.
+#'                           Default is "Average_Efficiency_Col".
+#' @param eroi The name of the column containing EROIs.
+#'             Default is "EROI".
+#' @param useful_stage_eroi The name of the column containing the useful stage EROI values.
+#'                          Default is "Useful_Stage_EROI".
+#' @param eroi_calc_method The calculation method being used, either DTA if working on single country, or GMA if working with a multi-regional framework.
 #'
-#' @return
+#' @return The `.tidy_io_erois` data frame with useful stage EROIs added.
 #' @export
 #'
 #' @examples
