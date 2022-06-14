@@ -2,7 +2,7 @@
 % Please edit documentation in R/useful_stage.R
 \name{push_to_useful_erois}
 \alias{push_to_useful_erois}
-\title{Title}
+\title{Push final stage EROIs to useful stage EROIs}
 \usage{
 push_to_useful_erois(
   .tidy_io_erois,
@@ -20,33 +20,31 @@ push_to_useful_erois(
 )
 }
 \arguments{
-\item{.tidy_io_erois}{}
+\item{.tidy_io_erois}{The \code{.tidy_io_erois} data frame for which useful stage EROIs need to be calculated.}
 
-\item{tidy_FU_efficiencies}{}
+\item{tidy_FU_efficiencies}{A tidy data frame containing the final-to-useful efficiencies to use for the calculation of useful stage EROIs.}
 
-\item{country}{}
+\item{country, method, energy_type, year, product}{See \code{IEATools::iea_cols}.}
 
-\item{method}{}
+\item{product_without_origin}{The name of the column containing the product name excluding the product origin.
+Default is "product_without_origin".}
 
-\item{energy_type}{}
+\item{average_efficiency}{The name of the column containing the average final-to-useful efficiency to apply to each energy product.
+Default is "Average_Efficiency_Col".}
 
-\item{year}{}
+\item{eroi}{The name of the column containing EROIs.
+Default is "EROI".}
 
-\item{product}{}
+\item{useful_stage_eroi}{The name of the column containing the useful stage EROI values.
+Default is "Useful_Stage_EROI".}
 
-\item{product_without_origin}{}
-
-\item{average_efficiency}{}
-
-\item{eroi}{}
-
-\item{useful_stage_eroi}{}
-
-\item{eroi_calc_method}{}
+\item{eroi_calc_method}{The calculation method being used, either DTA if working on single country, or GMA if working with a multi-regional framework.
+Default is "dta".}
 }
 \value{
-
+The \code{.tidy_io_erois} data frame with useful stage EROIs added.
 }
 \description{
-Title
+This function calculates the useful stage EROIs based on the final stage EROIs and on the average final-to-useful efficiencies provided for each energy product.
+It also works if the efficiencies are provided by end-use, or by sector - then end-use or sector specific useful stage EROIs are returned.
 }

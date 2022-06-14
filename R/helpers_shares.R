@@ -284,15 +284,20 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
 #' for the two following fossil fuel groups "Oil and gas products", and "All fossil fuels". So it gives the share supplied
 #' by respectively Coal products, Oil products, and Natural gas, in each of those groups. The shares then add up to unity necessarily.
 #'
-#' @param .tidy_iea_df
-#' @param supply_mats_list
-#' @param matnames
-#' @param product.group
-#' @param share
-#' @param energy.stage
+#' @param .tidy_iea_df The name of the `.tidy_iea_df` for which the share of electricity supplied by each fossil fuel need to be calculated.
+#' @param supply_mats_list The list of the supply matrices to be used for calculating the electricity supply mix.
+#'                         Default is `c(IEATools::psut_cols$V)`.
+#' @param matnames The name of the column containing matrices names.
+#'                 Default is "matnames".
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param share The name of the column containing the shares of each fossil fuel within the electricity supply.
+#'              Default is "Share".
+#' @param energy.stage The name of the column containing the energy stage.
+#'                     Default is "Energy.stage".
 #' @param country,method,energy_type,last_stage,year,unit,product,e_dot See `IEATools::iea_cols`.
 #'
-#' @return
+#' @return A `.tidy_iea_df` with the shares of electricity supply specified by fossil fuel group.
 #' @export
 #'
 #' @examples
@@ -431,15 +436,20 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
 #' The plan is then to update this function so it also does the same for the "Coal products", "Oil products", and "Natural gas".
 #' This would be trivial (respectively 1 for Coal products, Oil products, and Natural gas), but it would be very convenient.
 #' 
-#' @param .tidy_iea_df
-#' @param supply_mats_list
-#' @param matnames
-#' @param product.group
-#' @param share
-#' @param energy.stage
+#' @param .tidy_iea_df The name of the `.tidy_iea_df` for which the share of heat supplied by each fossil fuel need to be calculated.
+#' @param supply_mats_list The list of the supply matrices to be used for calculating the heat supply mix.
+#'                         Default is `c(IEATools::psut_cols$V)`.
+#' @param matnames The name of the column containing matrices names.
+#'                 Default is "matnames".
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param share The name of the column containing the shares of each fossil fuel within the electricity supply.
+#'              Default is "Share".
+#' @param energy.stage The name of the column containing the energy stage.
+#'                     Default is "Energy.stage".
 #' @param country,method,energy_type,last_stage,year,unit,product,e_dot See `IEATools::iea_cols`.
 #'
-#' @return
+#' @return A `.tidy_iea_df` with the shares of heat supply specified by fossil fuel group.
 #' @export
 #'
 #' @examples

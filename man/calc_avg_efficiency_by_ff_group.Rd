@@ -2,16 +2,13 @@
 % Please edit documentation in R/useful_stage.R
 \name{calc_avg_efficiency_by_ff_group}
 \alias{calc_avg_efficiency_by_ff_group}
-\title{Title}
+\title{Calculates average final-to-useful efficiency by fossil fuel group}
 \usage{
 calc_avg_efficiency_by_ff_group(
   .tidy_efficiencies_df,
   .tidy_iea_df,
   include_non_energy_uses = FALSE,
   final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
-  list_primary_oil_products = IEATools::primary_oil_products,
-  list_primary_coal_products = IEATools::primary_coal_products,
-  list_primary_gas_products = IEATools::primary_gas_products,
   list_oil_products = IEATools::oil_and_oil_products,
   list_coal_products = IEATools::coal_and_coal_products,
   list_gas_products = IEATools::primary_gas_products,
@@ -23,9 +20,6 @@ calc_avg_efficiency_by_ff_group(
   year = IEATools::iea_cols$year,
   product = IEATools::iea_cols$product,
   non_energy_uses = "Non_Energy_Uses",
-  eroi.method = "Eroi.method",
-  type = "Type",
-  boundary = "Boundary",
   share = "Share",
   useful_stage_eroi = "Useful_Stage_EROI",
   group.eroi = "Group.eroi",
@@ -37,63 +31,52 @@ calc_avg_efficiency_by_ff_group(
 )
 }
 \arguments{
-\item{.tidy_efficiencies_df}{}
+\item{.tidy_efficiencies_df}{The tidy efficiencies data frame which provides the efficiencies to use for each energy product.}
 
-\item{.tidy_iea_df}{}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df}, from which the shares of use of each energy product will be determined.}
 
-\item{include_non_energy_uses}{}
+\item{include_non_energy_uses}{A boolean stating whether non_energy_uses should be used in the calculation of the use shares of each energy product/
+Default is FALSE.}
 
-\item{final_use_mats}{}
+\item{final_use_mats}{The list of matrices that should be used for the calculation of the use shares of each energy product.
+Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}
 
-\item{list_primary_oil_products}{}
+\item{list_oil_products}{The list of oil products to use for the calculation of the use shares of each energy product.
+Default is \code{IEATools::oil_and_oil_products}.}
 
-\item{list_primary_coal_products}{}
+\item{list_coal_products}{The list of coal products to use for the calculation of the use shares of each energy product.
+Default is \code{IEATools::coal_and_coal_products}.}
 
-\item{list_primary_gas_products}{}
+\item{list_gas_products}{The list of gas products to use for the calculation of the use shares of each energy product.
+Default is \code{IEATools::primary_gas_products}.}
 
-\item{list_oil_products}{}
+\item{product.group}{The name of the column containing the name of the product group.
+Default is "Product.Group".}
 
-\item{list_coal_products}{}
+\item{country, method, energy_type, last_stage, year, product}{See \code{IEATools::iea_cols}.}
 
-\item{list_gas_products}{}
+\item{share}{The name of the column name containing the shares of use of each energy product.
+Default is "Share".}
 
-\item{product.group}{}
+\item{useful_stage_eroi}{The name of the column containing the useful stage EROI.
+Default is "Useful_Stage_EROI".}
 
-\item{country}{}
+\item{group.eroi}{The name of the column containing the group level EROI.
+Default is "Group.eroi".}
 
-\item{method}{}
+\item{energy.stage}{The name of the column containing the energy stage for which the efficiencies are calculated.
+Default is "Energy.stage".}
 
-\item{energy_type}{}
+\item{product_without_origin}{The name of the column containing the product name excluding its origin.
+Default is "product_without_origin".}
 
-\item{last_stage}{}
-
-\item{year}{}
-
-\item{product}{}
-
-\item{non_energy_uses}{}
-
-\item{eroi.method}{}
-
-\item{type}{}
-
-\item{boundary}{}
-
-\item{share}{}
-
-\item{useful_stage_eroi}{}
-
-\item{group.eroi}{}
-
-\item{energy.stage}{}
-
-\item{product_without_origin}{}
-
-\item{calc_method}{}
+\item{calc_method}{The calculation method being used, either DTA if working on single country, or GMA if working with a multi-regional framework.
+Default is "dta".}
 }
 \value{
-
+A tidy data frame with average final-to-useful efficiencies calculated for each fossil fuel group.
 }
 \description{
-Title
+This function calculates the average final-to-useful efficiencies for each fossil fuel group using the average efficiency of each energy product
+and the shares of use of each energy product within each fossil fuel group.
 }
