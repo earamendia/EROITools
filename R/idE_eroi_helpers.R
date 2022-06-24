@@ -512,38 +512,45 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
 }
 
 
-# Calculates final energy consumption by fossil fuel group, only when used as heat
-#' Title
+#' Calculates final energy consumption of heat from fossil fuel origin, by fossil fuel group
 #'
-#' @param .tidy_iea_df
-#' @param list_use_mats
-#' @param list_supply_mats
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param exports
-#' @param losses
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param product
-#' @param unit
-#' @param flow
-#' @param e_dot
-#' @param matnames
-#' @param product.group
-#' @param energy.stage
-#' @param share
+#' This function calculates the final energy consumption of heat from fossil fuel origin, by fossil fuel group. It does so by determining 
+#' the total final consumption of heat (from use matrices) and then applying share of heat supplied by each fossil fuel group (determined from supply matrices).
 #'
-#' @return
+#' @param .tidy_iea_df The `.tidy_iea_df` for which final energy consumption of heat by fossil fuel group needs to be determined.
+#' @param list_use_mats The list of matrices to be used for determining total final energy consumption of heat.
+#'                      Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_supply_mats The list of matrices to be used for determining the shares of supply of heat by fossil fuel group.
+#'                         Default is `c(IEATools::psut_cols$V)`.
+#' @param list_oil_products The list of oil products to be used when calculating the use shares.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products The list of coal products to be used when calculating the use shares.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products The list of gas products to be used when calculating the use shares.
+#'                           Default is `IEATools::primary_gas_products`.
+#' @param exports The character string identifying exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param losses The character string identifying losses flows in the `.tidy_iea_df`.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,year,product,unit,flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The name of the column containing the matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#'                     Default is "Energy.stage".
+#' @param share The name of the column containing the shares of supply of heat by fossil fuel group.
+#'              Default is "Share".
+#' @param product_without_origin The name of the column containing the product name excluding the origin of the product.
+#'                               Default is "product_without_origin".
+#'
+#' @return A tidy data frame containing the total final energy consumption of heat, broken down by the supplying fossil fuel group.
 #' @export
 #'
 #' @examples
 calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
                                               list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
-                                              list_supply_mats = "V",
+                                              list_supply_mats = c(IEATools::psut_cols$V),
                                               list_oil_products = IEATools::oil_and_oil_products,
                                               list_coal_products = IEATools::coal_and_coal_products,
                                               list_gas_products = IEATools::primary_gas_products,
