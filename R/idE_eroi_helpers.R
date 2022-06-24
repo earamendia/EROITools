@@ -4,6 +4,10 @@
 #' This function calculates final energy consumption supplied by each fossil fuel group, including in the form of electricity and heat. 
 #' It calculates it using the list of use matrices supplied by the user, and the list of supply matrices to determine the share of supply of electricity and heat
 #' by fossil fuel group.
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function).
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which the final energy consumption supplied by each fossil fuel group needs to be calculated.
 #' @param include_non_energy_uses A boolean indicating whether non-energy uses are included in the calculation of final energy consumption by fossil fuel group.
@@ -111,7 +115,11 @@ calc_fec_from_ff_by_group <- function(.tidy_iea_df,
 #' Calculates final energy consumption of fuel by fossil fuel group
 #' 
 #' This function calculates final energy consumption of fuel (so, excluding electricity and heat), by fossil fuel group. 
-#' It calculates it from the list of use matrices provided.
+#' It calculates it from the list of use matrices provided in the `list_use_mats` argument.
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function)
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which the final energy consumption of fuel by fossil fuel group need to be calculated.
 #' @param include_non_energy_uses A boolean indicating whether the calculated final energy consumption included non-energy uses or not.
@@ -259,7 +267,12 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
 #' Calculates final energy consumption of electricity from fossil fuel origin, by fossil fuel group
 #'
 #' This function calculates the final energy consumption of electricity from fossil fuel origin, by fossil fuel group. It does so by determining 
-#' the total final consumption of electricity (from use matrices) and then applying share of electricity supplied by each fossil fuel group (determined from supply matrices).
+#' the total final consumption of electricity (determined from use matrices provided in `list_use_mats`) and then applying the share of electricity supplied by each fossil fuel group,
+#' which is determined from supply matrices provided in `list_supply_mats`.
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function)
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which final energy consumption of electricity by fossil fuel group needs to be determined.
 #' @param list_use_mats The list of matrices to be used for determining total final energy consumption of electricity.
@@ -384,6 +397,9 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
 #' 
 #' Fossil fuel groups used are "All fossil fuels", "Oil and gas products", "Oil products", "Natural gas", and "Coal products",
 #' so they are obviously not exclusive.
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function)
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which the share of electricity provided by each fossil fuel group needs to be calculated.
 #' @param list_supply_mats The list of the supply matrices to be used for the calculating the shares.
@@ -552,7 +568,12 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
 #' Calculates final energy consumption of heat from fossil fuel origin, by fossil fuel group
 #'
 #' This function calculates the final energy consumption of heat from fossil fuel origin, by fossil fuel group. It does so by determining 
-#' the total final consumption of heat (from use matrices) and then applying share of heat supplied by each fossil fuel group (determined from supply matrices).
+#' the total final consumption of heat (from use matrices `list_use_mats`) and then 
+#' applying share of heat supplied by each fossil fuel group (determined from supply matrices `list_supply_mats`).
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function)
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which final energy consumption of heat by fossil fuel group needs to be determined.
 #' @param list_use_mats The list of matrices to be used for determining total final energy consumption of heat.
@@ -676,6 +697,9 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
 #' 
 #' Fossil fuel groups used are "All fossil fuels", "Oil and gas products", "Oil products", "Natural gas", and "Coal products",
 #' so they are obviously not exclusive.
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function)
 #' 
 #' @param .tidy_iea_df The `.tidy_iea_df` for which the share of heat provided by each fossil fuel group needs to be calculated.
 #' @param list_supply_mats The list of the supply matrices to be used for the calculating the shares.

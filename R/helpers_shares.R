@@ -450,9 +450,6 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
 #' for the two following fossil fuel groups "Oil and gas products", and "All fossil fuels". So it gives the share supplied
 #' by respectively Coal products, Oil products, and Natural gas, in each of those groups. The shares then add up to unity necessarily.
 #' 
-#' The plan is then to update this function so it also does the same for the "Coal products", "Oil products", and "Natural gas".
-#' This would be trivial (respectively 1 for Coal products, Oil products, and Natural gas), but it would be very convenient.
-#' 
 #' @param .tidy_iea_df The name of the `.tidy_iea_df` for which the share of heat supplied by each fossil fuel need to be calculated.
 #' @param supply_mats_list The list of the supply matrices to be used for calculating the heat supply mix.
 #'                         Default is `c(IEATools::psut_cols$V)`.
@@ -606,8 +603,13 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
 
 #' Calculates the share of use of each energy product within each fossil fuel group, including electricity and heat uses
 #' 
-#' This function calculates the share of use of each energy product within each fossil fuel group, 
+#' This function calculates the share of use (using the matrices provided in the `final_use_mats` argument) of each energy product within each fossil fuel group, 
 #' when including electricity and heat of fossil fuel origin in the calculations.
+#' 
+#' The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+#' or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+#' will have to be slightly adapted in this case (for an example see the tests related to the function).
+#' Non-energy uses can be included or excluded using the `include_non_energy_uses` argument.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which the share of uses should be calculated.
 #' @param include_non_energy_uses A boolean indicating whether non-energy uses should be included in the calculation of the share of uses.
