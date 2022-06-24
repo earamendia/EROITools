@@ -107,6 +107,10 @@ push_to_useful_erois <- function(.tidy_io_erois,
 #'                               Default is "product_without_origin".
 #' @param calc_method The calculation method being used, either DTA if working on single country, or GMA if working with a multi-regional framework.
 #'                    Default is "dta".
+#' @param average_efficiency The name of the column containing the average efficiency of each energy product.
+#'                           Default is "Average_Efficiency_Col".
+#' @param aggregated_efficiency The name of the column containing the aggregated efficiency for each fossil fuel group.
+#'                              Default is "Aggregated_Efficiency".
 #'
 #' @return A tidy data frame with average final-to-useful efficiencies calculated for each fossil fuel group.
 #' @export
@@ -130,7 +134,6 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
                                             last_stage = IEATools::iea_cols$last_stage,
                                             year = IEATools::iea_cols$year,
                                             product = IEATools::iea_cols$product,
-                                            non_energy_uses = "Non_Energy_Uses",
                                             share = "Share",
                                             useful_stage_eroi = "Useful_Stage_EROI",
                                             group.eroi = "Group.eroi",

@@ -26,7 +26,8 @@ Imports:
     stringr,
     rlang,
     tibble,
-    assertthat
+    assertthat,
+    ECCTools
 Suggests: 
     spelling,
     covr,

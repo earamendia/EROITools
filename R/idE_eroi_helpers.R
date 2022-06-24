@@ -133,6 +133,8 @@ calc_fec_from_ff_by_group <- function(.tidy_iea_df,
 #'                     Default is "Energy.stage".
 #' @param product.group The name of the column containing the product group name.
 #'                      Default is "Product.Group".
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin"
 #'
 #' @return A tidy data frame containing the final energy consumption in the form of fuel by fossil fuel group.
 #' @export
@@ -275,6 +277,8 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
 #'              Default is "Share".
 #' @param product_without_origin The name of the column containing the product name excluding the origin of the product.
 #'                               Default is "product_without_origin".
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
 #'
 #' @return A tidy data frame containing the total final energy consumption of electricity, broken down by the supplying fossil fuel group.
 #' @export
@@ -390,6 +394,8 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
 #' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
 #'                     Default is "Energy.stage".
 #' @param share The name of the column containing the shares of heat delivered by each fossil fuel group.
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin"
 #'
 #' @return A tidy data frame containing the shares of heat delivered by each fossil fuel group.
 #' @export
@@ -672,6 +678,8 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
 #' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
 #'                     Default is "Energy.stage".
 #' @param share The name of the column containing the shares of heat delivered by each fossil fuel group.
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin"
 #'
 #' @return A tidy data frame containing the shares of heat delivered by each fossil fuel group.
 #' @export

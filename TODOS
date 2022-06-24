@@ -8,3 +8,8 @@ EROITools improvements to do:
 	-> First and second steps can be conducted together with appropriate expand_grid and filter strategy
 
 * Add a prepare_gma_for_shares_calculation function
+
+
+no visible global function definition for ‘%>%’
+no visible global function definition for ‘:=’
+no visible binding for global variable ‘.data’

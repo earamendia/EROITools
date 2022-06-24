@@ -34,6 +34,8 @@
 #' @param energy.stage The column name of the column defining the energy stage.
 #'                     Default is "Energy.stage".
 #' @param country,method,energy_type,last_stage,year,unit,product See `IEATools::iea_cols`.
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin"
 #'
 #' @return A tidy data frame returning the primary energy supply shares of each product within each fossil fuel group.
 #' @export
@@ -170,6 +172,8 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
 #'                                Default is "Boolean_Non_Energy_Uses".
 #' @param energy.stage The column name of the column defining the energy stage.
 #'                     Default is "Energy.stage".
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin"
 #'
 #' @return A tidy data frame reporting the shares of each product use within each fossil fuel group.
 #' @export
@@ -295,7 +299,11 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
 #'              Default is "Share".
 #' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
-#' @param country,method,energy_type,last_stage,year,unit,product,e_dot See `IEATools::iea_cols`.
+#' @param country,method,energy_type,last_stage,year,unit,product,e.dot See `IEATools::iea_cols`.
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin".
+#' @param non_energy_uses The name of the column stating whether non-energy uses are included in the calculation of the shares of supply.
+#'                        Default is "Non_Energy_Uses".
 #'
 #' @return A `.tidy_iea_df` with the shares of electricity supply specified by fossil fuel group.
 #' @export
@@ -447,7 +455,11 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
 #'              Default is "Share".
 #' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
-#' @param country,method,energy_type,last_stage,year,unit,product,e_dot See `IEATools::iea_cols`.
+#' @param country,method,energy_type,last_stage,year,unit,product,e.dot See `IEATools::iea_cols`.
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin"
+#' @param non_energy_uses The name of the column indicating whether non-energy uses are included the calculation.
+#'                        Default is "Non_Energy_Uses".
 #'
 #' @return A `.tidy_iea_df` with the shares of heat supply specified by fossil fuel group.
 #' @export
@@ -610,6 +622,8 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
 #'                                Default is "Boolean_Non_Energy_Uses".
 #' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
+#' @param product_without_origin The name of the column containing the product name without the product origin.
+#'                               Default is "product_without_origin"
 #'
 #' @return A `.tidy_iea_df` with the shares of use of each energy product within each fossil fuel group.
 #' @export

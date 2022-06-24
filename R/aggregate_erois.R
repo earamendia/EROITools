@@ -34,6 +34,8 @@
 #'             Default is "Energy.stage".
 #' @param product_without_origin The name of the column containing the product name excluding the origin of the product.
 #'                               Default is "product_without_origin".
+#' @param eroi_calc_method The method being used for calculating the erois.
+#'                         Default is "dta".
 #'
 #' @return A data frame returning the aggregated primary stage EROIs for each fossil fuel group.
 #' @export
