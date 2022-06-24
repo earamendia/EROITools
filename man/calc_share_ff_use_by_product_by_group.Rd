@@ -68,6 +68,9 @@ Default is "Boolean_Non_Energy_Uses".}
 
 \item{energy.stage}{The column name of the column defining the energy stage.
 Default is "Energy.stage".}
+
+\item{product_without_origin}{The name of the column containing the product name without the product origin.
+Default is "product_without_origin"}
 }
 \value{
 A tidy data frame reporting the shares of each product use within each fossil fuel group.

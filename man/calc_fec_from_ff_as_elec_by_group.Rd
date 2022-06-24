@@ -60,7 +60,10 @@ Default is \code{IEATools::tfc_compare_flows$losses}.}
 \item{matnames}{The name of the column containing the product group name.
 Default is "Product.Group".}
 
-\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{energy.stage}{The name of the column containing the energy stage.
 Default is "Energy.stage".}
 
 \item{share}{The name of the column containing the shares of supply of electricity by fossil fuel group.

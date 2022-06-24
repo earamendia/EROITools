@@ -19,7 +19,6 @@ calc_avg_efficiency_by_ff_group(
   last_stage = IEATools::iea_cols$last_stage,
   year = IEATools::iea_cols$year,
   product = IEATools::iea_cols$product,
-  non_energy_uses = "Non_Energy_Uses",
   share = "Share",
   useful_stage_eroi = "Useful_Stage_EROI",
   group.eroi = "Group.eroi",
@@ -69,6 +68,12 @@ Default is "Energy.stage".}
 
 \item{product_without_origin}{The name of the column containing the product name excluding its origin.
 Default is "product_without_origin".}
+
+\item{average_efficiency}{The name of the column containing the average efficiency of each energy product.
+Default is "Average_Efficiency_Col".}
+
+\item{aggregated_efficiency}{The name of the column containing the aggregated efficiency for each fossil fuel group.
+Default is "Aggregated_Efficiency".}
 
 \item{calc_method}{The calculation method being used, either DTA if working on single country, or GMA if working with a multi-regional framework.
 Default is "dta".}

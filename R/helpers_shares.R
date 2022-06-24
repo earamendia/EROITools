@@ -1,8 +1,5 @@
 
 
-# Calculates shares of each product in the primary fossil fuel supply by group, by default using the V matrix
-# Where the groups are: "All fossil fuels", "Oil and gas products", and "Coal products".
-
 #' Calculates the primary energy supply shares of each product within each fossil fuel group
 #' 
 #' This function calculates the primary energy supply shares of each product within each fossil fuel group.

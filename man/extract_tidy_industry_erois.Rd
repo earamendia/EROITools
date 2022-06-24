@@ -91,7 +91,7 @@ The boundary column indicates whether the EROI includes:
 }
 \examples{
 # Let's first have a look at the raw data obtained when calculating EROIs:
-calculated_erois_raw <- tidy_AB_data \%>\%
+calculated_erois_raw <- ECCTools::tidy_AB_data \%>\%
  IEATools::prep_psut() \%>\%
  Recca::calc_io_mats() \%>\%
  Recca::calc_E_EIOU() \%>\%

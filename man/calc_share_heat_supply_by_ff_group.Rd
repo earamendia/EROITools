@@ -57,10 +57,13 @@ Default is \code{IEATools::mat_meta_cols$matnames}.}
 \item{product.group}{The name of the column containing the product group name.
 Default is "Product.Group".}
 
-\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+\item{energy.stage}{The name of the column containing the energy stage.
 Default is "Energy.stage".}
 
 \item{share}{The name of the column containing the shares of heat delivered by each fossil fuel group.}
+
+\item{product_without_origin}{The name of the column containing the product name without the product origin.
+Default is "product_without_origin"}
 }
 \value{
 A tidy data frame containing the shares of heat delivered by each fossil fuel group.

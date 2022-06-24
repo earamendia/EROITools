@@ -69,6 +69,9 @@ Default is "Boolean_Non_Energy_Uses".}
 
 \item{energy.stage}{The name of the column containing the energy stage.
 Default is "Energy.stage".}
+
+\item{product_without_origin}{The name of the column containing the product name without the product origin.
+Default is "product_without_origin"}
 }
 \value{
 A \code{.tidy_iea_df} with the shares of use of each energy product within each fossil fuel group.

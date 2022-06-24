@@ -41,7 +41,13 @@ Default is "Share".}
 \item{energy.stage}{The name of the column containing the energy stage.
 Default is "Energy.stage".}
 
-\item{country, method, energy_type, last_stage, year, unit, product, e_dot}{See \code{IEATools::iea_cols}.}
+\item{country, method, energy_type, last_stage, year, unit, product, e.dot}{See \code{IEATools::iea_cols}.}
+
+\item{product_without_origin}{The name of the column containing the product name without the product origin.
+Default is "product_without_origin"}
+
+\item{non_energy_uses}{The name of the column indicating whether non-energy uses are included the calculation.
+Default is "Non_Energy_Uses".}
 }
 \value{
 A \code{.tidy_iea_df} with the shares of heat supply specified by fossil fuel group.

@@ -67,7 +67,7 @@ Default is "Product.Group".}
 \item{product.group}{The name of the column containing the product group name.
 Default is "Product.Group".}
 
-\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+\item{energy.stage}{The name of the column containing the energy stage.
 Default is "Energy.stage".}
 }
 \value{

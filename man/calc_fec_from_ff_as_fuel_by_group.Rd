@@ -64,8 +64,11 @@ Default is "Product.Group".}
 \item{product.group}{The name of the column containing the product group name.
 Default is "Product.Group".}
 
-\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+\item{energy.stage}{The name of the column containing the energy stage.
 Default is "Energy.stage".}
+
+\item{product_without_origin}{The name of the column containing the product name without the product origin.
+Default is "product_without_origin"}
 }
 \value{
 A tidy data frame containing the final energy consumption in the form of fuel by fossil fuel group.

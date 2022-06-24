@@ -56,6 +56,9 @@ Default is "Share".}
 Default is "Energy.stage".}
 
 \item{country, method, energy_type, last_stage, year, unit, product}{See \code{IEATools::iea_cols}.}
+
+\item{product_without_origin}{The name of the column containing the product name without the product origin.
+Default is "product_without_origin"}
 }
 \value{
 A tidy data frame returning the primary energy supply shares of each product within each fossil fuel group.
