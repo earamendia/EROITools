@@ -78,3 +78,9 @@ This function calculates final energy consumption supplied by each fossil fuel g
 It calculates it using the list of use matrices supplied by the user, and the list of supply matrices to determine the share of supply of electricity and heat
 by fossil fuel group.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_fec_from_ff_by_group()
+}

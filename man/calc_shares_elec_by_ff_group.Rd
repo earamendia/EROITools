@@ -57,3 +57,9 @@ This function calculates the share of electricity supplied by each fossil fuel w
 for the two following fossil fuel groups "Oil and gas products", and "All fossil fuels". So it gives the share supplied
 by respectively Coal products, Oil products, and Natural gas, in each of those groups. The shares then add up to unity necessarily.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_shares_elec_by_ff_group()
+}

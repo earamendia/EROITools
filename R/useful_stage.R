@@ -22,6 +22,36 @@
 #' @export
 #'
 #' @examples
+#' # Calculating IO matrices
+#' tidy_io_AB_dta <- ECCTools::tidy_AB_data %>%
+#'  IEATools::prep_psut() %>%
+#'  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+#' # Calculating tidy IO EROIs
+#' tidy_AB_erois_dta <- tidy_io_AB_dta %>%
+#'  Recca::calc_E_EIOU() %>%
+#'  Recca::calc_erois() %>%
+#'  EROITools::extract_tidy_product_erois() %>%
+#'  dplyr::mutate(
+#'    Eroi.method = "DTA"
+#'  ) %>%
+#'  dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+#' # Pushing to tidy useful stage EROIs
+#' length_to_use <- tidy_AB_erois_dta %>% 
+#'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+#'  dplyr::distinct() %>% 
+#'  nrow()
+#' tidy_FU_efficiencies_dta <- tidy_AB_erois_dta %>% 
+#'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+#'  dplyr::distinct() %>% 
+#'  dplyr::mutate(
+#'    Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
+#'  )
+#' # Applying the push_to_useful_erois() function:
+#' tidy_useful_erois_dta_with_function <- push_to_useful_erois(
+#'  .tidy_io_erois = tidy_AB_erois_dta,
+#'  tidy_FU_efficiencies = tidy_FU_efficiencies_dta,
+#'  eroi_calc_method = "dta"
+#' )
 push_to_useful_erois <- function(.tidy_io_erois,
                                  tidy_FU_efficiencies,
                                  country = IEATools::iea_cols$country,
@@ -116,6 +146,26 @@ push_to_useful_erois <- function(.tidy_io_erois,
 #' @export
 #'
 #' @examples
+#'   tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+#'                         select_dta_observations = FALSE)
+#' # Building efficiencies data frame:
+#' length_to_use <- tidy_AB_data %>% 
+#'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+#'  dplyr::distinct() %>% 
+#'  nrow()
+#' tidy_FU_efficiencies <- tidy_AB_data %>% 
+#'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+#'  dplyr::distinct() %>% 
+#'  dplyr::mutate(
+#'    Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
+#'  )
+#' # Calculating aggregated efficiencies
+#' aggregated_efficiencies_dta <- calc_avg_efficiency_by_ff_group(
+#'  .tidy_efficiencies_df = tidy_FU_efficiencies,
+#'  .tidy_iea_df = tidy_AB_dta,
+#'  calc_method = "dta"
+#')
 calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
                                             .tidy_iea_df,
                                             # Whether you want to include non-energy uses products in the EROI calculation

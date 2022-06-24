@@ -83,3 +83,9 @@ will have to be slightly adapted in this case (for an example see the tests rela
 and the energy use by product will be returned as the pair (Origin_Country, Product).
 Non-energy use flows can be included or excluded from the calculations using the \code{include_non_energy_uses} boolean.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_total_use_by_product()
+}

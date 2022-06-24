@@ -27,3 +27,9 @@ This function prepares a tidy iea data frame following the Global Market Assumpt
 of shares of product use within each fossil fuel group. To do this, the country of location is removed from each flow,
 and is relocated in the country column, and a column of product without origin is added to the data frame.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_gma() \%>\% 
+   prepare_gma_for_shares()
+}

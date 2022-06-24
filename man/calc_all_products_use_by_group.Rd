@@ -90,3 +90,9 @@ or with a multi-regional Energy Conversion Chain for instance using the Global M
 will have to be slightly adapted in this case.
 Non-energy use flows can be included or excluded from the calculations using the \code{include_non_energy_uses} boolean.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_all_products_use_by_group()
+}

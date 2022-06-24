@@ -79,3 +79,9 @@ A tidy data frame containing the total final energy consumption of electricity, 
 This function calculates the final energy consumption of electricity from fossil fuel origin, by fossil fuel group. It does so by determining
 the total final consumption of electricity (from use matrices) and then applying share of electricity supplied by each fossil fuel group (determined from supply matrices).
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_fec_from_ff_as_elec_by_group()
+}

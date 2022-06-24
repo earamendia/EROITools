@@ -68,3 +68,9 @@ It does not disaggregate the oil and gas products group because they are jointly
 in EROI calculations, at least from the IEA data we use here.
 By default, it uses flows in the V matrix and selects primary energy products to determine primary energy production flows.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_primary_products_supply_by_group()
+}

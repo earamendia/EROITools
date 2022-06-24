@@ -77,3 +77,9 @@ A tidy data frame containing the final energy consumption in the form of fuel by
 This function calculates final energy consumption of fuel (so, excluding electricity and heat), by fossil fuel group.
 It calculates it from the list of use matrices provided.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_fec_from_ff_as_fuel_by_group()
+}

@@ -74,3 +74,9 @@ The function can work both on a single country Energy Conversion Chain of Domest
 or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
 will have to be slightly adapted in this case.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_share_primary_ff_supply_by_product_by_group()
+}

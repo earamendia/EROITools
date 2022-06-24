@@ -77,3 +77,9 @@ indeed they won't if any electricity is supplied by renewables or nuclear.
 Fossil fuel groups used are "All fossil fuels", "Oil and gas products", "Oil products", "Natural gas", and "Coal products",
 so they are obviously not exclusive.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_share_elec_supply_by_ff_group()
+}

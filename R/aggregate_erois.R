@@ -42,6 +42,25 @@
 #' @export
 #'
 #' @examples
+#' tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+#'                        select_dta_observations = FALSE)
+#' tidy_io_AB_dta <- tidy_AB_data %>% 
+#'  IEATools::prep_psut() %>% 
+#'  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+#' tidy_AB_erois_dta <- tidy_io_AB_dta %>% 
+#'  Recca::calc_E_EIOU() %>% 
+#'  Recca::calc_erois() %>% 
+#'  EROITools::extract_tidy_product_erois() %>% 
+#'  dplyr::mutate(
+#'    Eroi.method = "DTA"
+#'  ) %>% 
+#'  dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+#' res_dta <- aggregate_primary_stage_erois(
+#'  .tidy_erois_df = tidy_AB_erois_dta,
+#'  .tidy_iea_df = tidy_AB_dta,
+#'  eroi_calc_method = "dta"
+#' )
 aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                           .tidy_iea_df,
                                           # Which matrices flows to use for calculating shares
@@ -186,6 +205,25 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 #' @export
 #'
 #' @examples
+#' tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+#'                        select_dta_observations = FALSE)
+#' tidy_io_AB_dta <- tidy_AB_data %>% 
+#'  IEATools::prep_psut() %>% 
+#'  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+#' tidy_AB_erois_dta <- tidy_io_AB_dta %>% 
+#'  Recca::calc_E_EIOU() %>% 
+#'  Recca::calc_erois() %>% 
+#'  EROITools::extract_tidy_product_erois() %>% 
+#'  dplyr::mutate(
+#'    Eroi.method = "DTA"
+#'  ) %>% 
+#'  dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+#' res_dta <- aggregate_final_stage_erois(
+#'  .tidy_erois_df = tidy_AB_erois_dta,
+#'  .tidy_iea_df = tidy_AB_dta,
+#'  eroi_calc_method = "dta"
+#' )
 aggregate_final_stage_erois <- function(.tidy_erois_df,
                                         .tidy_iea_df,
                                         # Whether you want to include non-energy uses products in the EROI calculation
@@ -357,6 +395,46 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
 #' @export
 #'
 #' @examples
+#' tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+#'                           select_dta_observations = FALSE)
+#' # Calculating IO matrices
+#' tidy_io_AB_dta <- tidy_AB_data %>%
+#'  IEATools::prep_psut() %>%
+#'  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+#' # Calculating tidy IO EROIs
+#' tidy_AB_erois_dta <- tidy_io_AB_dta %>%
+#'  Recca::calc_E_EIOU() %>%
+#'  Recca::calc_erois() %>%
+#'  EROITools::extract_tidy_product_erois() %>%
+#'  dplyr::mutate(
+#'    Eroi.method = "DTA"
+#'  ) %>%
+#'  dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+#' # Pushing to tidy useful stage EROIs
+#' length_to_use <- tidy_AB_erois_dta %>% 
+#'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+#'  dplyr::distinct() %>% 
+#'  nrow()
+#' tidy_FU_efficiencies_dta <- tidy_AB_erois_dta %>% 
+#'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+#'  dplyr::distinct() %>% 
+#'  dplyr::mutate(
+#'    Average_Efficiency_Global = seq(0.15, 1, 0.85/(length_to_use-1))
+#'  )
+#' tidy_useful_erois_dta <- tidy_AB_erois_dta %>% 
+#'  dplyr::left_join(tidy_FU_efficiencies_dta,
+#'                   by = c("Country", "Method", "Energy.type", "Year", "Product")) %>%
+#'  dplyr::mutate(
+#'    Useful_Stage_EROI = Average_Efficiency_Global * EROI
+#'  ) %>% 
+#'  dplyr::filter(! is.na(Useful_Stage_EROI))
+#' # Calculating aggregated EROIs:
+#' res_dta <- aggregate_useful_stage_erois(
+#'  .tidy_erois_df = tidy_useful_erois_dta,
+#'  .tidy_iea_df = tidy_AB_dta,
+#'  eroi_calc_method = "dta"
+#' )
 aggregate_useful_stage_erois <- function(.tidy_erois_df,
                                          .tidy_iea_df,
                                          # Whether you want to include non-energy uses products in the EROI calculation

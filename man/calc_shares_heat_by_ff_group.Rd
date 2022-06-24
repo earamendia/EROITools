@@ -61,3 +61,9 @@ by respectively Coal products, Oil products, and Natural gas, in each of those g
 The plan is then to update this function so it also does the same for the "Coal products", "Oil products", and "Natural gas".
 This would be trivial (respectively 1 for Coal products, Oil products, and Natural gas), but it would be very convenient.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_shares_heat_by_ff_group()
+}

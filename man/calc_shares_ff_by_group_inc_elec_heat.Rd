@@ -80,3 +80,9 @@ A \code{.tidy_iea_df} with the shares of use of each energy product within each 
 This function calculates the share of use of each energy product within each fossil fuel group,
 when including electricity and heat of fossil fuel origin in the calculations.
 }
+\examples{
+ECCTools::tidy_AB_data \%>\% 
+   IEATools::add_psut_matnames() \%>\% 
+   ECCTools::transform_to_dta() \%>\% 
+   calc_shares_ff_by_group_inc_elec_heat()
+}
