@@ -27,7 +27,7 @@
 #' @param country,method,energy_type,last_stage,year,product,unit,flow,e_dot See `IEATools::iea_cols`.
 #' @param matnames The name of the column containing the product group name.
 #'                 Default is "Product.Group".
-#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
 #' @param product.group The name of the column containing the product group name.
 #'                      Default is "Product.Group".
@@ -129,7 +129,7 @@ calc_fec_from_ff_by_group <- function(.tidy_iea_df,
 #' @param country,method,energy_type,last_stage,year,product,unit,flow,e_dot See `IEATools::iea__cols`.
 #' @param matnames The name of the column containing the product group name.
 #'                 Default is "Product.Group".
-#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
 #' @param product.group The name of the column containing the product group name.
 #'                      Default is "Product.Group".
@@ -271,7 +271,7 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
 #' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,year,product,unit,flow,e_dot See `IEATools::iea_cols`.
 #' @param matnames The name of the column containing the product group name.
 #'                 Default is "Product.Group".
-#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
 #' @param share The name of the column containing the shares of supply of electricity by fossil fuel group.
 #'              Default is "Share".
@@ -391,7 +391,7 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param product.group The name of the column containing the product group name.
 #'                      Default is "Product.Group".
-#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
 #' @param share The name of the column containing the shares of heat delivered by each fossil fuel group.
 #' @param product_without_origin The name of the column containing the product name without the product origin.
@@ -558,7 +558,7 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param product.group The name of the column containing the product group name.
 #'                      Default is "Product.Group".
-#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
 #' @param share The name of the column containing the shares of supply of heat by fossil fuel group.
 #'              Default is "Share".
@@ -675,7 +675,7 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param product.group The name of the column containing the product group name.
 #'                      Default is "Product.Group".
-#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#' @param energy.stage The name of the column containing the energy stage.
 #'                     Default is "Energy.stage".
 #' @param share The name of the column containing the shares of heat delivered by each fossil fuel group.
 #' @param product_without_origin The name of the column containing the product name without the product origin.
