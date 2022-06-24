@@ -1,34 +1,38 @@
 
-# Calculates all the final energy consumption, whatever the form (fuel, elect, heat)
-# that is provided from fossil fuels, by fossil fuel group.
-# We need that function for adding indirect energy and to have EROIs with idE.
-
-#' Title
+#' Calculates final energy consumption supplied by each fossil fuel group, including in the form of electricity and heat
+#' 
+#' This function calculates final energy consumption supplied by each fossil fuel group, including in the form of electricity and heat. 
+#' It calculates it using the list of use matrices supplied by the user, and the list of supply matrices to determine the share of supply of electricity and heat
+#' by fossil fuel group.
 #'
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param list_use_mats
-#' @param list_supply_mats
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param list_non_energy_flows
-#' @param exports
-#' @param losses
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param product
-#' @param unit
-#' @param flow
-#' @param e_dot
-#' @param matnames
-#' @param product.group
-#' @param energy.stage
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the final energy consumption supplied by each fossil fuel group needs to be calculated.
+#' @param include_non_energy_uses A boolean indicating whether non-energy uses are included in the calculation of final energy consumption by fossil fuel group.
+#'                                Default is "FALSE".
+#' @param list_use_mats The list of matrices to be used for determining total final energy consumption by fossil fuel group.
+#'                      Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_supply_mats The list of matrices to be used for determining the shares of supply of heat and electricity by fossil fuel group.
+#'                         Default is `c(IEATools::psut_cols$V)`.
+#' @param list_oil_products The list of oil products to be used when calculating the use shares.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products The list of coal products to be used when calculating the use shares.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products The list of gas products to be used when calculating the use shares.
+#'                           Default is `IEATools::primary_gas_products`.
+#' @param list_non_energy_flows A list identifying non-energy flows.
+#'                              Default is `IEATools::non_energy_flows`.
+#' @param exports The character string identifying exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param losses The character string identifying losses flows in the `.tidy_iea_df`.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param country,method,energy_type,last_stage,year,product,unit,flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The name of the column containing the product group name.
+#'                 Default is "Product.Group".
+#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#'                     Default is "Energy.stage".
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
 #'
-#' @return
+#' @return A tidy data frame containing the final energy consumption supplied by each fossil fuel group, including in the form of heat and electricity.
 #' @export
 #'
 #' @examples
