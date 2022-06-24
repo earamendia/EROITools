@@ -1,33 +1,41 @@
 
-# This function aggregates final stage EROIs per main groups
-# This function aggregates using the shares of each product in the primary production of each country, within a given fossil fuel group.
-# So it uses the make matrix V on which it filters for primary energy products to calculate the shares.
-
-#' Title
+#' Aggregates primary stage EROIs per fossil fuel group
+#' 
+#' The function calculates the aggregated primary stage EROIs for each fossil fuel group. It determines the shares of supply of each energy product
+#' within each fossil fuel group (by default using the V matrix), selects only the list of energy products defined as primary energy products (see arguments),
+#' and from these shares determines the average EROI by fossil fuel group.
 #'
-#' @param .tidy_erois_df 
-#' @param .tidy_iea_df 
-#' @param primary_production_mats 
-#' @param list_primary_oil_products 
-#' @param list_primary_coal_products 
-#' @param list_primary_gas_products 
-#' @param product.group 
-#' @param country 
-#' @param method 
-#' @param energy_type 
-#' @param last_stage 
-#' @param year 
-#' @param product 
-#' @param eroi.method 
-#' @param type 
-#' @param boundary 
-#' @param share 
-#' @param eroi 
-#' @param group.eroi 
-#' @param energy.stage 
-#' @param product_without_origin 
+#' @param .tidy_erois_df The tidy erois data frame (calculated for each product via input-output) for which the aggregation needs to be done.
+#' @param .tidy_iea_df The `tidy_iea_df` from which the input-output erois have been calculated.
+#' @param primary_production_mats The list of matrices to use as primary production matrices to determine the share of supply of each primary energy product.
+#'                                Default is `c(IEATools::psut_cols$V)`.
+#' @param list_primary_oil_products The list of primary oil products.
+#'                                  Default is `IEATools::primary_oil_products`.
+#' @param list_primary_coal_products The list of primary coal products.
+#'                                  Default is `IEATools::primary_coal_products`.
+#' @param list_primary_gas_products The list of primary gas products.
+#'                                  Default is `IEATools::primary_gas_products`.
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param country,method,energy_type,last_stage,year,product See `IEATools::iea_cols`.
+#' @param eroi.method The name of the column containing the method used for calculating the erois.
+#'                    Default is "Eroi.method".
+#' @param type The name of the column containing the type of eroi calculated.
+#'             Default is "Type".
+#' @param boundary The name of the column containing the boundary for the eroi calculation.
+#'                 Default is "Boundary".
+#' @param share The name of the column containing the share of each energy product supply within each fossil fuel group.
+#'              Default is "Share".
+#' @param eroi The name of the column containing the energy-product level eroi value.
+#'             Default is "EROI".
+#' @param group.eroi The name of the column containing the fossil fuel group level eroi value.
+#'             Default is "Group.eroi".
+#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#'             Default is "Energy.stage".
+#' @param product_without_origin The name of the column containing the product name excluding the origin of the product.
+#'                               Default is "product_without_origin".
 #'
-#' @return
+#' @return A data frame returning the aggregated primary stage EROIs for each fossil fuel group.
 #' @export
 #'
 #' @examples
