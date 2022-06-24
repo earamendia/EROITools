@@ -147,14 +147,15 @@ push_to_useful_erois <- function(.tidy_io_erois,
 #'
 #' @examples
 #'   tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#'   IEATools::add_psut_matnames() %>% 
 #' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
 #'                         select_dta_observations = FALSE)
 #' # Building efficiencies data frame:
-#' length_to_use <- tidy_AB_data %>% 
+#' length_to_use <- tidy_AB_dta %>% 
 #'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
 #'  dplyr::distinct() %>% 
 #'  nrow()
-#' tidy_FU_efficiencies <- tidy_AB_data %>% 
+#' tidy_FU_efficiencies <- tidy_AB_dta %>% 
 #'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
 #'  dplyr::distinct() %>% 
 #'  dplyr::mutate(

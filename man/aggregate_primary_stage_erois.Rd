@@ -91,9 +91,9 @@ and from these shares determines the average primary stage EROI by fossil fuel g
 }
 \examples{
 tidy_AB_dta <- ECCTools::tidy_AB_data \%>\%
-ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
-                       select_dta_observations = FALSE)
-tidy_io_AB_dta <- tidy_AB_data \%>\% 
+IEATools::add_psut_matnames() \%>\% 
+ECCTools::transform_to_dta()
+tidy_io_AB_dta <- tidy_AB_dta \%>\% 
  IEATools::prep_psut() \%>\% 
  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
 tidy_AB_erois_dta <- tidy_io_AB_dta \%>\% 
