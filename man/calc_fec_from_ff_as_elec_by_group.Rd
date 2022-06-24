@@ -2,12 +2,12 @@
 % Please edit documentation in R/idE_eroi_helpers.R
 \name{calc_fec_from_ff_as_elec_by_group}
 \alias{calc_fec_from_ff_as_elec_by_group}
-\title{Title}
+\title{Calculates final energy consumption of electricity from fossil fuel origin, by fossil fuel group}
 \usage{
 calc_fec_from_ff_as_elec_by_group(
   .tidy_iea_df,
   list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
-  list_supply_mats = "V",
+  list_supply_mats = c(IEATools::psut_cols$V),
   list_oil_products = IEATools::oil_and_oil_products,
   list_coal_products = IEATools::coal_and_coal_products,
   list_gas_products = IEATools::primary_gas_products,
@@ -32,11 +32,47 @@ calc_fec_from_ff_as_elec_by_group(
 )
 }
 \arguments{
-\item{share}{}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which final energy consumption of electricity by fossil fuel group needs to be determined.}
+
+\item{list_use_mats}{The list of matrices to be used for determining total final energy consumption of electricity.
+Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}
+
+\item{list_supply_mats}{The list of matrices to be used for determining the shares of supply of electricity by fossil fuel group.
+Default is \code{c(IEATools::psut_cols$V)}.}
+
+\item{list_oil_products}{The list of oil products to be used when calculating the use shares.
+Default is \code{IEATools::oil_and_oil_products}.}
+
+\item{list_coal_products}{The list of coal products to be used when calculating the use shares.
+Default is \code{IEATools::coal_and_coal_products}.}
+
+\item{list_gas_products}{The list of gas products to be used when calculating the use shares.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{exports}{The character string identifying exports flows in the \code{.tidy_iea_df}.
+Default is \code{IEATools::interface_industries$exports}.}
+
+\item{losses}{The character string identifying losses flows in the \code{.tidy_iea_df}.
+Default is \code{IEATools::tfc_compare_flows$losses}.}
+
+\item{country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, year, product, unit, flow, e_dot}{See \code{IEATools::iea_cols}.}
+
+\item{matnames}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+Default is "Energy.stage".}
+
+\item{share}{The name of the column containing the shares of supply of electricity by fossil fuel group.
+Default is "Share".}
+
+\item{product_without_origin}{The name of the column containing the product name excluding the origin of the product.
+Default is "product_without_origin".}
 }
 \value{
-
+A tidy data frame containing the total final energy consumption of electricity, broken down by the supplying fossil fuel group.
 }
 \description{
-Title
+This function calculates the final energy consumption of electricity from fossil fuel origin, by fossil fuel group. It does so by determining
+the total final consumption of electricity (from use matrices) and then applying share of electricity supplied by each fossil fuel group (determined from supply matrices).
 }

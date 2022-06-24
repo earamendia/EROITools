@@ -800,6 +800,33 @@ test_that("calc_fec_from_ff_as_fuel_by_group",{
     expect_equal(2200)
   
   
+  # Quick test for including non-energy uses
+  res_dta_non_energy_uses <- tidy_AB_dta %>%
+    calc_fec_from_ff_as_fuel_by_group(include_non_energy_uses = TRUE)
+  
+  # Country A:
+  res_dta_non_energy_uses %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(5700)
+  res_dta_non_energy_uses %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(950)
+  res_dta_non_energy_uses %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(700)
+  res_dta_non_energy_uses %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(4750)
+  res_dta_non_energy_uses %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(4050)
+  
+  
   # SECOND, WE TEST THE GMA APPROACH
   
   tidy_AB_data_gma <- tidy_AB_data %>%

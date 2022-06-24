@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers_shares.R
 \name{calc_shares_ff_by_group_inc_elec_heat}
 \alias{calc_shares_ff_by_group_inc_elec_heat}
-\title{Title}
+\title{Calculates the share of use of each energy product within each fossil fuel group, including electricity and heat uses}
 \usage{
 calc_shares_ff_by_group_inc_elec_heat(
   .tidy_iea_df,
@@ -30,13 +30,50 @@ calc_shares_ff_by_group_inc_elec_heat(
 )
 }
 \arguments{
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which the share of uses should be calculated.}
+
+\item{include_non_energy_uses}{A boolean indicating whether non-energy uses should be included in the calculation of the share of uses.
+Default is FALSE.}
+
+\item{final_use_mats}{The list of matrices to be used to calculate the share of uses.
+Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}
+
+\item{list_oil_products}{The list of oil products to be used for the shares calculations.
+Default is \code{IEATools::oil_and_oil_products}.}
+
+\item{list_coal_products}{The list of coal products to be used for the shares calculations.
+Default is \code{IEATools::coal_and_coal_products}.}
+
+\item{list_gas_products}{The list of gas products to be used for the shares calculations.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{total_product_use}{The name of the column containing the total energy use by product.
+Default is "Total_Product_Use".}
+
+\item{total_group_use}{The name of the column containing the total energy use by fossil fuel group.
+Default is "Total_Group_Use".}
+
+\item{non_energy_uses}{The name of the column stating whether non-energy uses are included in the shares calculations.
+Default is "Non_Energy_Uses".}
+
+\item{share}{The name of the column containing the shares of each fossil fuel within the electricity supply.
+Default is "Share".}
+
 \item{country, method, energy_type, last_stage, year, unit, e_dot, product}{See \code{IEATools::iea_cols}.}
 
-\item{energy.stage}{}
+\item{boolean_non_energy_uses}{The column name of a column containing a boolean stating whether non-energy uses are included in the shares calculations.
+Default is "Boolean_Non_Energy_Uses".}
+
+\item{energy.stage}{The name of the column containing the energy stage.
+Default is "Energy.stage".}
 }
 \value{
-
+A \code{.tidy_iea_df} with the shares of use of each energy product within each fossil fuel group.
 }
 \description{
-Title
+This function calculates the share of use of each energy product within each fossil fuel group,
+when including electricity and heat of fossil fuel origin in the calculations.
 }

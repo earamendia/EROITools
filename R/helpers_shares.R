@@ -211,9 +211,9 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
       )
     )
   
-  if (! (isTRUE(include_non_energy_uses) | isFALSE(include_non_energy_uses))){
-    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
-  }
+  assertthat::assert_that(isFALSE(include_non_energy_uses) | isTRUE(include_non_energy_uses),
+                          msg = "The include_non_energy_uses argument must be either TRUE or FALSE.")
+  
   
   ### Calculate the total use of each fossil fuel product, and binds its product groups in each observation. ###
   use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
@@ -651,10 +651,8 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       )
     )
   
-  
-  if (! (isTRUE(include_non_energy_uses) | isFALSE(include_non_energy_uses))){
-    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
-  }
+  assertthat::assert_that(isFALSE(include_non_energy_uses) | isTRUE(include_non_energy_uses),
+                          msg = "The include_non_energy_uses argument must be either TRUE or FALSE.")
   
   # For all fossil fuels together
   use_ff_by_product_1 <- calc_total_use_by_product(.tidy_iea_df,

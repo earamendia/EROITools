@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregate_erois.R
 \name{aggregate_primary_stage_erois}
 \alias{aggregate_primary_stage_erois}
-\title{Title}
+\title{Aggregates primary stage EROIs by fossil fuel group}
 \usage{
 aggregate_primary_stage_erois(
   .tidy_erois_df,
@@ -30,51 +30,56 @@ aggregate_primary_stage_erois(
 )
 }
 \arguments{
-\item{.tidy_erois_df}{}
+\item{.tidy_erois_df}{The tidy erois data frame (calculated for each product via input-output) for which the aggregation needs to be done.}
 
-\item{.tidy_iea_df}{}
+\item{.tidy_iea_df}{The \code{tidy_iea_df} from which the input-output erois have been calculated.}
 
-\item{primary_production_mats}{}
+\item{primary_production_mats}{The list of matrices to use as primary production matrices to determine the share of supply of each primary energy product.
+Default is \code{c(IEATools::psut_cols$V)}.}
 
-\item{list_primary_oil_products}{}
+\item{list_primary_oil_products}{The list of primary oil products.
+Default is \code{IEATools::primary_oil_products}.}
 
-\item{list_primary_coal_products}{}
+\item{list_primary_coal_products}{The list of primary coal products.
+Default is \code{IEATools::primary_coal_products}.}
 
-\item{list_primary_gas_products}{}
+\item{list_primary_gas_products}{The list of primary gas products.
+Default is \code{IEATools::primary_gas_products}.}
 
-\item{product.group}{}
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
 
-\item{country}{}
+\item{country, method, energy_type, last_stage, year, product}{See \code{IEATools::iea_cols}.}
 
-\item{method}{}
+\item{eroi.method}{The name of the column containing the method used for calculating the erois.
+Default is "Eroi.method".}
 
-\item{energy_type}{}
+\item{type}{The name of the column containing the type of eroi calculated.
+Default is "Type".}
 
-\item{last_stage}{}
+\item{boundary}{The name of the column containing the boundary for the eroi calculation.
+Default is "Boundary".}
 
-\item{year}{}
+\item{share}{The name of the column containing the share of each energy product supply within each fossil fuel group.
+Default is "Share".}
 
-\item{product}{}
+\item{eroi}{The name of the column containing the energy-product level eroi value.
+Default is "EROI".}
 
-\item{eroi.method}{}
+\item{group.eroi}{The name of the column containing the fossil fuel group level eroi value.
+Default is "Group.eroi".}
 
-\item{type}{}
+\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+Default is "Energy.stage".}
 
-\item{boundary}{}
-
-\item{share}{}
-
-\item{eroi}{}
-
-\item{group.eroi}{}
-
-\item{energy.stage}{}
-
-\item{product_without_origin}{}
+\item{product_without_origin}{The name of the column containing the product name excluding the origin of the product.
+Default is "product_without_origin".}
 }
 \value{
-
+A data frame returning the aggregated primary stage EROIs for each fossil fuel group.
 }
 \description{
-Title
+The function calculates the aggregated primary stage EROIs for each fossil fuel group. It determines the shares of supply of each energy product
+within each fossil fuel group (by default using the V matrix), selects only the list of energy products defined as primary energy products (see arguments),
+and from these shares determines the average primary stage EROI by fossil fuel group.
 }

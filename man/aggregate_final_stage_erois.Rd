@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregate_erois.R
 \name{aggregate_final_stage_erois}
 \alias{aggregate_final_stage_erois}
-\title{Title}
+\title{Aggregates final stage EROIs by fossil fuel group}
 \usage{
 aggregate_final_stage_erois(
   .tidy_erois_df,
@@ -32,11 +32,64 @@ aggregate_final_stage_erois(
 )
 }
 \arguments{
-\item{product_without_origin}{}
+\item{.tidy_erois_df}{The tidy erois data frame (calculated for each product via input-output) for which the aggregation needs to be done.}
+
+\item{.tidy_iea_df}{The \code{tidy_iea_df} from which the input-output erois have been calculated.}
+
+\item{include_non_energy_uses}{A boolean indicating whether the calculation of use shares includes non-energy uses.
+Default is FALSE.}
+
+\item{final_use_mats}{The list of matrices to be used for calculating the use shares by energy product.
+Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}
+
+\item{list_oil_products}{The list of oil products to be used when calculating the use shares.
+Default is \code{IEATools::oil_and_oil_products}.}
+
+\item{list_coal_products}{The list of coal products to be used when calculating the use shares.
+Default is \code{IEATools::coal_and_coal_products}.}
+
+\item{list_gas_products}{The list of gas products to be used when calculating the use shares.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{country, method, energy_type, last_stage, year, product}{See \code{IEATools::iea_cols}.}
+
+\item{non_energy_uses}{The name of the column stating whether non-energy uses are included in the calculation of use shares.
+Default is "Non_Energy_Uses".}
+
+\item{eroi.method}{The name of the column containing the method used for calculating the erois.
+Default is "Eroi.method".}
+
+\item{type}{The name of the column containing the type of eroi calculated.
+Default is "Type".}
+
+\item{boundary}{The name of the column containing the boundary for the eroi calculation.
+Default is "Boundary".}
+
+\item{share}{The name of the column containing the share of each energy product supply within each fossil fuel group.
+Default is "Share".}
+
+\item{eroi}{The name of the column containing the energy-product level eroi value.
+Default is "EROI".}
+
+\item{group.eroi}{The name of the column containing the fossil fuel group level eroi value.
+Default is "Group.eroi".}
+
+\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+Default is "Energy.stage".}
+
+\item{product_without_origin}{The name of the column containing the product name excluding the origin of the product.
+Default is "product_without_origin".}
+
+\item{eroi_calc_method}{The method being used for calculating the erois.
+Default is "dta".}
 }
 \value{
-
+A tidy data frame containing the aggregated final stage EROIs.
 }
 \description{
-Title
+The function calculates the aggregated final stage EROIs for each fossil fuel group. It determines the shares of uses of each energy product
+within each fossil fuel group (by default using the Y and U_eiou matrices), and from these shares determines the average final stage EROI by fossil fuel group.
 }

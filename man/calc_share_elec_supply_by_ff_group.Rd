@@ -6,7 +6,7 @@
 \usage{
 calc_share_elec_supply_by_ff_group(
   .tidy_iea_df,
-  list_supply_mats = "V",
+  list_supply_mats = c(IEATools::psut_cols$V),
   list_oil_products = IEATools::oil_and_oil_products,
   list_coal_products = IEATools::coal_and_coal_products,
   list_gas_products = IEATools::primary_gas_products,
@@ -29,10 +29,41 @@ calc_share_elec_supply_by_ff_group(
 )
 }
 \arguments{
-\item{share}{}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which the share of electricity provided by each fossil fuel group needs to be calculated.}
+
+\item{list_supply_mats}{The list of the supply matrices to be used for the calculating the shares.
+Default is \code{c(IEATools::psut_cols$V)}.}
+
+\item{list_oil_products}{The list of oil products to be used when calculating the use shares.
+Default is \code{IEATools::oil_and_oil_products}.}
+
+\item{list_coal_products}{The list of coal products to be used when calculating the use shares.
+Default is \code{IEATools::coal_and_coal_products}.}
+
+\item{list_gas_products}{The list of gas products to be used when calculating the use shares.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{exports}{The character string identifying exports flows in the \code{.tidy_iea_df}.
+Default is \code{IEATools::interface_industries$exports}.}
+
+\item{losses}{The character string identifying losses flows in the \code{.tidy_iea_df}.
+Default is \code{IEATools::tfc_compare_flows$losses}.}
+
+\item{country, method, energy_type, last_stage, year, product, unit, flow, e_dot}{See \code{IEATools::iea_cols}.}
+
+\item{matnames}{The name of the column containing the matrices names.
+Default is \code{IEATools::mat_meta_cols$matnames}.}
+
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+Default is "Energy.stage".}
+
+\item{share}{The name of the column containing the shares of heat delivered by each fossil fuel group.}
 }
 \value{
-
+A tidy data frame containing the shares of heat delivered by each fossil fuel group.
 }
 \description{
 This function calculates, for each country, the share of electricity that has been supplied by each fossil fuel group,

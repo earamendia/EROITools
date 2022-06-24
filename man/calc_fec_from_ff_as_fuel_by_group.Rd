@@ -2,7 +2,7 @@
 % Please edit documentation in R/idE_eroi_helpers.R
 \name{calc_fec_from_ff_as_fuel_by_group}
 \alias{calc_fec_from_ff_as_fuel_by_group}
-\title{Title}
+\title{Calculates final energy consumption of fuel by fossil fuel group}
 \usage{
 calc_fec_from_ff_as_fuel_by_group(
   .tidy_iea_df,
@@ -30,11 +30,47 @@ calc_fec_from_ff_as_fuel_by_group(
 )
 }
 \arguments{
-\item{energy.stage}{}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which the final energy consumption of fuel by fossil fuel group need to be calculated.}
+
+\item{include_non_energy_uses}{A boolean indicating whether the calculated final energy consumption included non-energy uses or not.
+Default is FALSE.}
+
+\item{list_use_mats}{The list of matrices to be used for determining total final energy consumption of electricity.
+Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)}.}
+
+\item{list_oil_products}{The list of oil products to be used when calculating the use shares.
+Default is \code{IEATools::oil_and_oil_products}.}
+
+\item{list_coal_products}{The list of coal products to be used when calculating the use shares.
+Default is \code{IEATools::coal_and_coal_products}.}
+
+\item{list_gas_products}{The list of gas products to be used when calculating the use shares.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{list_non_energy_flows}{A list identifying non-energy flows.
+Default is \code{IEATools::non_energy_flows}.}
+
+\item{exports}{The character string identifying exports flows in the \code{.tidy_iea_df}.
+Default is \code{IEATools::interface_industries$exports}.}
+
+\item{losses}{The character string identifying losses flows in the \code{.tidy_iea_df}.
+Default is \code{IEATools::tfc_compare_flows$losses}.}
+
+\item{country, method, energy_type, last_stage, year, product, unit, flow, e_dot}{See \code{IEATools::iea__cols}.}
+
+\item{matnames}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+Default is "Energy.stage".}
 }
 \value{
-
+A tidy data frame containing the final energy consumption in the form of fuel by fossil fuel group.
 }
 \description{
-Title
+This function calculates final energy consumption of fuel (so, excluding electricity and heat), by fossil fuel group.
+It calculates it from the list of use matrices provided.
 }

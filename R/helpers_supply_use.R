@@ -78,6 +78,9 @@ calc_total_use_by_product <- function(.tidy_iea_df,
       )
     )
   
+  assertthat::assert_that(isFALSE(include_non_energy_uses) | isTRUE(include_non_energy_uses),
+                          msg = "The include_non_energy_uses argument must be either TRUE or FALSE.")
+  
   if (isFALSE(include_non_energy_uses)){
     
     to_return <- .tidy_iea_df %>%
@@ -117,9 +120,7 @@ calc_total_use_by_product <- function(.tidy_iea_df,
     
     return(to_return)
     
-  } else {
-    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
-  }
+  } 
 }
 
 
@@ -312,6 +313,9 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
       )
     )
   
+  assertthat::assert_that(isFALSE(include_non_energy_uses) | isTRUE(include_non_energy_uses),
+                          msg = "The include_non_energy_uses argument must be either TRUE or FALSE.")
+  
   if (isFALSE(include_non_energy_uses)){
     
     to_return_1 <- .tidy_iea_df %>%
@@ -459,8 +463,6 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
     
     return(to_return)
     
-  } else {
-    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
   }
 }
 

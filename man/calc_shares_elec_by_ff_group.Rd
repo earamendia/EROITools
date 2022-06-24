@@ -24,10 +24,27 @@ calc_shares_elec_by_ff_group(
 )
 }
 \arguments{
+\item{.tidy_iea_df}{The name of the \code{.tidy_iea_df} for which the share of electricity supplied by each fossil fuel need to be calculated.}
+
+\item{supply_mats_list}{The list of the supply matrices to be used for calculating the electricity supply mix.
+Default is \code{c(IEATools::psut_cols$V)}.}
+
+\item{matnames}{The name of the column containing matrices names.
+Default is "matnames".}
+
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
+
+\item{share}{The name of the column containing the shares of each fossil fuel within the electricity supply.
+Default is "Share".}
+
+\item{energy.stage}{The name of the column containing the energy stage.
+Default is "Energy.stage".}
+
 \item{country, method, energy_type, last_stage, year, unit, product, e_dot}{See \code{IEATools::iea_cols}.}
 }
 \value{
-
+A \code{.tidy_iea_df} with the shares of electricity supply specified by fossil fuel group.
 }
 \description{
 This function calculates the share of electricity supplied by each fossil fuel within each fossil fuel group,
