@@ -3,7 +3,7 @@
 #' 
 #' The function calculates the aggregated primary stage EROIs for each fossil fuel group. It determines the shares of supply of each energy product
 #' within each fossil fuel group (by default using the V matrix), selects only the list of energy products defined as primary energy products (see arguments),
-#' and from these shares determines the average EROI by fossil fuel group.
+#' and from these shares determines the average primary stage EROI by fossil fuel group.
 #'
 #' @param .tidy_erois_df The tidy erois data frame (calculated for each product via input-output) for which the aggregation needs to be done.
 #' @param .tidy_iea_df The `tidy_iea_df` from which the input-output erois have been calculated.
@@ -139,7 +139,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 #' Aggregates final stage EROIs by fossil fuel group
 #' 
 #' The function calculates the aggregated final stage EROIs for each fossil fuel group. It determines the shares of uses of each energy product
-#' within each fossil fuel group (by default using the Y and U_eiou matrices), and from these shares determines the average EROI by fossil fuel group.
+#' within each fossil fuel group (by default using the Y and U_eiou matrices), and from these shares determines the average final stage EROI by fossil fuel group.
 #'
 #' @param .tidy_erois_df The tidy erois data frame (calculated for each product via input-output) for which the aggregation needs to be done.
 #' @param .tidy_iea_df The `tidy_iea_df` from which the input-output erois have been calculated.
@@ -306,37 +306,47 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
 
 
 
-#' Title
+#' Aggregates useful stage EROIs by fossil fuel group
+#' 
+#' The function calculates the aggregated useful stage EROIs for each fossil fuel group. It determines the shares of uses of each energy product
+#' within each fossil fuel group (by default using the Y and U_eiou matrices), and from these shares determines the average useful stage EROI by fossil fuel group.
 #'
-#' @param .tidy_erois_df
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param final_use_mats
-#' @param primary_production_mats
-#' @param list_primary_oil_products
-#' @param list_primary_coal_products
-#' @param list_primary_gas_products
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param product.group
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param product
-#' @param non_energy_uses
-#' @param eroi.method
-#' @param type
-#' @param boundary
-#' @param share
-#' @param useful_stage_eroi
-#' @param group.eroi
-#' @param energy.stage
-#' @param product_without_origin
+#' @param .tidy_erois_df The tidy erois data frame for which the aggregation needs to be done.
+#' @param .tidy_iea_df The `tidy_iea_df` from which the input-output erois have been calculated.
+#' @param include_non_energy_uses A boolean indicating whether the calculation of use shares includes non-energy uses.
+#'                                Default is FALSE.
+#' @param final_use_mats The list of matrices to be used for calculating the use shares by energy product.
+#'                       Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_oil_products The list of oil products to be used when calculating the use shares.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products The list of coal products to be used when calculating the use shares.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products The list of gas products to be used when calculating the use shares.
+#'                           Default is `IEATools::primary_gas_products`.
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param country,method,energy_type,last_stage,year,product See `IEATools::iea_cols`.
+#' @param non_energy_uses The name of the column stating whether non-energy uses are included in the calculation of use shares.
+#'                      Default is "Non_Energy_Uses".
+#' @param eroi.method The name of the column containing the method used for calculating the erois.
+#'                    Default is "Eroi.method".
+#' @param type The name of the column containing the type of eroi calculated.
+#'             Default is "Type".
+#' @param boundary The name of the column containing the boundary for the eroi calculation.
+#'                 Default is "Boundary".
+#' @param share The name of the column containing the share of each energy product supply within each fossil fuel group.
+#'              Default is "Share".
+#' @param useful_stage_eroi The name of the column containing the useful stage EROIs for each energy product.
+#' @param group.eroi The name of the column containing the fossil fuel group level eroi value.
+#'             Default is "Group.eroi".
+#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#'             Default is "Energy.stage".
+#' @param product_without_origin The name of the column containing the product name excluding the origin of the product.
+#'                               Default is "product_without_origin".
+#' @param eroi_calc_method The method being used for calculating the erois.
+#'                         Default is "dta".
 #'
-#' @return
+#' @return A tidy data frame containing the aggregated useful stage EROIs by fossil fuel group.
 #' @export
 #'
 #' @examples
@@ -347,9 +357,6 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
                                          # Which matrices flows to use for calculating shares
                                          final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                                          # Lists defining each product group
-                                         list_primary_oil_products = IEATools::primary_oil_products,
-                                         list_primary_coal_products = IEATools::primary_coal_products,
-                                         list_primary_gas_products = IEATools::primary_gas_products,
                                          list_oil_products = IEATools::oil_and_oil_products,
                                          list_coal_products = IEATools::coal_and_coal_products,
                                          list_gas_products = IEATools::primary_gas_products,
