@@ -355,28 +355,29 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
 #' Fossil fuel groups used are "All fossil fuels", "Oil and gas products", "Oil products", "Natural gas", and "Coal products",
 #' so they are obviously not exclusive.
 #'
-#' @param .tidy_iea_df
-#' @param list_supply_mats
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param exports
-#' @param losses
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param product
-#' @param unit
-#' @param flow
-#' @param e_dot
-#' @param matnames
-#' @param product.group
-#' @param energy.stage
-#' @param share
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the share of electricity provided by each fossil fuel group needs to be calculated.
+#' @param list_supply_mats The list of the supply matrices to be used for the calculating the shares.
+#'                         Default is `c(IEATools::psut_cols$V)`.
+#' @param list_oil_products The list of oil products to be used when calculating the use shares.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products The list of coal products to be used when calculating the use shares.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products The list of gas products to be used when calculating the use shares.
+#'                           Default is `IEATools::primary_gas_products`.
+#' @param exports The character string identifying exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param losses The character string identifying losses flows in the `.tidy_iea_df`.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param country,method,energy_type,last_stage,year,product,unit,flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The name of the column containing the matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#'                     Default is "Energy.stage".
+#' @param share The name of the column containing the shares of heat delivered by each fossil fuel group.
 #'
-#' @return
+#' @return A tidy data frame containing the shares of heat delivered by each fossil fuel group.
 #' @export
 #'
 #' @examples
