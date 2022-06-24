@@ -45,7 +45,8 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
 
   # Working out primary energy supply, and final energy consumption by fossil fuel group (including energy / heat coming grom fossil fuels)
   total_output_per_group <- dplyr::bind_rows(
-    calc_primary_products_supply_by_group(.tidy_iea_df),
+    calc_primary_products_supply_by_group(.tidy_iea_df,
+                                          total_group_supply = total_group_output),
     calc_fec_from_ff_by_group(.tidy_iea_df,
                               include_non_energy_uses = include_non_energy_uses) %>%
       dplyr::rename(
@@ -87,7 +88,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
     ) %>%
     dplyr::inner_join(
       indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-.data[[energy.stage]]),
-      by = c({country}, {country}, {product.group})
+      by = c({country}, {year}, {product.group})
     ) %>%
     dplyr::mutate(
       ratio_indirect_energy_per_output = ratio_indirect_energy_per_output / Final_to_useful_efficiency

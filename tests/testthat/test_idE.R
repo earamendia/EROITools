@@ -107,8 +107,7 @@ test_that("add_indirect_energy_to_erois works as intended",{
   prepare_idE_df_2 <- prepare_idE_df_1 %>% 
     dplyr::mutate(
       Indirect_Energy_ktoe = seq(0, 1000, 1000/(n_rows - 1))
-    ) %>% 
-    print()
+    )
   
   res_idE <- add_indirect_energy_to_erois(
     .tidy_summarised_erois_df = all_erois,
@@ -116,8 +115,69 @@ test_that("add_indirect_energy_to_erois works as intended",{
     .tidy_iea_df = tidy_AB_dta,
   )
   
-  
   # And finally testing the values obtained:
   
+  # First, primary energy stage:
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "All fossil fuels", Energy.stage == "Primary", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(40.52669, tolerance = 1e-3)
+
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "Oil and gas products", Energy.stage == "Primary", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(23.06059, tolerance = 1e-3)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "Coal products", Energy.stage == "Primary", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(36.18344, tolerance = 1e-3)
+  
+  # Second, final energy stage:
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(7.144977, tolerance = 1e-3)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "All fossil fuels", Energy.stage == "Final (electricity)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(15.30191, tolerance = 1e-3)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "All fossil fuels", Energy.stage == "Final (heat)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(15.30191, tolerance = 1e-3)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "All fossil fuels", Energy.stage == "Final (fuel+elec+heat)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(8.911203, tolerance = 1e-3)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "Natural gas", Energy.stage == "Final (fuel)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(2.874926, tolerance = 1e-3)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "Natural gas", Energy.stage == "Final (electricity)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(2.738458, tolerance = 1e-3)
+  
+  # Third, useful energy stage:
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "All fossil fuels", Energy.stage == "Useful (fuel)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(2.260515, tolerance = 1e-2)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "All fossil fuels", Energy.stage == "Useful (electricity)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(4.799236, tolerance = 1e-2)
+  
+  res_idE %>% 
+    filter(Country == "A", Type == "Gross", Boundary == "All", Product.Group == "Natural gas", Energy.stage == "Useful (fuel)", Indirect_Energy == "Included") %>% 
+    magrittr::extract2("Group.eroi") %>% 
+    expect_equal(1.609235, tolerance = 1e-3)
   
 })

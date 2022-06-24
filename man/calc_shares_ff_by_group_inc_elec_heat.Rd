@@ -77,8 +77,14 @@ Default is "product_without_origin"}
 A \code{.tidy_iea_df} with the shares of use of each energy product within each fossil fuel group.
 }
 \description{
-This function calculates the share of use of each energy product within each fossil fuel group,
+This function calculates the share of use (using the matrices provided in the \code{final_use_mats} argument) of each energy product within each fossil fuel group,
 when including electricity and heat of fossil fuel origin in the calculations.
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function).
+Non-energy uses can be included or excluded using the \code{include_non_energy_uses} argument.
 }
 \examples{
 ECCTools::tidy_AB_data \%>\% 

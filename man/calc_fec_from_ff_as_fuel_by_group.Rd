@@ -75,7 +75,12 @@ A tidy data frame containing the final energy consumption in the form of fuel by
 }
 \description{
 This function calculates final energy consumption of fuel (so, excluding electricity and heat), by fossil fuel group.
-It calculates it from the list of use matrices provided.
+It calculates it from the list of use matrices provided in the \code{list_use_mats} argument.
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function)
 }
 \examples{
 ECCTools::tidy_AB_data \%>\% 

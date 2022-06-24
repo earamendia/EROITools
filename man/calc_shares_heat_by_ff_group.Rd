@@ -57,10 +57,6 @@ This function calculates the share of heat supplied by each fossil fuel within e
 for the two following fossil fuel groups "Oil and gas products", and "All fossil fuels". So it gives the share supplied
 by respectively Coal products, Oil products, and Natural gas, in each of those groups. The shares then add up to unity necessarily.
 }
-\details{
-The plan is then to update this function so it also does the same for the "Coal products", "Oil products", and "Natural gas".
-This would be trivial (respectively 1 for Coal products, Oil products, and Natural gas), but it would be very convenient.
-}
 \examples{
 ECCTools::tidy_AB_data \%>\% 
    IEATools::add_psut_matnames() \%>\% 

@@ -96,6 +96,11 @@ A tidy data frame containing the aggregated final stage EROIs.
 The function calculates the aggregated final stage EROIs for each fossil fuel group. It determines the shares of uses of each energy product
 within each fossil fuel group (by default using the Y and U_eiou matrices), and from these shares determines the average final stage EROI by fossil fuel group.
 }
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function)
+}
 \examples{
 tidy_AB_dta <- ECCTools::tidy_AB_data \%>\%
 IEATools::add_psut_matnames() \%>\% 

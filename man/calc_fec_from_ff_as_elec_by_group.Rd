@@ -77,7 +77,13 @@ A tidy data frame containing the total final energy consumption of electricity, 
 }
 \description{
 This function calculates the final energy consumption of electricity from fossil fuel origin, by fossil fuel group. It does so by determining
-the total final consumption of electricity (from use matrices) and then applying share of electricity supplied by each fossil fuel group (determined from supply matrices).
+the total final consumption of electricity (determined from use matrices provided in \code{list_use_mats}) and then applying the share of electricity supplied by each fossil fuel group,
+which is determined from supply matrices provided in \code{list_supply_mats}.
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function)
 }
 \examples{
 ECCTools::tidy_AB_data \%>\% 

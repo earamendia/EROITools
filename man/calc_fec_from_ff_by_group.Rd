@@ -78,6 +78,11 @@ This function calculates final energy consumption supplied by each fossil fuel g
 It calculates it using the list of use matrices supplied by the user, and the list of supply matrices to determine the share of supply of electricity and heat
 by fossil fuel group.
 }
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function).
+}
 \examples{
 ECCTools::tidy_AB_data \%>\% 
    IEATools::add_psut_matnames() \%>\% 

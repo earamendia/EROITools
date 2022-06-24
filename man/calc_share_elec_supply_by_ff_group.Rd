@@ -76,6 +76,9 @@ indeed they won't if any electricity is supplied by renewables or nuclear.
 \details{
 Fossil fuel groups used are "All fossil fuels", "Oil and gas products", "Oil products", "Natural gas", and "Coal products",
 so they are obviously not exclusive.
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function)
 }
 \examples{
 ECCTools::tidy_AB_data \%>\% 

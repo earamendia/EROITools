@@ -77,7 +77,13 @@ A tidy data frame containing the total final energy consumption of heat, broken 
 }
 \description{
 This function calculates the final energy consumption of heat from fossil fuel origin, by fossil fuel group. It does so by determining
-the total final consumption of heat (from use matrices) and then applying share of heat supplied by each fossil fuel group (determined from supply matrices).
+the total final consumption of heat (from use matrices \code{list_use_mats}) and then
+applying share of heat supplied by each fossil fuel group (determined from supply matrices \code{list_supply_mats}).
+}
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function)
 }
 \examples{
 ECCTools::tidy_AB_data \%>\% 

@@ -89,6 +89,11 @@ The function calculates the aggregated primary stage EROIs for each fossil fuel 
 within each fossil fuel group (by default using the V matrix), selects only the list of energy products defined as primary energy products (see arguments),
 and from these shares determines the average primary stage EROI by fossil fuel group.
 }
+\details{
+The function can work both on a single country Energy Conversion Chain of Domestic Technology Assumption type,
+or with a multi-regional Energy Conversion Chain for instance using the Global Market Assumption. The input data frame
+will have to be slightly adapted in this case (for an example see the tests related to the function)
+}
 \examples{
 tidy_AB_dta <- ECCTools::tidy_AB_data \%>\%
 IEATools::add_psut_matnames() \%>\% 
