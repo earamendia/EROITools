@@ -42,6 +42,10 @@
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_total_use_by_product()
 calc_total_use_by_product <- function(.tidy_iea_df,
                                       include_non_energy_uses = FALSE,
                                       total_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
@@ -157,6 +161,10 @@ calc_total_use_by_product <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_primary_products_supply_by_group()
 calc_primary_products_supply_by_group <- function(.tidy_iea_df,
                                                   primary_production_mats = c(IEATools::psut_cols$V),
                                                   list_primary_oil_products = IEATools::primary_oil_products,
@@ -276,6 +284,10 @@ calc_primary_products_supply_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_all_products_use_by_group()
 calc_all_products_use_by_group <- function(.tidy_iea_df,
                                            include_non_energy_uses = FALSE,
                                            final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),

@@ -36,6 +36,10 @@
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_fec_from_ff_by_group()
 calc_fec_from_ff_by_group <- function(.tidy_iea_df,
                                       include_non_energy_uses = FALSE,
                                       list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
@@ -140,6 +144,10 @@ calc_fec_from_ff_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_fec_from_ff_as_fuel_by_group()
 calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
                                               include_non_energy_uses = FALSE,
                                               list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
@@ -284,6 +292,10 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_fec_from_ff_as_elec_by_group()
 calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
                                               list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                                               list_supply_mats = c(IEATools::psut_cols$V),
@@ -401,6 +413,10 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_share_elec_supply_by_ff_group()
 calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
                                                list_supply_mats = c(IEATools::psut_cols$V),
                                                list_oil_products = IEATools::oil_and_oil_products,
@@ -569,6 +585,10 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_fec_from_ff_as_heat_by_group()
 calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
                                               list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                                               list_supply_mats = c(IEATools::psut_cols$V),
@@ -685,6 +705,10 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_share_heat_supply_by_ff_group()
 calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
                                                list_supply_mats = c(IEATools::psut_cols$V),
                                                list_oil_products = IEATools::oil_and_oil_products,

@@ -28,6 +28,7 @@ aggregate_useful_stage_erois(
   group.eroi = "Group.eroi",
   energy.stage = "Energy.stage",
   product_without_origin = "product_without_origin",
+  Group.eroi.inversed = "Group.eroi.inversed",
   eroi_calc_method = c("dta", "gma")
 )
 }
@@ -81,6 +82,8 @@ Default is "Energy.stage".}
 
 \item{product_without_origin}{The name of the column containing the product name excluding the origin of the product.
 Default is "product_without_origin".}
+
+\item{Group.eroi.inversed}{Name of the temporary column that computes the inverse of the EROI.}
 
 \item{eroi_calc_method}{The method being used for calculating the erois.
 Default is "dta".}

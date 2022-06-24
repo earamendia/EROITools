@@ -38,6 +38,10 @@
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_share_primary_ff_supply_by_product_by_group()
 calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
                                                              primary_production_mats = c(IEATools::psut_cols$V),
                                                              list_primary_oil_products = IEATools::primary_oil_products,
@@ -176,6 +180,10 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_share_ff_use_by_product_by_group()
 calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
                                                   include_non_energy_uses = FALSE,
                                                   final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
@@ -306,6 +314,10 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_shares_elec_by_ff_group()
 calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
                                          supply_mats_list = c(IEATools::psut_cols$V),
                                          matnames = IEATools::mat_meta_cols$matnames,
@@ -462,6 +474,10 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_shares_heat_by_ff_group()
 calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
                                          supply_mats_list = c(IEATools::psut_cols$V),
                                          matnames = IEATools::mat_meta_cols$matnames,
@@ -626,6 +642,10 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_dta() %>% 
+#'    calc_shares_ff_by_group_inc_elec_heat()
 calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
                                                   include_non_energy_uses = FALSE,
                                                   final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
@@ -705,7 +725,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = Product.Group
+      Origin.Product.Group = .data[[product.group]]
     )
   
   share_elec_from_ff_by_ff_group_2 <- calc_share_elec_supply_by_ff_group(.tidy_iea_df) %>%
@@ -715,7 +735,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = Product.Group
+      Origin.Product.Group = .data[[product.group]]
     )
   
   use_elec_by_ff_group_1 <- calc_fec_from_ff_as_elec_by_group(.tidy_iea_df) %>%
@@ -729,7 +749,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      Total_Product_Use = sum(.data[[e_dot]])
+      "{total_product_use}" := sum(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -746,7 +766,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      Total_Product_Use = sum(.data[[e_dot]])
+      "{total_product_use}" := sum(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -759,7 +779,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      Total_Product_Use = sum(.data[[e_dot]])
+      "{total_product_use}" := sum(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -777,7 +797,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = Product.Group
+      Origin.Product.Group = .data[[product.group]]
     )
   
   share_heat_from_ff_by_ff_group_2 <- calc_share_heat_supply_by_ff_group(.tidy_iea_df) %>%
@@ -787,7 +807,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = Product.Group
+      Origin.Product.Group = .data[[product.group]]
     )
   
   use_heat_by_ff_group_1 <- calc_fec_from_ff_as_heat_by_group(.tidy_iea_df) %>%
@@ -801,7 +821,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      Total_Product_Use = sum(.data[[e_dot]])
+      "{total_product_use}" := sum(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -818,7 +838,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      Total_Product_Use = sum(.data[[e_dot]])
+      "{total_product_use}" := sum(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -831,7 +851,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      Total_Product_Use = sum(.data[[e_dot]])
+      "{total_product_use}" := sum(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -857,10 +877,10 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[energy.stage]]) %>%
     dplyr::mutate(
-      Total_Group_Use = sum(Total_Product_Use)
+      Total_Group_Use = sum(.data[[total_product_use]])
     ) %>%
     dplyr::mutate(
-      "{share}" := .data[["Total_Product_Use"]] / .data[["Total_Group_Use"]],
+      "{share}" := .data[[total_product_use]] / .data[["Total_Group_Use"]],
       "{boolean_non_energy_uses}" := include_non_energy_uses,
       "{non_energy_uses}" := dplyr::case_when(
         .data[[boolean_non_energy_uses]] == TRUE ~ "Included",
@@ -888,6 +908,10 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>% 
+#'    IEATools::add_psut_matnames() %>% 
+#'    ECCTools::transform_to_gma() %>% 
+#'    prepare_gma_for_shares()
 prepare_gma_for_shares <- function(.tidy_iea_df,
                                    country = IEATools::iea_cols$country,
                                    flow = IEATools::iea_cols$flow,

@@ -36,6 +36,7 @@
 #'                               Default is "product_without_origin".
 #' @param eroi_calc_method The method being used for calculating the erois.
 #'                         Default is "dta".
+#' @param Group.eroi.inversed Name of the temporary column that computes the inverse of the EROI.
 #'
 #' @return A data frame returning the aggregated primary stage EROIs for each fossil fuel group.
 #' @export
@@ -65,6 +66,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
                                           group.eroi = "Group.eroi",
                                           energy.stage = "Energy.stage",
                                           product_without_origin = "product_without_origin",
+                                          Group.eroi.inversed = "Group.eroi.inversed",
                                           eroi_calc_method = c("dta", "gma")){
   
   eroi_calc_method <- match.arg(eroi_calc_method)
@@ -107,12 +109,12 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
-        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+        "{Group.eroi.inversed}" := sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
       ) %>% 
       dplyr::mutate(
-        "{group.eroi}" := 1 / Group.eroi.inversed
+        "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-Group.eroi.inversed)
+      dplyr::select(-.data[[Group.eroi.inversed]])
     
     return(aggregated_primary_stage_erois)
     
@@ -125,12 +127,12 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
-        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+        "{Group.eroi.inversed}" := sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
       ) %>% 
       dplyr::mutate(
-        "{group.eroi}" := 1 / Group.eroi.inversed
+        "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-Group.eroi.inversed)
+      dplyr::select(-.data[[Group.eroi.inversed]])
     
     return(aggregated_primary_stage_erois)
     
@@ -178,6 +180,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 #'                               Default is "product_without_origin".
 #' @param eroi_calc_method The method being used for calculating the erois.
 #'                         Default is "dta".
+#' @param Group.eroi.inversed Name of the temporary column that computes the inverse of the EROI.
 #'
 #' @return A tidy data frame containing the aggregated final stage EROIs.
 #' @export
@@ -210,6 +213,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
                                         group.eroi = "Group.eroi",
                                         energy.stage = "Energy.stage",
                                         product_without_origin = "product_without_origin",
+                                        Group.eroi.inversed = "Group.eroi.inversed",
                                         eroi_calc_method = c("dta", "gma")){
   
   eroi_calc_method <- match.arg(eroi_calc_method)
@@ -277,12 +281,12 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
-        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+        "{Group.eroi.inversed}" := sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
       ) %>% 
       dplyr::mutate(
-        "{group.eroi}" := 1 / Group.eroi.inversed
+        "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-Group.eroi.inversed)
+      dplyr::select(-.data[[Group.eroi.inversed]])
     
     return(aggregated_final_stage_erois)
     
@@ -294,12 +298,12 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
-        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
+        "{Group.eroi.inversed}" := sum(.data[[share]] * (1/.data[[eroi]])) / sum(.data[[share]])
       ) %>% 
       dplyr::mutate(
-        "{group.eroi}" := 1 / Group.eroi.inversed
+        "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-Group.eroi.inversed)
+      dplyr::select(-.data[[Group.eroi.inversed]])
     
     return(aggregated_final_stage_erois)
      
@@ -347,6 +351,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
 #'                               Default is "product_without_origin".
 #' @param eroi_calc_method The method being used for calculating the erois.
 #'                         Default is "dta".
+#' @param Group.eroi.inversed Name of the temporary column that computes the inverse of the EROI.
 #'
 #' @return A tidy data frame containing the aggregated useful stage EROIs by fossil fuel group.
 #' @export
@@ -379,6 +384,7 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
                                          group.eroi = "Group.eroi",
                                          energy.stage = "Energy.stage",
                                          product_without_origin = "product_without_origin",
+                                         Group.eroi.inversed = "Group.eroi.inversed",
                                          eroi_calc_method = c("dta", "gma")){
   
   ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
@@ -460,12 +466,12 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
-        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[useful_stage_eroi]])) / sum(.data[[share]])
+        "{Group.eroi.inversed}" := sum(.data[[share]] * (1/.data[[useful_stage_eroi]])) / sum(.data[[share]])
       ) %>% 
       dplyr::mutate(
-        "{group.eroi}" := 1 / Group.eroi.inversed
+        "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-Group.eroi.inversed)
+      dplyr::select(-.data[[Group.eroi.inversed]])
     
     return(aggregated_useful_erois)
     
@@ -477,12 +483,12 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
-        Group.eroi.inversed = sum(.data[[share]] * (1/.data[[useful_stage_eroi]])) / sum(.data[[share]])
+        "{Group.eroi.inversed}" := sum(.data[[share]] * (1/.data[[useful_stage_eroi]])) / sum(.data[[share]])
       ) %>% 
       dplyr::mutate(
-        "{group.eroi}" := 1 / Group.eroi.inversed
+        "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-Group.eroi.inversed)
+      dplyr::select(-.data[[Group.eroi.inversed]])
     
     return(aggregated_useful_erois)
     
