@@ -35,7 +35,7 @@
 calc_fec_from_ff_by_group <- function(.tidy_iea_df,
                                       include_non_energy_uses = FALSE,
                                       list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
-                                      list_supply_mats = "V",
+                                      list_supply_mats = c(IEATools::psut_cols$V),
                                       list_oil_products = IEATools::oil_and_oil_products,
                                       list_coal_products = IEATools::coal_and_coal_products,
                                       list_gas_products = IEATools::primary_gas_products,
@@ -100,32 +100,37 @@ calc_fec_from_ff_by_group <- function(.tidy_iea_df,
 }
 
 
-# Calculates final energy consumption by fossil fuel group, only when used as fuel.
-#' Title
+#' Calculates final energy consumption of fuel by fossil fuel group
+#' 
+#' This function calculates final energy consumption of fuel (so, excluding electricity and heat), by fossil fuel group. 
+#' It calculates it from the list of use matrices provided.
 #'
-#' @param .tidy_iea_df
-#' @param include_non_energy_uses
-#' @param list_use_mats
-#' @param list_oil_products
-#' @param list_coal_products
-#' @param list_gas_products
-#' @param list_non_energy_flows
-#' @param exports
-#' @param losses
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param product
-#' @param unit
-#' @param flow
-#' @param e_dot
-#' @param matnames
-#' @param product.group
-#' @param energy.stage
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the final energy consumption of fuel by fossil fuel group need to be calculated.
+#' @param include_non_energy_uses A boolean indicating whether the calculated final energy consumption included non-energy uses or not.
+#'                                Default is FALSE.
+#' @param list_use_mats The list of matrices to be used for determining total final energy consumption of electricity.
+#'                      Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou)`.
+#' @param list_oil_products The list of oil products to be used when calculating the use shares.
+#'                          Default is `IEATools::oil_and_oil_products`.
+#' @param list_coal_products The list of coal products to be used when calculating the use shares.
+#'                           Default is `IEATools::coal_and_coal_products`.
+#' @param list_gas_products The list of gas products to be used when calculating the use shares.
+#'                           Default is `IEATools::primary_gas_products`.
+#' @param list_non_energy_flows A list identifying non-energy flows.
+#'                              Default is `IEATools::non_energy_flows`.
+#' @param exports The character string identifying exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param losses The character string identifying losses flows in the `.tidy_iea_df`.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param country,method,energy_type,last_stage,year,product,unit,flow,e_dot See `IEATools::iea__cols`.
+#' @param matnames The name of the column containing the product group name.
+#'                 Default is "Product.Group".
+#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#'                     Default is "Energy.stage".
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
 #'
-#' @return
+#' @return A tidy data frame containing the final energy consumption in the form of fuel by fossil fuel group.
 #' @export
 #'
 #' @examples
@@ -273,7 +278,7 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
 #' @examples
 calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
                                               list_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
-                                              list_supply_mats = "V",
+                                              list_supply_mats = c(IEATools::psut_cols$V),
                                               list_oil_products = IEATools::oil_and_oil_products,
                                               list_coal_products = IEATools::coal_and_coal_products,
                                               list_gas_products = IEATools::primary_gas_products,
@@ -387,7 +392,7 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
 #'
 #' @examples
 calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
-                                               list_supply_mats = "V",
+                                               list_supply_mats = c(IEATools::psut_cols$V),
                                                list_oil_products = IEATools::oil_and_oil_products,
                                                list_coal_products = IEATools::coal_and_coal_products,
                                                list_gas_products = IEATools::primary_gas_products,
