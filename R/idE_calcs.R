@@ -1,6 +1,30 @@
 
 
 
+#' Title
+#'
+#' @param .tidy_summarised_erois_df 
+#' @param .tidy_indirect_energy 
+#' @param .tidy_iea_df 
+#' @param country 
+#' @param year 
+#' @param method 
+#' @param energy_type 
+#' @param last_stage 
+#' @param e_dot 
+#' @param unit 
+#' @param product.group 
+#' @param energy.stage 
+#' @param total_group_output 
+#' @param indirect_energy_ktoe 
+#' @param type 
+#' @param boundary 
+#' @param include_non_energy_uses 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
                                          .tidy_indirect_energy,
                                          .tidy_iea_df,
