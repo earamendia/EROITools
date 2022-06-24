@@ -48,3 +48,35 @@ The \code{.tidy_io_erois} data frame with useful stage EROIs added.
 This function calculates the useful stage EROIs based on the final stage EROIs and on the average final-to-useful efficiencies provided for each energy product.
 It also works if the efficiencies are provided by end-use, or by sector - then end-use or sector specific useful stage EROIs are returned.
 }
+\examples{
+# Calculating IO matrices
+tidy_io_AB_dta <- ECCTools::tidy_AB_data \%>\%
+ IEATools::prep_psut() \%>\%
+ Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+# Calculating tidy IO EROIs
+tidy_AB_erois_dta <- tidy_io_AB_dta \%>\%
+ Recca::calc_E_EIOU() \%>\%
+ Recca::calc_erois() \%>\%
+ EROITools::extract_tidy_product_erois() \%>\%
+ dplyr::mutate(
+   Eroi.method = "DTA"
+ ) \%>\%
+ dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+# Pushing to tidy useful stage EROIs
+length_to_use <- tidy_AB_erois_dta \%>\% 
+ dplyr::select(Country, Method, Energy.type, Year, Product) \%>\% 
+ dplyr::distinct() \%>\% 
+ nrow()
+tidy_FU_efficiencies_dta <- tidy_AB_erois_dta \%>\% 
+ dplyr::select(Country, Method, Energy.type, Year, Product) \%>\% 
+ dplyr::distinct() \%>\% 
+ dplyr::mutate(
+   Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
+ )
+# Applying the push_to_useful_erois() function:
+tidy_useful_erois_dta_with_function <- push_to_useful_erois(
+ .tidy_io_erois = tidy_AB_erois_dta,
+ tidy_FU_efficiencies = tidy_FU_efficiencies_dta,
+ eroi_calc_method = "dta"
+)
+}

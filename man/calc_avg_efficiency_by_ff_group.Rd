@@ -85,3 +85,25 @@ A tidy data frame with average final-to-useful efficiencies calculated for each 
 This function calculates the average final-to-useful efficiencies for each fossil fuel group using the average efficiency of each energy product
 and the shares of use of each energy product within each fossil fuel group.
 }
+\examples{
+  tidy_AB_dta <- ECCTools::tidy_AB_data \%>\%
+ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                        select_dta_observations = FALSE)
+# Building efficiencies data frame:
+length_to_use <- tidy_AB_data \%>\% 
+ dplyr::select(Country, Method, Energy.type, Year, Product) \%>\% 
+ dplyr::distinct() \%>\% 
+ nrow()
+tidy_FU_efficiencies <- tidy_AB_data \%>\% 
+ dplyr::select(Country, Method, Energy.type, Year, Product) \%>\% 
+ dplyr::distinct() \%>\% 
+ dplyr::mutate(
+   Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
+ )
+# Calculating aggregated efficiencies
+aggregated_efficiencies_dta <- calc_avg_efficiency_by_ff_group(
+ .tidy_efficiencies_df = tidy_FU_efficiencies,
+ .tidy_iea_df = tidy_AB_dta,
+ calc_method = "dta"
+)
+}

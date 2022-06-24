@@ -89,3 +89,24 @@ The function calculates the aggregated primary stage EROIs for each fossil fuel 
 within each fossil fuel group (by default using the V matrix), selects only the list of energy products defined as primary energy products (see arguments),
 and from these shares determines the average primary stage EROI by fossil fuel group.
 }
+\examples{
+tidy_AB_dta <- ECCTools::tidy_AB_data \%>\%
+ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                       select_dta_observations = FALSE)
+tidy_io_AB_dta <- tidy_AB_data \%>\% 
+ IEATools::prep_psut() \%>\% 
+ Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+tidy_AB_erois_dta <- tidy_io_AB_dta \%>\% 
+ Recca::calc_E_EIOU() \%>\% 
+ Recca::calc_erois() \%>\% 
+ EROITools::extract_tidy_product_erois() \%>\% 
+ dplyr::mutate(
+   Eroi.method = "DTA"
+ ) \%>\% 
+ dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+res_dta <- aggregate_primary_stage_erois(
+ .tidy_erois_df = tidy_AB_erois_dta,
+ .tidy_iea_df = tidy_AB_dta,
+ eroi_calc_method = "dta"
+)
+}

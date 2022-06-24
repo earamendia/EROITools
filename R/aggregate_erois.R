@@ -43,6 +43,7 @@
 #'
 #' @examples
 #' tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>% 
 #' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
 #'                        select_dta_observations = FALSE)
 #' tidy_io_AB_dta <- tidy_AB_data %>% 
@@ -206,6 +207,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 #'
 #' @examples
 #' tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>% 
 #' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
 #'                        select_dta_observations = FALSE)
 #' tidy_io_AB_dta <- tidy_AB_data %>% 
@@ -396,6 +398,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
 #'
 #' @examples
 #' tidy_AB_dta <- ECCTools::tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>% 
 #' ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
 #'                           select_dta_observations = FALSE)
 #' # Calculating IO matrices
