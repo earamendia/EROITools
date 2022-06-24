@@ -2,7 +2,7 @@
 % Please edit documentation in R/idE_calcs.R
 \name{add_indirect_energy_to_erois}
 \alias{add_indirect_energy_to_erois}
-\title{Title}
+\title{Adds indirect energy to the EROI values}
 \usage{
 add_indirect_energy_to_erois(
   .tidy_summarised_erois_df,
@@ -17,51 +17,60 @@ add_indirect_energy_to_erois(
   unit = IEATools::iea_cols$unit,
   product.group = "Product.Group",
   energy.stage = "Energy.stage",
+  group.eroi = "Group.eroi",
   total_group_output = "Total_Group_Output",
   indirect_energy_ktoe = "Indirect_Energy_ktoe",
+  eroi.method = "Eroi.method",
   type = "Type",
   boundary = "Boundary",
+  final_to_useful_eff = "Final_to_useful_efficiency",
+  ratio_indirect_energy_per_output = "ratio_indirect_energy_per_output",
   include_non_energy_uses = TRUE
 )
 }
 \arguments{
-\item{.tidy_summarised_erois_df}{}
+\item{.tidy_summarised_erois_df}{The aggregated EROI values to which indirect energy needs to be added}
 
-\item{.tidy_indirect_energy}{}
+\item{.tidy_indirect_energy}{A tidy data frame containing the indirect energy to be added, in ktoe.}
 
-\item{.tidy_iea_df}{}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} from which the output per product group is calculated.}
 
-\item{country}{}
+\item{country, year, method, energy_type, last_stage, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
-\item{year}{}
+\item{product.group}{The name of the column containing the product group name.
+Default is "Product.Group".}
 
-\item{method}{}
+\item{energy.stage}{The name of the column containing the energy stage for the calculation of the EROI.
+Default is "Energy.stage".}
 
-\item{energy_type}{}
+\item{group.eroi}{The name of the column containing the EROI values.
+Default is "Group.eroi".}
 
-\item{last_stage}{}
+\item{total_group_output}{The name of the column containing the total product group output.
+Default is "Total_Group_Output".}
 
-\item{e_dot}{}
+\item{indirect_energy_ktoe}{The name of the column containing the indirect energy data in the input indirect energy data frame.
+Default is "Indirect_Energy_ktoe".}
 
-\item{unit}{}
+\item{eroi.method}{The name of the column containing the eroi method.
+Default is "Eroi.method".}
 
-\item{product.group}{}
+\item{type}{The name of the column containing the type of eroi calculated.
+Default is "Type".}
 
-\item{energy.stage}{}
+\item{boundary}{The name of the column containing the boundary for the eroi calculation.
+Default is "Boundary".}
 
-\item{total_group_output}{}
+\item{ratio_indirect_energy_per_output}{The name of the column containing the ratio of indirect energy to product group output.
+Default is "ratio_indirect_energy_per_output".}
 
-\item{indirect_energy_ktoe}{}
-
-\item{type}{}
-
-\item{boundary}{}
-
-\item{include_non_energy_uses}{}
+\item{include_non_energy_uses}{A boolean stating whether non-energy uses are included in the calculation of the output per product group.}
 }
 \value{
-
+A data frame containing the EROIs with the indirect energy now included.
 }
 \description{
-Title
+To add indirect energy, the function calculates the ratio of indirect energy to output per product group,
+and then adds it to the energy inputs using the inverse of the EROI. The function uses the same ratio for each product group,
+independently of whether the energy stage is electricity, heat, fuel, or the combination (it does apply a different ratio at the primary, final and useful stage though).
 }

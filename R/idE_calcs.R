@@ -1,30 +1,38 @@
 
-
-
-#' Title
+#' Adds indirect energy to the EROI values
 #'
-#' @param .tidy_summarised_erois_df 
-#' @param .tidy_indirect_energy 
-#' @param .tidy_iea_df 
-#' @param country 
-#' @param year 
-#' @param method 
-#' @param energy_type 
-#' @param last_stage 
-#' @param e_dot 
-#' @param unit 
-#' @param product.group 
-#' @param energy.stage 
-#' @param total_group_output 
-#' @param indirect_energy_ktoe 
-#' @param type 
-#' @param boundary 
-#' @param include_non_energy_uses 
+#' To add indirect energy, the function calculates the ratio of indirect energy to output per product group, 
+#' and then adds it to the energy inputs using the inverse of the EROI. The function uses the same ratio for each product group, 
+#' independently of whether the energy stage is electricity, heat, fuel, or the combination (it does apply a different ratio at the primary, final and useful stage though).
 #'
-#' @return
+#' @param .tidy_summarised_erois_df The aggregated EROI values to which indirect energy needs to be added
+#' @param .tidy_indirect_energy A tidy data frame containing the indirect energy to be added, in ktoe.
+#' @param .tidy_iea_df The `.tidy_iea_df` from which the output per product group is calculated.
+#' @param country,year,method,energy_type,last_stage,e_dot,unit See `IEATools::iea_cols`.
+#' @param product.group The name of the column containing the product group name.
+#'                      Default is "Product.Group".
+#' @param energy.stage The name of the column containing the energy stage for the calculation of the EROI.
+#'                     Default is "Energy.stage".
+#' @param group.eroi The name of the column containing the EROI values.
+#'                   Default is "Group.eroi".
+#' @param total_group_output The name of the column containing the total product group output.
+#'                           Default is "Total_Group_Output".
+#' @param indirect_energy_ktoe The name of the column containing the indirect energy data in the input indirect energy data frame.
+#'                             Default is "Indirect_Energy_ktoe".
+#' @param eroi.method The name of the column containing the eroi method.
+#'                    Default is "Eroi.method".
+#' @param type The name of the column containing the type of eroi calculated.
+#'             Default is "Type".
+#' @param boundary The name of the column containing the boundary for the eroi calculation.
+#'                 Default is "Boundary".
+#' @final_to_useful_eff The name of the column containing the derived final-to-useful efficiencies.
+#'                      Default is "Final_to_useful_efficiency".
+#' @param ratio_indirect_energy_per_output The name of the column containing the ratio of indirect energy to product group output.
+#'                                         Default is "ratio_indirect_energy_per_output".
+#' @param include_non_energy_uses A boolean stating whether non-energy uses are included in the calculation of the output per product group.
+#'
+#' @return A data frame containing the EROIs with the indirect energy now included.
 #' @export
-#'
-#' @examples
 add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
                                          .tidy_indirect_energy,
                                          .tidy_iea_df,
@@ -37,10 +45,14 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
                                          unit = IEATools::iea_cols$unit,
                                          product.group = "Product.Group",
                                          energy.stage = "Energy.stage",
+                                         group.eroi = "Group.eroi",
                                          total_group_output = "Total_Group_Output",
                                          indirect_energy_ktoe = "Indirect_Energy_ktoe",
+                                         eroi.method = "Eroi.method",
                                          type = "Type",
                                          boundary = "Boundary",
+                                         final_to_useful_eff = "Final_to_useful_efficiency",
+                                         ratio_indirect_energy_per_output = "ratio_indirect_energy_per_output",
                                          include_non_energy_uses = TRUE){
 
   # Working out primary energy supply, and final energy consumption by fossil fuel group (including energy / heat coming grom fossil fuels)
@@ -61,7 +73,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       by = c({country}, {year}, {product.group}, {energy.stage})
     ) %>%
     dplyr::mutate(
-      ratio_indirect_energy_per_output = .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
+      "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
     ) %>%
     dplyr::select(-.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
                   -.data[[last_stage]], -.data[[unit]], -.data[[total_group_output]])
@@ -77,13 +89,13 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       "{product.group}" := stringr::str_c(.data[[product.group]], stringr::str_extract(.data[[energy.stage]], " \\(.*\\)")),
       "{energy.stage}" := stringr::str_remove(.data[[energy.stage]], " \\(.*\\)")
     ) %>%
-    tidyr::pivot_wider(names_from = .data[[energy.stage]], values_from = Group.eroi) %>%
+    tidyr::pivot_wider(names_from = .data[[energy.stage]], values_from = .data[[group.eroi]]) %>%
     dplyr::mutate(
-      Final_to_useful_efficiency = Useful / Final
+      "{final_to_useful_eff}" := .data[["Useful"]] / .data[["Final"]]
     ) %>%
-    dplyr::select(-Final, -Useful) %>%
+    dplyr::select(-.data[["Final"]], -.data[["Useful"]]) %>%
     dplyr::mutate(
-      "{energy.stage}" := stringr::str_c("Useful", stringr::str_extract(Product.Group, " \\(.*\\)")),
+      "{energy.stage}" := stringr::str_c("Useful", stringr::str_extract(.data[[product.group]], " \\(.*\\)")),
       "{product.group}" := stringr::str_remove(.data[[product.group]], " \\(.*\\)")
     ) %>%
     dplyr::inner_join(
@@ -91,10 +103,10 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       by = c({country}, {year}, {product.group})
     ) %>%
     dplyr::mutate(
-      ratio_indirect_energy_per_output = ratio_indirect_energy_per_output / Final_to_useful_efficiency
+      "{ratio_indirect_energy_per_output}" := .data[[ratio_indirect_energy_per_output]] / .data[[final_to_useful_eff]]
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[method]], -.data[[energy_type]], -.data[[last_stage]], -Eroi.method, -.data[[type]], -.data[[boundary]], -Non_Energy_Uses, -Final_to_useful_efficiency)
+    dplyr::select(-.data[[method]], -.data[[energy_type]], -.data[[last_stage]], -.data[[eroi.method]], -.data[[type]], -.data[[boundary]], -.data[["Non_Energy_Uses"]], -.data[[final_to_useful_eff]])
 
 
   # Expand, so that the final stage is now available for final (fuel), final (elec), and final (heat)
@@ -119,10 +131,10 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       by = c({country}, {year}, "Indirect_Energy", {product.group}, {energy.stage})
     ) %>%
     dplyr::mutate(
-      ratio_indirect_energy_per_output = tidyr::replace_na(.data[["ratio_indirect_energy_per_output"]], 0),
-      Group.eroi = 1/(1/Group.eroi + .data[["ratio_indirect_energy_per_output"]])
+      "{ratio_indirect_energy_per_output}" := tidyr::replace_na(.data[[ratio_indirect_energy_per_output]], 0),
+      "{group.eroi}" := 1/(1/.data[[group.eroi]] + .data[[ratio_indirect_energy_per_output]])
     ) %>%
-    dplyr::select(-.data[["ratio_indirect_energy_per_output"]])
+    dplyr::select(-.data[[ratio_indirect_energy_per_output]])
 
   return(tidy_summarised_erois_with_idE)
 }
