@@ -668,8 +668,10 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
         TRUE ~ .data[[product]]
       )
     ) %>% 
-    dplyr::filter(.data[[flow]] != losses) %>%
-    dplyr::filter(! stringr::str_detect(.data[[flow]], exports)) %>%
+    dplyr::filter(
+      ! (stringr::str_detect(.data[[flow]], exports))
+    ) %>%
+    dplyr::filter(! (stringr::str_detect(.data[[flow]], losses) & .data[[matnames]] == IEATools::psut_cols$Y)) %>% 
     dplyr::group_by(
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]],
       .data[[flow]], .data[[product]], .data[[unit]], .data[[matnames]], .data[[product_without_origin]]
