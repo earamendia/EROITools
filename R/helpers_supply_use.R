@@ -90,9 +90,10 @@ calc_total_use_by_product <- function(.tidy_iea_df,
     to_return <- .tidy_iea_df %>%
       dplyr::filter(.data[[product_without_origin]] %in% c(list_coal_products, list_oil_products, list_gas_products)) %>%
       dplyr::filter(
-        ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
+        ! (stringr::str_detect(.data[[flow]], exports))
       ) %>%
-      dplyr::filter(matnames %in% total_use_mats) %>%
+      dplyr::filter(! (stringr::str_detect(.data[[flow]], losses) & .data[[matnames]] == IEATools::psut_cols$Y))
+      dplyr::filter(.data[[matnames]] %in% total_use_mats) %>%
       dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
       dplyr::mutate(
         "{e_dot}" := abs(.data[[e_dot]])
@@ -110,8 +111,9 @@ calc_total_use_by_product <- function(.tidy_iea_df,
     to_return <- .tidy_iea_df %>%
       dplyr::filter(.data[[product_without_origin]] %in% c(list_coal_products, list_oil_products, list_gas_products)) %>%
       dplyr::filter(
-        ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
+        ! (stringr::str_detect(.data[[flow]], exports))
       ) %>%
+      dplyr::filter(! (stringr::str_detect(.data[[flow]], losses) & .data[[matnames]] == IEATools::psut_cols$Y))
       dplyr::filter(matnames %in% total_use_mats) %>%
       dplyr::mutate(
         "{e_dot}" := abs(.data[[e_dot]])
