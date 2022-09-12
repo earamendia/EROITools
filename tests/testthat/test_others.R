@@ -883,3 +883,366 @@ test_that("calc_fec_from_ff_as_fuel_by_group",{
     expect_equal(2200)
 })
 
+
+
+
+test_that("calc_share_elec_supply_by_ff_group works with losses",{
+  
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
+  
+  # Loading data
+  tidy_AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "TFC compare",
+      Flow = "Losses",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = -50
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Transformation processes",
+      Flow = "A balancing industry",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = 50
+    ) %>%
+    IEATools::specify_all() %>%
+    ECCTools::specify_elect_heat_renewables() %>%
+    ECCTools::specify_elect_heat_fossil_fuels() %>%
+    ECCTools::specify_elect_heat_nuclear() %>%
+    ECCTools::specify_other_elec_heat_production() %>%
+    ECCTools::specify_elect_heat_markets() %>%
+    IEATools::add_psut_matnames() %>%
+    ECCTools::stat_diffs_to_balancing() %>%
+    ECCTools::stock_changes_to_balancing() %>% 
+    ECCTools::specify_losses_as_industry()
+  
+  
+  # FIRST, WE TEST THE DTA APPROACH
+  
+  # Calculating total use of each product
+  tidy_AB_dta <- tidy_AB_data %>%
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE)
+  
+  res_dta <- tidy_AB_dta %>%
+    calc_share_elec_supply_by_ff_group()
+  
+  # Testing
+  res_dta %>% 
+    dplyr::filter(Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Product.Group == "All fossil fuels") %>% 
+    dplyr::ungroup() %>% dplyr::select(Share) %>% dplyr::pull() %>%
+    expect_equal(c(0.9846154,1), tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.8055944, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.179021, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.179021, tolerance = 1e-5)
+  # Useless because no change in country B's ECC
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Coal products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.1176471, tolerance = 1e-5)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Oil and gas products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.8823529, tolerance = 1e-5)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Natural gas") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.8823529, tolerance = 1e-5)
+  
+  # Only A because this is the country that changes
+  # This time we add losses without increasing supply
+  tidy_A_data_bis <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    dplyr::filter(Country == "A") %>% 
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "TFC compare",
+      Flow = "Losses",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = -50
+    ) %>%
+    # reducing consumption as 50 goes to losses
+    dplyr::mutate(
+      E.dot = dplyr::case_when(
+        (Flow == "Iron and steel" & Product == "Electricity") ~ 2870,
+        TRUE ~ E.dot
+      )
+    ) %>% 
+    IEATools::specify_all() %>%
+    ECCTools::specify_elect_heat_renewables() %>%
+    ECCTools::specify_elect_heat_fossil_fuels() %>%
+    ECCTools::specify_elect_heat_nuclear() %>%
+    ECCTools::specify_other_elec_heat_production() %>%
+    ECCTools::specify_elect_heat_markets() %>%
+    IEATools::add_psut_matnames() %>%
+    ECCTools::stat_diffs_to_balancing() %>%
+    ECCTools::stock_changes_to_balancing() %>% 
+    ECCTools::specify_losses_as_industry()
+  
+  # Calcs
+  tidy_A_dta_bis <- tidy_A_data_bis %>%
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE)
+  
+  res_dta_bis <- tidy_A_dta_bis %>%
+    calc_share_elec_supply_by_ff_group()
+  
+  # Testing:
+  res_dta_bis %>% 
+    dplyr::filter(Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta_bis %>% 
+    dplyr::filter(Product.Group == "All fossil fuels") %>% 
+    dplyr::ungroup() %>% dplyr::select(Share) %>% dplyr::pull() %>%
+    expect_equal(1)
+  res_dta_bis %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.8181818, tolerance = 1e-5)
+  res_dta_bis %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1818182, tolerance = 1e-5)
+  res_dta_bis %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1818182, tolerance = 1e-5)
+  
+  
+  # SECOND, WE TEST THE GMA APPROACH
+  # THE LOSSES APPROACH IS NOT YET IMPLEMENTED AT THE COUNTRY LEVEL!!!
+  
+  # tidy_AB_data_gma <- tidy_AB_data %>%
+  #   ECCTools::transform_to_gma()
+  # 
+  # tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+  #   prepare_gma_for_shares()
+  # 
+  # res_gma <- tidy_AB_data_gma_prepared %>% 
+  #   calc_share_elec_supply_by_ff_group()
+  
+  # Testing
+  # res_gma %>% 
+  #   dplyr::filter(Product.Group == "Oil products") %>% 
+  #   nrow() %>% 
+  #   expect_equal(0)
+  # res_gma %>% 
+  #   dplyr::filter(Product.Group == "All fossil fuels") %>% 
+  #   dplyr::ungroup() %>% dplyr::select(Share) %>% dplyr::pull() %>%
+  #   expect_equal(c(1,1))
+  # res_gma %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.8181818, tolerance = 1e-5)
+  # res_gma %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.1818182, tolerance = 1e-5)
+  # res_gma %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.1818182, tolerance = 1e-5)
+  # res_gma %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Coal products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.1176471, tolerance = 1e-5)
+  # res_gma %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Oil and gas products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.8823529, tolerance = 1e-5)
+  # res_gma %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Natural gas") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.8823529, tolerance = 1e-5)
+})
+
+
+
+
+test_that("calc_share_heat_supply_by_ff_group works with losses modelling",{
+  
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "EROITools")
+  
+  # Loading data
+  tidy_AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    dplyr::filter(Country == "A") %>% 
+    # Adding losses of Heat
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "TFC compare",
+      Flow = "Losses",
+      Product = "Heat",
+      Unit = "ktoe",
+      E.dot = -10
+    ) %>%
+    dplyr::mutate(
+      E.dot = dplyr::case_when(
+        (Flow == "Iron and steel" & Product == "Heat") ~ 40,
+        TRUE ~ E.dot
+      )
+    ) %>% 
+    IEATools::specify_all() %>%
+    ECCTools::specify_elect_heat_renewables() %>%
+    ECCTools::specify_elect_heat_fossil_fuels() %>%
+    ECCTools::specify_elect_heat_nuclear() %>%
+    ECCTools::specify_other_elec_heat_production() %>%
+    ECCTools::specify_elect_heat_markets() %>%
+    IEATools::add_psut_matnames() %>%
+    ECCTools::stat_diffs_to_balancing() %>%
+    ECCTools::stock_changes_to_balancing() %>% 
+    ECCTools::specify_losses_as_industry()
+  
+  
+  # FIRST, WE TEST THE DTA APPROACH
+  
+  # Calculating total use of each product
+  tidy_AB_dta <- tidy_AB_data %>%
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE)
+  
+  res_dta <- tidy_AB_dta %>%
+    calc_share_heat_supply_by_ff_group()
+  
+  # Country A
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.8)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil products") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1454545, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.1454545, tolerance = 1e-5)
+  res_dta %>% 
+    dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+    magrittr::extract2("Share") %>% 
+    expect_equal(0.6545455, tolerance = 1e-5)
+  
+  # Country B
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.6)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Oil products") %>% 
+  #   nrow() %>% 
+  #   expect_equal(0)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Oil and gas products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.5294118, tolerance = 1e-5)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Natural gas") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.5294118, tolerance = 1e-5)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Coal products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.07058824, tolerance = 1e-5)
+  
+  
+  # SECOND, WE TEST THE GMA APPROACH
+  # NOTE THAT LOSSES MODELLING IS NOT IMPLEMENTED YET FOR COUNTRY LEVEL!!
+  
+  # tidy_AB_data_gma <- tidy_AB_data %>%
+  #   ECCTools::transform_to_gma()
+  # 
+  # tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>% 
+  #   prepare_gma_for_shares()
+  # 
+  # res_gma <- tidy_AB_data_gma_prepared %>% 
+  #   calc_share_heat_supply_by_ff_group()
+  
+  # Country A
+  # res_dta %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "All fossil fuels") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.8)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Oil products") %>% 
+  #   nrow() %>% 
+  #   expect_equal(0)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Oil and gas products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.1454545, tolerance = 1e-4)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Natural gas") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.1454545, tolerance = 1e-4)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "A", Product.Group == "Coal products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.6545455, tolerance = 1e-4)
+  
+  # Country B
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "All fossil fuels") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.6)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Oil products") %>% 
+  #   nrow() %>% 
+  #   expect_equal(0)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Oil and gas products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.5294118, tolerance = 1e-5)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Natural gas") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.5294118, tolerance = 1e-5)
+  # res_dta %>% 
+  #   dplyr::filter(Country == "B", Product.Group == "Coal products") %>% 
+  #   magrittr::extract2("Share") %>% 
+  #   expect_equal(0.07058824, tolerance = 1e-5)
+})
