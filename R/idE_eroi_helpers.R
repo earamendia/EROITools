@@ -481,6 +481,7 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::filter(matnames %in% list_supply_mats) %>%
     dplyr::filter(stringr::str_detect(.data[[product]], "Electricity")) %>%
     dplyr::filter(.data[[flow]] != "Electricity market") %>%
+    dplyr::filter(! stringr::str_detect(.data[[flow]], "Losses")) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         .data[[product_without_origin]] %in% c("Electricity [from Coal products]", "Electricity [from Natural gas]", "Electricity [from Oil products]") ~ "All fossil fuels",
@@ -508,6 +509,7 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::filter(matnames == list_supply_mats) %>%
     dplyr::filter(stringr::str_detect(.data[[product]], "Electricity")) %>%
     dplyr::filter(.data[[flow]] != "Electricity market") %>%
+    dplyr::filter(! stringr::str_detect(.data[[flow]], "Losses")) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         .data[[product_without_origin]] %in% c("Electricity [from Natural gas]", "Electricity [from Oil products]") ~ "Oil and gas products",
@@ -536,6 +538,7 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::filter(matnames == list_supply_mats) %>%
     dplyr::filter(stringr::str_detect(.data[[product]], "Electricity")) %>%
     dplyr::filter(.data[[flow]] != "Electricity market") %>%
+    dplyr::filter(! stringr::str_detect(.data[[flow]], "Losses")) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         .data[[product_without_origin]] == "Electricity [from Oil products]" ~ "Oil products",
@@ -783,6 +786,7 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::filter(.data[[matnames]] == list_supply_mats) %>%
     dplyr::filter(stringr::str_detect(.data[[product]], "Heat")) %>%
     dplyr::filter(.data[[flow]] != "Heat market") %>%
+    dplyr::filter(! stringr::str_detect(.data[[flow]], "Losses")) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         .data[[product_without_origin]] %in% c("Heat [from Coal products]", "Heat [from Natural gas]", "Heat [from Oil products]") ~ "All fossil fuels",
@@ -810,6 +814,7 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::filter(.data[[matnames]] == list_supply_mats) %>%
     dplyr::filter(stringr::str_detect(.data[[product]], "Heat")) %>%
     dplyr::filter(.data[[flow]] != "Heat market") %>%
+    dplyr::filter(! stringr::str_detect(.data[[flow]], "Losses")) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         .data[[product_without_origin]] %in% c("Heat [from Natural gas]", "Heat [from Oil products]") ~ "Oil and gas products",
@@ -838,6 +843,7 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::filter(.data[[matnames]] == list_supply_mats) %>%
     dplyr::filter(stringr::str_detect(.data[[product]], "Heat")) %>%
     dplyr::filter(.data[[flow]] != "Heat market") %>%
+    dplyr::filter(! stringr::str_detect(.data[[flow]], "Losses")) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         .data[[product_without_origin]] == "Heat [from Oil products]" ~ "Oil products",
