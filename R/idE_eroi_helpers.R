@@ -205,8 +205,10 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
     dplyr::filter(
       (.data[[matnames]] %in% list_use_mats & (.data[[product_without_origin]] %in% c(list_oil_products, list_coal_products, list_gas_products)))
     ) %>%
-    dplyr::filter(.data[[flow]] != losses) %>%
-    dplyr::filter(! stringr::str_detect(.data[[flow]], exports)) %>%
+    dplyr::filter(
+      ! (stringr::str_detect(.data[[flow]], exports))
+    ) %>%
+    dplyr::filter(! (stringr::str_detect(.data[[flow]], losses) & .data[[matnames]] == IEATools::psut_cols$Y)) %>% 
     dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
     dplyr::mutate(
       "{product.group}" := "All fossil fuels",
@@ -219,8 +221,10 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
     dplyr::filter(
       (.data[[matnames]] %in% list_use_mats & (.data[[product_without_origin]] %in% c(list_oil_products, list_coal_products, list_gas_products)))
     ) %>%
-    dplyr::filter(.data[[flow]] != losses) %>%
-    dplyr::filter(! stringr::str_detect(.data[[flow]], exports)) %>%
+    dplyr::filter(
+      ! (stringr::str_detect(.data[[flow]], exports))
+    ) %>%
+    dplyr::filter(! (stringr::str_detect(.data[[flow]], losses) & .data[[matnames]] == IEATools::psut_cols$Y)) %>% 
     dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
@@ -237,8 +241,10 @@ calc_fec_from_ff_as_fuel_by_group <- function(.tidy_iea_df,
     dplyr::filter(
       (.data[[matnames]] %in% list_use_mats & (.data[[product_without_origin]] %in% c(list_oil_products, list_coal_products, list_gas_products)))
     ) %>%
-    dplyr::filter(.data[[flow]] != losses) %>%
-    dplyr::filter(! stringr::str_detect(.data[[flow]], exports)) %>%
+    dplyr::filter(
+      ! (stringr::str_detect(.data[[flow]], exports))
+    ) %>%
+    dplyr::filter(! (stringr::str_detect(.data[[flow]], losses) & .data[[matnames]] == IEATools::psut_cols$Y)) %>% 
     dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
