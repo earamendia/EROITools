@@ -80,3 +80,5 @@
 #     Group.eroi = 1/(1/Group.eroi + .data[["ratio_indirect_energy_per_output"]])
 #   ) %>%
 #   dplyr::select(-.data[["ratio_indirect_energy_per_output"]])
+
+# just a test in the debugging file
