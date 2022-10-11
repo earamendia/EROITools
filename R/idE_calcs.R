@@ -240,7 +240,7 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
     ) %>%
-    dplyr::select(-.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
+    dplyr::select(-.data[[country]], -.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
                   -.data[[last_stage]], -.data[[unit]], -.data[[total_group_output]])
   
   
@@ -265,7 +265,7 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
     ) %>%
     dplyr::inner_join(
       indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-.data[[energy.stage]]),
-      by = c({country}, {year}, {product.group})
+      by = c({year}, {product.group})
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[ratio_indirect_energy_per_output]] / .data[[final_to_useful_eff]]
