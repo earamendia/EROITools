@@ -28,7 +28,7 @@
 #'             Default is "Type".
 #' @param boundary The name of the column containing the boundary for the eroi calculation.
 #'                 Default is "Boundary".
-#' @final_to_useful_eff The name of the column containing the derived final-to-useful efficiencies.
+#' @param final_to_useful_eff The name of the column containing the derived final-to-useful efficiencies.
 #'                      Default is "Final_to_useful_efficiency".
 #' @param ratio_indirect_energy_per_output The name of the column containing the ratio of indirect energy to product group output.
 #'                                         Default is "ratio_indirect_energy_per_output".
@@ -187,7 +187,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
 #'             Default is "Type".
 #' @param boundary The name of the column containing the boundary for the eroi calculation.
 #'                 Default is "Boundary".
-#' @final_to_useful_eff The name of the column containing the derived final-to-useful efficiencies.
+#' @param final_to_useful_eff The name of the column containing the derived final-to-useful efficiencies.
 #'                      Default is "Final_to_useful_efficiency".
 #' @param ratio_indirect_energy_per_output The name of the column containing the ratio of indirect energy to product group output.
 #'                                         Default is "ratio_indirect_energy_per_output".
