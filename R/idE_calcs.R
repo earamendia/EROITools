@@ -1,9 +1,12 @@
 
 #' Adds indirect energy to the EROI values
 #'
-#' To add indirect energy, the function calculates the ratio of indirect energy to output per product group, 
+#' To add indirect energy, the function calculates the ratio of indirect energy to output per product group at the global level (see details), 
 #' and then adds it to the energy inputs using the inverse of the EROI. The function uses the same ratio for each product group, 
 #' independently of whether the energy stage is electricity, heat, fuel, or the combination (it does apply a different ratio at the primary, final and useful stage though).
+#' 
+#' The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of idE to output (primary and final energy stages)
+#' is calculated at the global level, so output per fossil fuel group needs to be calculated at the global level.
 #'
 #' @param .tidy_summarised_erois_df The aggregated EROI values to which indirect energy needs to be added
 #' @param .tidy_indirect_energy A tidy data frame containing the indirect energy to be added, in ktoe.
@@ -77,7 +80,8 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
     ) %>%
-    dplyr::select(-.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
+    dplyr::ungroup() %>% 
+    dplyr::select(-.data[[country]], -.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
                   -.data[[last_stage]], -.data[[unit]], -.data[[total_group_output]])
 
 
@@ -102,7 +106,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
     ) %>%
     dplyr::inner_join(
       indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-.data[[energy.stage]]),
-      by = c({country}, {year}, {product.group})
+      by = c({year}, {product.group})
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[ratio_indirect_energy_per_output]] / .data[[final_to_useful_eff]]
@@ -110,13 +114,22 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
     dplyr::ungroup() %>%
     dplyr::select(-.data[[method]], -.data[[energy_type]], -.data[[last_stage]], -.data[[eroi.method]], -.data[[type]], -.data[[boundary]], -.data[["Non_Energy_Uses"]], -.data[[final_to_useful_eff]])
 
-
+  
+  # List countries
+  list_countries <- indirect_energy_per_output_useful %>%
+    dplyr::ungroup() %>%
+    dplyr::select(.data[[country]]) %>%
+    dplyr::distinct() %>%
+    dplyr::pull()
+  
   # Expand, so that the final stage is now available for final (fuel), final (elec), and final (heat)
   # With the same values.
   indirect_energy_per_output_expanded <- indirect_energy_per_output_primary_final %>%
+    tidyr::expand_grid("{country}" := list_countries) %>% 
     dplyr::filter(.data[[energy.stage]] == "Primary") %>%
     dplyr::bind_rows(
       indirect_energy_per_output_primary_final %>%
+        tidyr::expand_grid("{country}" := list_countries) %>% 
         dplyr::filter(.data[[energy.stage]] == "Final") %>%
         dplyr::select(-.data[[energy.stage]]) %>%
         tidyr::expand_grid(Energy.stage = c("Final (fuel)", "Final (electricity)", "Final (heat)", "Final (fuel+elec+heat)")),
@@ -149,6 +162,9 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
 #' and then adds it to the energy inputs using the inverse of the EROI. The function starts by calculating the ratio of
 #' indirect energy to final energy output, and then uses the average efficiency, either by end-use or final demand sector depending on the breakdown,
 #' to determine the ratio indirect energy input to useful energy output. The average efficiency is determined as the ratio of useful stage EROI to funal stage EROI.
+#' 
+#' The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of idE to output (primary and final energy stages)
+#' is calculated at the global level, so output per fossil fuel group needs to be calculated at the global level.
 #'
 #' @param .tidy_aggregated_erois_by_df The aggregated useful stage EROI values, with breakdown, to which indirect energy needs to be added
 #' @param .tidy_indirect_energy A tidy data frame containing the indirect energy to be added, in ktoe.

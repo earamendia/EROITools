@@ -110,9 +110,9 @@ test_that("add_indirect_energy_to_erois works as intended",{
     )
   
   res_idE <- add_indirect_energy_to_erois(
-    .tidy_summarised_erois_df = all_erois,
-    .tidy_indirect_energy = prepare_idE_df_2,
-    .tidy_iea_df = tidy_AB_dta,
+    .tidy_summarised_erois_df = all_erois %>% dplyr::filter(Country == "A"),
+    .tidy_indirect_energy = prepare_idE_df_2 %>% dplyr::filter(Country == "A"),
+    .tidy_iea_df = tidy_AB_dta %>% dplyr::filter(Country == "A"),
   )
   
   # And finally testing the values obtained:

@@ -73,7 +73,11 @@ Default is "ratio_indirect_energy_per_output".}
 A data frame containing the EROIs with the indirect energy now included.
 }
 \description{
-To add indirect energy, the function calculates the ratio of indirect energy to output per product group,
+To add indirect energy, the function calculates the ratio of indirect energy to output per product group at the global level (see details),
 and then adds it to the energy inputs using the inverse of the EROI. The function uses the same ratio for each product group,
 independently of whether the energy stage is electricity, heat, fuel, or the combination (it does apply a different ratio at the primary, final and useful stage though).
+}
+\details{
+The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of idE to output (primary and final energy stages)
+is calculated at the global level, so output per fossil fuel group needs to be calculated at the global level.
 }
