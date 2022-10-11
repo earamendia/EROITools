@@ -240,6 +240,7 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
     ) %>%
+    dplyr::ungroup() %>% 
     dplyr::select(-.data[[country]], -.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
                   -.data[[last_stage]], -.data[[unit]], -.data[[total_group_output]])
   
