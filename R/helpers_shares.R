@@ -751,7 +751,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      "{total_product_use}" := sum(.data[[e_dot]])
+      "{total_product_use}" := sum(abs(.data[[e_dot]]))
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -768,7 +768,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      "{total_product_use}" := sum(.data[[e_dot]])
+      "{total_product_use}" := sum(abs(.data[[e_dot]]))
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -781,7 +781,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      "{total_product_use}" := sum(.data[[e_dot]])
+      "{total_product_use}" := sum(abs(.data[[e_dot]]))
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -823,7 +823,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      "{total_product_use}" := sum(.data[[e_dot]])
+      "{total_product_use}" := sum(abs(.data[[e_dot]]))
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -840,7 +840,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      "{total_product_use}" := sum(.data[[e_dot]])
+      "{total_product_use}" := sum(abs(.data[[e_dot]]))
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
@@ -853,7 +853,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
-      "{total_product_use}" := sum(.data[[e_dot]])
+      "{total_product_use}" := sum(abs(.data[[e_dot]]))
     ) %>%
     dplyr::mutate(
       "{unit}" := "ktoe"
