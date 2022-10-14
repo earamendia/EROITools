@@ -1,0 +1,7 @@
+EROITools to dos:
+- Pick a license
+- Remove all warnings/notes
+- Write vignettes (define which ones):
+	-> 
+	-> 
+- Do first actual release
