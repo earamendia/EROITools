@@ -194,6 +194,9 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
                                             aggregated_efficiency = "Aggregated_Efficiency",
                                             calc_method = c("dta", "gma")){
   
+  # Setting up calc_method argument
+  calc_method <- match.arg(calc_method)
+  
   ### Preparing the .tidy_iea_df so that it has a new "product_without_origin" column,
   # which will be equal to "product" when we are not using a MR-PSUT framework
   cols_to_check <- c(product_without_origin = NA_character_)
