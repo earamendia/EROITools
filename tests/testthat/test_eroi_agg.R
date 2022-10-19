@@ -629,10 +629,13 @@ test_that("aggregate_useful_stage_erois works",{
   tidy_useful_erois_gma <- tidy_AB_erois_gma %>% 
     dplyr::left_join(tidy_FU_efficiencies_gma,
                      by = c("Country", "Method", "Energy.type", "Year", "Product")) %>%
+    dplyr::select(-Country) %>% 
+    tidyr::expand_grid(Country = c("A", "B")) %>% 
     dplyr::mutate(
       Useful_Stage_EROI = Average_Efficiency_Global * EROI
     ) %>% 
     dplyr::filter(! is.na(Useful_Stage_EROI))
+  
   
   # Calculating aggregated EROIs:
   res_gma <- aggregate_useful_stage_erois(

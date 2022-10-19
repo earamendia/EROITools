@@ -568,8 +568,7 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
   } else if (eroi_calc_method == "gma"){
     
     aggregated_useful_erois <- tidy_shares_df %>%
-      dplyr::inner_join(.tidy_erois_df %>% 
-                          dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
