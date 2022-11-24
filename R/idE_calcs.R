@@ -5,7 +5,7 @@
 #' and then adds it to the energy inputs using the inverse of the EROI. The function uses the same ratio for each product group, 
 #' independently of whether the energy stage is electricity, heat, fuel, or the combination (it does apply a different ratio at the primary, final and useful stage though).
 #' 
-#' The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of idE to output (primary and final energy stages)
+#' The .tidy_iea_data frame provided as input should be a representation of the global Energy Conversion Chain, as the ratio of indirect energy to output (primary and final energy stages)
 #' is calculated at the global level, so output per fossil fuel group needs to be calculated at the global level.
 #'
 #' @param .tidy_summarised_erois_df The aggregated EROI values to which indirect energy needs to be added
@@ -167,9 +167,9 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
 #' To add indirect energy, the function calculates the ratio of indirect energy to output per product group, 
 #' and then adds it to the energy inputs using the inverse of the EROI. The function starts by calculating the ratio of
 #' indirect energy to final energy output, and then uses the average efficiency, either by end-use or final demand sector depending on the breakdown,
-#' to determine the ratio indirect energy input to useful energy output. The average efficiency is determined as the ratio of useful stage EROI to funal stage EROI.
+#' to determine the ratio indirect energy input to useful energy output. The average efficiency is determined as the ratio of useful stage EROI to final stage EROI.
 #' 
-#' The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of idE to output (primary and final energy stages)
+#' The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of indirect energy to output (primary and final energy stages)
 #' is calculated at the global level, so output per fossil fuel group needs to be calculated at the global level.
 #'
 #' @param .tidy_aggregated_erois_by_df The aggregated useful stage EROI values, with breakdown, to which indirect energy needs to be added
