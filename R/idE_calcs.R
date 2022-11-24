@@ -146,6 +146,12 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       by = c({country}, {year}, "Indirect_Energy", {product.group}, {energy.stage})
     ) %>%
     dplyr::mutate(
+      Indirect_Energy = dplyr::case_when(
+        Indirect_Energy == "Included" & is.na(.data[[ratio_indirect_energy_per_output]]) ~ "Inclusion not possible",
+        TRUE ~ Indirect_Energy
+      )
+    ) %>% 
+    dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := tidyr::replace_na(.data[[ratio_indirect_energy_per_output]], 0),
       "{group.eroi}" := 1/(1/.data[[group.eroi]] + .data[[ratio_indirect_energy_per_output]])
     ) %>%
@@ -283,6 +289,12 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
     dplyr::left_join(
       indirect_energy_per_output_useful,
       by = c({country}, {year}, "Indirect_Energy", {product.group}, {energy.stage}, {aggregation_category})
+    ) %>% 
+    dplyr::mutate(
+      Indirect_Energy = dplyr::case_when(
+        Indirect_Energy == "Included" & is.na(.data[[ratio_indirect_energy_per_output]]) ~ "Inclusion not possible",
+        TRUE ~ Indirect_Energy
+      )
     ) %>% 
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := tidyr::replace_na(.data[[ratio_indirect_energy_per_output]], 0),
