@@ -201,8 +201,7 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
   # which will be equal to "product" when we are not using a MR-PSUT framework
   cols_to_check <- c(product_without_origin = NA_character_)
   
-  .tidy_iea_df <- .tidy_iea_df %>%
-    tibble::add_column(!!!cols_to_check[!names(cols_to_check) %in% names(.)]) %>%
+  .tidy_iea_df <- tibble::add_column(.tidy_iea_df, !!!cols_to_check[!names(cols_to_check) %in% names(.tidy_iea_df)]) %>% 
     dplyr::mutate(
       "{product_without_origin}" := dplyr::case_when(
         is.na(.data[[product_without_origin]]) ~ .data[[product]],

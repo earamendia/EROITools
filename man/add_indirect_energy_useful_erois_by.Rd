@@ -79,9 +79,9 @@ A data frame containing the EROIs with considered breakdown, with the indirect e
 To add indirect energy, the function calculates the ratio of indirect energy to output per product group,
 and then adds it to the energy inputs using the inverse of the EROI. The function starts by calculating the ratio of
 indirect energy to final energy output, and then uses the average efficiency, either by end-use or final demand sector depending on the breakdown,
-to determine the ratio indirect energy input to useful energy output. The average efficiency is determined as the ratio of useful stage EROI to funal stage EROI.
+to determine the ratio indirect energy input to useful energy output. The average efficiency is determined as the ratio of useful stage EROI to final stage EROI.
 }
 \details{
-The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of idE to output (primary and final energy stages)
+The .tidy_iea_df provided as input should be a representation of the global Energy Conversion Chain, as the ratio of indirect energy to output (primary and final energy stages)
 is calculated at the global level, so output per fossil fuel group needs to be calculated at the global level.
 }
