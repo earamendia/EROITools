@@ -1,0 +1,125 @@
+---
+  title: "Get started"
+author: "Emmanuel Aramendia"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+  fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Get started}
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteEncoding{UTF-8}
+bibliography: References.bib
+---
+
+  ```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+library(dplyr)
+library(Recca)
+library(EROITools)
+```
+
+
+# Introduction
+
+The `R` package `EROITools` provides tools to aggregate Energy Return On Investment (EROI) values previously calculated using a Physical Supply Use Table (PSUT) framework to represent the Energy Conversion Chain (see @Heun:2018). Previous to using the `EROITools` package, the World Energy Extended Balances (WEEB) from the International Energy Agency (IEA) can be loaded and tidied using the `IEATools` and `ECCTools` `R` packages. The `Recca` `R` package then allows analysts to calculate a wide range of EROIs at the product and industry levels, and the `EROITools` package provides tools aggregate the calculated EROIs by product group. Important features of the `EROITools` package include the following:
+
+* Aggregations can be performed either at the global or national level;
+* Aggregations can be performed at both the primary and final stage of energy use, but also at the **useful** stage of energy use providing that final-to-useful efficiencies are provided by the analyst for each energy product;
+* At the useful stage, the package also allows analysts to conduct these aggregations respecting sectoral or end-use breakdowns, so that the average useful stage EROI of a product group can be calculated for a given final demand sector (for instance steelmaking) or for a given end-use category (for instance high temperature heating);
+* Last, the package allows analysts to add additional energy requirements (supposing that these are provided by the analyst) that cannot be quantified using the IEA's WEEB such as supply chain energy requirements --- see @brockwayEstimationGlobalFinalstage2019 or @brandcorreaDevelopingInputOutputBased2017 for examples of a quantification of such indirect energy flows.
+
+
+# Available vignettes
+
+The vignettes available for this package detail how to conduct the following tasks:
+
+1.  [Aggregating EROIs by fossil fuel group](aggregating.html): Shows how EROIs can be aggregated by fossil fuel group at the primary, final, and useful energy stages. The product-level EROIs need to have been calculated and extracted first as described in the subsequent example section.
+2.  [Breaking down useful stage EROIs by sector or end-use](breakdown.html): Shows how to calculate useful stage EROIs while respecting a breakdown either by final demand sector or end-use category.
+3.  [Adding indirect or other energy requirements](indirect_energy.html): Shows how indirect or other energy requirements can be added to the EROI calculations.
+
+
+# Example for vignettes: the AB world
+
+We the same example than the one used to describe the `ECCTools` package: welcome back to the fictitious AB world (consisting of country A and country B)!
+
+
+## Country A
+
+The Energy Conversion Chain of country A is shown in the figure below:
+
+![](figs/Country_A_ECC.png)
+
+
+## Country B
+
+Next figure shows the Energy Conversion Chain of country B.
+
+![](figs/Country_B_ECC.png)
+
+
+## Tidy AB data
+
+Let's now have a look to the AB data organised in a `.tidy_iea_df` as provided by the `IEATools` package.
+
+```{r}
+# Fix product-level balances within each country
+tidy_AB_data %>% 
+  dplyr::glimpse()
+```
+
+
+## Calculation of product-level EROIs
+
+Let us first modify the Energy Conversion Chain to make it compliant with the Domestic Technology Assumption (see the vignettes of the `ECCTools` package for more information --- the basic idea is to avoid taking into consideration imports in the supply mix of a given country).
+
+
+```{r}
+# Transforming to Domestic Technology Assumption
+tidy_AB_dta <- tidy_AB_data %>%
+    ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
+                               select_dta_observations = FALSE) %>% 
+  dplyr::glimpse()
+```
+
+Then, we construct the Input-Output matrices needed to conduct the calculations.
+
+```{r}
+# Calculating associated Input-Output matrices
+tidy_io_AB_dta <- tidy_AB_data %>%
+  IEATools::prep_psut() %>%
+  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols") %>% 
+  dplyr::glimpse()
+```
+
+Then, we calculate the product-level EROIs in a matric format.
+
+```{r}
+# Calculating EROI vectors (matrix format)
+tidy_AB_erois_matrices <- tidy_io_AB_dta %>%
+  Recca::calc_E_EIOU() %>%
+  Recca::calc_erois() %>% 
+  dplyr::glimpse()
+```
+
+Last, we can drop the matrix format and extract the product-level EROIs in a tidy data frame format.
+
+```{r}
+# Extracting EROI values to a tidy data frame format
+tidy_AB_erois <- tidy_AB_erois_matrices %>%
+  EROITools::extract_tidy_product_erois() %>%
+  dplyr::mutate(
+    Eroi.method = "DTA"
+  ) %>%
+  dplyr::relocate(.data[["Eroi.method"]], .after = Year) %>% 
+  dplyr::glimpse()
+```
+
+
+The rest of the vignettes will take will demonstrate the `EROITools` package based on this `tidy_AB_erois` data frame.

@@ -1,0 +1,11 @@
+---
+title: "Breaking down useful stage EROIs by sector or end-use"
+author: "Emmanuel Aramendia"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using the balancing matrix}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: References.bib
+---
