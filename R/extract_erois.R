@@ -92,8 +92,8 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
       )
     ) %>%
     dplyr::select(-.data[[matnames]]) %>%
-    dplyr::relocate(.data[[boundary]], .before = product) %>%
-    dplyr::relocate(.data[[type]], .before = boundary) %>%
+    dplyr::relocate(.data[[boundary]], .before = .data[[product]]) %>%
+    dplyr::relocate(.data[[type]], .before = .data[[boundary]]) %>%
     dplyr::rename(
       "{eroi}" := .data[[matvals]]
     ) %>%
@@ -204,8 +204,8 @@ extract_tidy_industry_erois <- function(.tidy_io_mats,
       ),
     ) %>%
     dplyr::select(-.data[[matnames]]) %>%
-    dplyr::relocate(.data[[boundary]], .before = industry) %>%
-    dplyr::relocate(.data[[type]], .before = boundary) %>%
+    dplyr::relocate(.data[[boundary]], .before = .data[[industry]]) %>%
+    dplyr::relocate(.data[[type]], .before = .data[[boundary]]) %>%
     dplyr::rename(
       "{eroi}" := .data[[matvals]]
     )
