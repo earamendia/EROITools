@@ -170,4 +170,6 @@ tidy_AB_erois_gma <- tidy_AB_erois_matrices_gma %>%
   dplyr::glimpse()
 ```
 
+It can be seen that in the Global Market Assumption, there is only one region ("World"), and that the EROI of each product is specified in function of the region of **production** (not consumption!) of the product --- information contained in the product name ("Product" column).
+
 The rest of the vignettes will take will demonstrate the `EROITools` package based on the `tidy_AB_erois_dta` and `tidy_AB_erois_gma` data frames.
