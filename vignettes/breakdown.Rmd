@@ -9,3 +9,119 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 bibliography: References.bib
 ---
+
+In this vignette, we show how EROIs can be aggregated by fossil fuel group at the useful stage by respecting a given breakdown, which would usually be a breakdown by final demand sector or end-use category.
+
+
+# Domestic perspective
+
+We start by constructing the dummy final-to-useful efficiencies for each energy product in a similar way than in the vignette demonstrating the aggregation process:
+
+```{r}
+# Constructing final-to-useful efficiencies data frame
+length_to_use <- tidy_AB_erois_dta %>%
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>%
+  dplyr::distinct() %>%
+  nrow()
+
+tidy_FU_efficiencies_dta <- tidy_AB_erois_dta %>%
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>%
+  dplyr::distinct() %>%
+  dplyr::mutate(
+    Average_Efficiency_Global = seq(0.15, 1, 0.85/(length_to_use-1))
+  ) %>% 
+  dplyr::glimpse()
+```
+
+Now, supposing that the analyst has access to different final-to-useful efficiencies for three different end-uses; "heating", "machanical work", and "other end-uses"; let's suppose that the final-to-useful efficiencies for mechanical work are half of those of heating, and those of other end-uses a third of those of heating. We can then construct the data frame of end-use specific final-to-useful efficiencies as follows:
+
+```{r}
+# Making the data frame end-use specific
+tidy_FU_efficiencies_dta_end_uses <- tidy_FU_efficiencies_dta %>% 
+  tidyr::expand_grid(End_Use = c("Heating", "Mechanical Work", "Other end-uses")) %>% 
+  dplyr::mutate(
+    Average_Efficiency_Global = dplyr::case_when(
+      Average_Efficiency_Global == "Mechanical Work" ~ Average_Efficiency_Global / 2,
+      Average_Efficiency_Global == "Other end-uses" ~ Average_Efficiency_Global / 3,
+      TRUE ~ Average_Efficiency_Global
+    )
+  ) %>% 
+  dplyr::glimpse()
+```
+
+Then, we can calculate the useful stage EROIs at the product level using the `push_to_useful_erois`, which will respect the different end-uses.
+
+```{r}
+# Constructing useful stage EROIs data frame
+  tidy_useful_erois_dta_end_uses <- push_to_useful_erois(
+    .tidy_io_erois = tidy_AB_erois_dta,
+    tidy_FU_efficiencies = tidy_FU_efficiencies_dta_end_uses,
+    eroi_calc_method = "dta"
+  ) %>% 
+  dplyr::glimpse()
+```
+
+Note that likewise, a data frame containing the final demand sector specific final-to-useful efficiencies could have been conducted, and a final demand sector specific of useful stage EROIs could have been conducted.
+
+Last, note that the `aggregate_useful_stage_erois` function does not yet allow to aggregate EROIs respecting the breakdown. Such a feature will be developed in the near future.
+
+
+<!--
+Finally, we can aggregate useful stage EROIs in a similar way than when no breakdown is provided, using the `aggregate_useful_stage_erois` function. The function also uses the final use shares of each product within each fossil fuel group, as for the `aggregate_final_stage_erois` function.
+!-->
+
+
+
+# Multi-regional perspective
+
+Similarly, we construct the data frame containing the final-to-useful efficiencies.
+
+```{r}
+# Constructing final-to-useful efficiencies data frame
+length_to_use <- tidy_AB_erois_dta %>%
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>%
+  dplyr::distinct() %>%
+  nrow()
+
+tidy_FU_efficiencies_gma <- tidy_AB_erois_gma %>% 
+  dplyr::mutate(
+    Country = stringr::str_extract(Product, "\\{.*\\}") %>% 
+      stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
+    Product = stringr::str_remove(Product, "\\{.*\\}_")
+  ) %>% 
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+  dplyr::distinct() %>% 
+  dplyr::mutate(
+    Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
+  ) %>% 
+  dplyr::glimpse()
+```
+
+
+Next, we make this data frame end-use specific assuming some specific final-to-useful efficiencies by end-use: the average efficiency of mechanical work being half of the one of heating, and the one of other end-uses being a third of the one of heating, and this for all energy products.
+
+```{r}
+# Making the data frame end-use specific
+tidy_FU_efficiencies_gma_end_uses <- tidy_FU_efficiencies_gma %>% 
+  tidyr::expand_grid(End_Use = c("Heating", "Mechanical Work", "Other end-uses")) %>% 
+  dplyr::mutate(
+    Average_Efficiency_Global = dplyr::case_when(
+      Average_Efficiency_Global == "Mechanical Work" ~ Average_Efficiency_Global / 2,
+      Average_Efficiency_Global == "Other end-uses" ~ Average_Efficiency_Global / 3,
+      TRUE ~ Average_Efficiency_Global
+    )
+  ) %>% 
+  dplyr::glimpse()
+```
+
+Finally, we construct the useful stage EROIs data frame using the `push_to_useful_erois` function.
+
+```{r}
+# Constructing useful stage EROIs data frame
+tidy_useful_erois_gma_end_uses <- push_to_useful_erois(
+  .tidy_io_erois = tidy_AB_erois_gma,
+  tidy_FU_efficiencies = tidy_FU_efficiencies_gma_end_uses,
+  eroi_calc_method = "gma"
+  ) %>% 
+  dplyr::glimpse()
+```
