@@ -10,4 +10,197 @@ vignette: >
 bibliography: References.bib
 ---
 
+In this vignette, we show how indirect energy requirements (or other energy requirements) can be added to the energy requirements of a given EROI, and the new EROI determined. Note that the analyst would have to provide the indirect energy requirements (or other energy requirements) to use the functions provided in the `EROITools` package.
 
+
+# Adding indirect energy requirements
+
+We start by expanding the product-level EROIs to the useful stage using some made-up final-to-useful efficiencies for each product, in a similar vein to what has been done in the other vignettes.
+
+
+```{r}
+# Constructing final-to-useful efficiencies data frame
+# Pushing to tidy useful stage EROIs:
+length_to_use <- tidy_AB_erois_dta %>% 
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+  dplyr::distinct() %>% 
+  nrow()
+
+tidy_FU_efficiencies_dta <- tidy_AB_erois_dta %>% 
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
+  dplyr::distinct() %>% 
+  dplyr::mutate(
+    Average_Efficiency_Global = seq(0.15, 1, 0.85/(length_to_use-1))
+  )
+
+tidy_useful_erois_dta <- push_to_useful_erois(
+    .tidy_io_erois = tidy_AB_erois_dta,
+    tidy_FU_efficiencies = tidy_FU_efficiencies_dta,
+    eroi_calc_method = "dta"
+  ) %>%
+  dplyr::glimpse()
+```
+
+Then, we aggregate primary, final, and useful stage EROIs using the functions of the package, and bind all the results in a single data frame of aggregated EROIs.
+
+```{r}
+# Primary stage EROIs:
+primary_erois <- aggregate_primary_stage_erois(
+  .tidy_erois_df = tidy_AB_erois_dta,
+  .tidy_iea_df = tidy_AB_dta,
+  eroi_calc_method = "dta"
+)
+
+# Final stage EROIs:
+final_erois <- aggregate_final_stage_erois(
+  .tidy_erois_df = tidy_AB_erois_dta,
+  .tidy_iea_df = tidy_AB_dta,
+  eroi_calc_method = "dta"
+)
+
+# Useful stage EROIs:
+useful_erois <- aggregate_useful_stage_erois(
+  .tidy_erois_df = tidy_useful_erois_dta,
+  .tidy_iea_df = tidy_AB_dta,
+  eroi_calc_method = "dta"
+)
+
+# All EROIs in single data frame:
+all_aggregated_erois <- dplyr::bind_rows(
+  primary_erois,
+  final_erois,
+  useful_erois
+)
+```
+
+
+Next, the analyst needs to provide aa data frame containing for each product, year, product group, and energy stage (primary, final), the indirect energy requirements quantified in the same unit that the `.tidy_iea_df` being used (here the `tidy_AB_dta` data frame). Here, we make up our own data to demonstrate the package and the structure of the input data frame that the analyst needs to provide.
+
+
+```{r}
+prepare_nrows_df <- all_aggregated_erois %>% 
+  dplyr::filter(Energy.stage == "Primary" | stringr::str_detect(Energy.stage, "Final")) %>% 
+  dplyr::mutate(
+    Energy.stage = dplyr::case_when(
+      stringr::str_detect(Energy.stage, "Final") ~ "Final",
+      TRUE ~ Energy.stage
+    )
+  ) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(Country, Year, Product.Group, Energy.stage) %>% 
+  dplyr::mutate(
+    Indirect_Energy = "Included"
+  ) %>% 
+  dplyr::distinct() %>% 
+  dplyr::glimpse()
+
+n_rows <- prepare_idE_df_1 %>% 
+  nrow()
+
+idE_df <- prepare_nrows_df %>% 
+  dplyr::mutate(
+    Indirect_Energy_ktoe = seq(0, 1000, 1000/(n_rows - 1))
+  ) %>% 
+  dplyr::glimpse()
+```
+
+From there, the indirect energy requirements can easily be added to the energy requirements of each product group using the `add_indirect_energy_to_erois` function. Note, the `add_indirect_energy_to_erois` adds indirect energy requirements by calculating, for each product group, the ratio of indirect energy requirements to energy output, as:
+
+$$r = \frac{\textrm{idE}}{e_{\textrm{out}}},$$
+
+the indirect energy requirements are thus those provided by the analyst, the energy output by product group is however calculated internally by the function using the data of the `.tidy_iea_df` passed as argument. An important note is that the analyst can decide to quantify energy products used as non-energy products as part of the energy output (leading to a lower ratio), or to exclude them (leading to a higher ratio), using the *include_non_energy_uses* argument --- this decision has to be made on the basis of whether energy use should be ascribed to energy products used as non-energy products or not. By default, it is recommended to include non-energy uses as part of the output to ensure consistency with the Physical Supply Use Table calculations, and hence to use TRUE as value.
+
+The inverse of the new EROI including indirect energy requirements is then calculated as:
+
+$$\textrm{EROI}_{\textrm{idE}}^{-1} = \textrm{EROI}_{\textrm{dE}}^{-1} + \frac{\textrm{idE}}{e_{\textrm{out}}},$$
+
+and taking the inverse yields the EROI including indirect energy requirements.
+
+```{r}
+erois_with_idE <- add_indirect_energy_to_erois(
+  .tidy_summarised_erois_df = all_aggregated_erois,
+  .tidy_indirect_energy = idE_df,
+  .tidy_iea_df = tidy_AB_dta
+) %>% 
+  dplyr::glimpse()
+```
+
+
+# Adding a sectoral or end-use breakdown at the useful stage
+
+If indirect energy requirements are to be added to EROIs in a way that respects a given breakdown (by final demand sector, end-use, etc.) at the useful stage, then one should use instead the `add_indirect_energy_useful_erois_by` function.
+
+First, we need to define a data frame containing the useful stage EROIs for the different categories. For the sake of the example, we suppose that "Iron and steel" has the highest EROIs, with fuels used in "Others" having only a EROI of half the value, fuels used in "Road transportation" only a third, in "Agriculture" only a fourth, and in "Mining" only a fifth.
+
+```{r}
+list_breakdown_categories <- c("Iron and steel", "Road transportation", "Agriculture", "Mining", "Others")
+
+# Useful stage EROIs:
+useful_stage_erois_by <- aggregate_useful_stage_erois(
+  .tidy_erois_df = tidy_useful_erois_dta,
+  .tidy_iea_df = tidy_AB_dta,
+  eroi_calc_method = "dta"
+) %>% 
+  tidyr::expand_grid(
+    Categories = list_breakdown_categories
+  ) %>% 
+  dplyr::mutate(
+    Group.eroi = dplyr::case_when(
+      Categories == "Others" ~ Group.eroi/2,
+      Categories == "Road transportation" ~ Group.eroi/3,
+      Categories == "Agriculture" ~ Group.eroi/4,
+      Categories == "Mining" ~ Group.eroi/5,
+      TRUE ~ Group.eroi
+    )
+  ) %>% 
+  dplyr::glimpse()
+```
+
+Then, we can prepare the values of indirect energy requirements for each product group:
+
+```{r}
+# Final stage EROIs:
+final_erois <- aggregate_final_stage_erois(
+  .tidy_erois_df = tidy_AB_erois_dta,
+  .tidy_iea_df = tidy_AB_dta,
+  eroi_calc_method = "dta"
+) %>% 
+  tidyr::expand_grid(
+    Categories = list_breakdown_categories
+  )
+
+prepare_idE_df <- final_erois %>% 
+  dplyr::filter(stringr::str_detect(Energy.stage, "Final")) %>% 
+  dplyr::mutate(
+    Energy.stage = dplyr::case_when(
+      stringr::str_detect(Energy.stage, "Final") ~ "Final",
+      TRUE ~ Energy.stage
+    )
+  ) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(Country, Year, Product.Group, Energy.stage) %>% 
+  dplyr::mutate(
+    Indirect_Energy = "Included"
+  ) %>% 
+  dplyr::distinct()
+
+n_rows <- prepare_idE_df_1 %>% 
+  nrow()
+
+idE_df <- prepare_idE_df %>% 
+  dplyr::mutate(
+    Indirect_Energy_ktoe = seq(0, 1000, 1000/(n_rows - 1))
+  )
+```
+
+and finally, useful stage EROIs including indirect energy requirements respecting the breakdown by category can be determined using the `add_indirect_energy_useful_erois_by` function as:
+
+```{r}
+res_idE <- add_indirect_energy_useful_erois_by(
+  .tidy_aggregated_erois_by_df = final_useful_erois,
+  .tidy_indirect_energy = prepare_idE_df_2,
+  .tidy_iea_df = tidy_AB_dta,
+  aggregation_category = "Categories"
+)
+```
+  
