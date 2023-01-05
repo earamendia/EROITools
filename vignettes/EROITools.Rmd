@@ -1,18 +1,13 @@
 ---
-  title: "Get started"
-author: "Emmanuel Aramendia"
-date: "`r Sys.Date()`"
-output: 
-  rmarkdown::html_vignette:
-  fig_caption: yes
+title: "EROITools"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Get started}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
-bibliography: References.bib
+  %\VignetteIndexEntry{EROITools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-  ```{r, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -22,9 +17,9 @@ knitr::opts_chunk$set(
 ```{r setup, include = FALSE}
 library(dplyr)
 library(Recca)
+library(ECCTools)
 library(EROITools)
 ```
-
 
 # Introduction
 
@@ -84,7 +79,7 @@ Let us first modify the Energy Conversion Chain to make it compliant with the Do
 
 ```{r}
 # Transforming Energy Conversion Chain to Domestic Technology Assumption
-tidy_AB_dta <- tidy_AB_data %>%
+tidy_AB_dta <- ECCTools::tidy_AB_data %>%
   IEATools::add_psut_matnames() %>% 
   ECCTools::transform_to_dta(requirement_matrices_list = c("U_feed"),
                                select_dta_observations = FALSE) %>% 
@@ -120,7 +115,7 @@ tidy_AB_erois_dta <- tidy_AB_erois_matrices_dta %>%
   dplyr::mutate(
     Eroi.method = "DTA"
   ) %>%
-  dplyr::relocate(.data[["Eroi.method"]], .after = Year) %>% 
+  dplyr::relocate(.data[["Eroi.method"]], .after = Year) %>%
   dplyr::glimpse()
 ```
 
@@ -132,8 +127,8 @@ Alternatively, we can modify the Energy Conversion Chain to describe energy flow
 ```{r}
 # Transforming Energy Conversion Chain to Global Market Assumption
 tidy_AB_data_gma <- ECCTools::tidy_AB_data %>%
-  IEATools::add_psut_matnames() %>% 
-  ECCTools::transform_to_gma() %>% 
+  IEATools::add_psut_matnames() %>%
+  ECCTools::transform_to_gma() %>%
   dplyr::glimpse()
 ```
 
@@ -153,7 +148,7 @@ Then, we calculate the product-level EROIs in a matric format.
 # Calculating EROI vectors (matrix format)
 tidy_AB_erois_matrices_gma <- tidy_io_AB_gma %>%
   Recca::calc_E_EIOU() %>%
-  Recca::calc_erois() %>% 
+  Recca::calc_erois() %>%
   dplyr::glimpse()
 ```
 
@@ -166,7 +161,7 @@ tidy_AB_erois_gma <- tidy_AB_erois_matrices_gma %>%
   dplyr::mutate(
     Eroi.method = "GMA"
   ) %>%
-  dplyr::relocate(.data[["Eroi.method"]], .after = Year) %>% 
+  dplyr::relocate(.data[["Eroi.method"]], .after = Year) %>%
   dplyr::glimpse()
 ```
 
