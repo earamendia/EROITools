@@ -138,7 +138,7 @@ Then, we construct the Input-Output matrices needed to conduct the calculations.
 # Calculating associated Input-Output matrices
 tidy_io_AB_gma <- tidy_AB_data_gma %>%
   IEATools::prep_psut() %>%
-  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+  Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols") %>% 
   dplyr::glimpse()
 ```
 
