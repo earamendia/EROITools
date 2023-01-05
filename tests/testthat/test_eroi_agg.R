@@ -91,8 +91,9 @@ test_that("aggregate_primary_stage_erois works",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>%
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
-
+    # dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
+  
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>%
     prepare_gma_for_shares()
 
