@@ -5,6 +5,7 @@ vignette: >
   %\VignetteIndexEntry{EROITools}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: References.bib
 ---
 
 ```{r, include = FALSE}
