@@ -14,7 +14,7 @@ test_that("calc_share_primary_ff_supply_by_product_by_group works",{
     ECCTools::specify_elect_heat_nuclear() %>% 
     ECCTools::specify_other_elec_heat_production() %>% 
     ECCTools::specify_elect_heat_markets() %>% 
-    IEATools::add_psut_matnames() %>% 
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>% 
     ECCTools::stat_diffs_to_balancing() %>% 
     ECCTools::stock_changes_to_balancing()
   
@@ -137,7 +137,7 @@ test_that("calc_share_ff_use_by_product_by_group works",{
     ECCTools::specify_elect_heat_nuclear() %>% 
     ECCTools::specify_other_elec_heat_production() %>% 
     ECCTools::specify_elect_heat_markets() %>% 
-    IEATools::add_psut_matnames() %>% 
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>% 
     ECCTools::stat_diffs_to_balancing() %>% 
     ECCTools::stock_changes_to_balancing()
   
@@ -503,7 +503,7 @@ test_that("calc_shares_elec_by_ff_group works",{
     ECCTools::specify_elect_heat_nuclear() %>% 
     ECCTools::specify_other_elec_heat_production() %>% 
     ECCTools::specify_elect_heat_markets() %>% 
-    IEATools::add_psut_matnames() %>% 
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>% 
     ECCTools::stat_diffs_to_balancing() %>% 
     ECCTools::stock_changes_to_balancing()
   
@@ -619,7 +619,7 @@ test_that("calc_shares_heat_by_ff_group works",{
     ECCTools::specify_elect_heat_nuclear() %>% 
     ECCTools::specify_other_elec_heat_production() %>% 
     ECCTools::specify_elect_heat_markets() %>% 
-    IEATools::add_psut_matnames() %>% 
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>% 
     ECCTools::stat_diffs_to_balancing() %>% 
     ECCTools::stock_changes_to_balancing()
   
@@ -734,7 +734,7 @@ test_that("calc_shares_ff_by_group_inc_elec_heat works",{
     ECCTools::specify_elect_heat_nuclear() %>% 
     ECCTools::specify_other_elec_heat_production() %>% 
     ECCTools::specify_elect_heat_markets() %>% 
-    IEATools::add_psut_matnames() %>% 
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>% 
     ECCTools::stat_diffs_to_balancing() %>% 
     ECCTools::stock_changes_to_balancing()
   
@@ -1024,7 +1024,7 @@ test_that("prepare_gma_for_shares function works",{
     ECCTools::specify_elect_heat_nuclear() %>% 
     ECCTools::specify_other_elec_heat_production() %>% 
     ECCTools::specify_elect_heat_markets() %>% 
-    IEATools::add_psut_matnames() %>% 
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>% 
     ECCTools::stat_diffs_to_balancing() %>% 
     ECCTools::stock_changes_to_balancing()
   

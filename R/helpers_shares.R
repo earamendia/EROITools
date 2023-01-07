@@ -279,7 +279,7 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
         .data[[boolean_non_energy_uses]] == FALSE ~ "Excluded"
       )
     ) %>%
-    dplyr::select(-.data[[boolean_non_energy_uses]])
+    dplyr::select(-tidyselect::all_of(boolean_non_energy_uses))
   
   return(share_ff_use_by_product_by_group)
 }
@@ -349,8 +349,7 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
   shares_electricity_by_ff <- .tidy_iea_df %>%
     dplyr::filter(matnames %in% supply_mats_list) %>%
     dplyr::filter(.data[[product_without_origin]] %in% c("Electricity [from Coal products]", "Electricity [from Oil products]", "Electricity [from Natural gas]")) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                  .data[[unit]], .data[[product]], .data[[e.dot]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, unit, product, e.dot))) %>% 
     dplyr::mutate(
       "{product.group}" := "All fossil fuels",
       "{energy.stage}" := "Final (electricity)"
@@ -369,7 +368,7 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
       "{share}" := .data[[e.dot]] / sum(.data[[e.dot]])
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::select(-tidyselect::all_of(c(unit, e.dot))) %>% 
     dplyr::mutate(
       "{non_energy_uses}" := "Excluded"
     )
@@ -378,8 +377,7 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
   shares_electricity_by_ff_group <- .tidy_iea_df %>%
     dplyr::filter(matnames %in% supply_mats_list) %>%
     dplyr::filter(.data[[product_without_origin]] %in% c("Electricity [from Coal products]", "Electricity [from Oil products]", "Electricity [from Natural gas]")) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                  .data[[unit]], .data[[product]], .data[[e.dot]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, unit, product, e.dot))) %>% 
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         stringr::str_detect(.data[[product]], "Electricity \\[from Coal products\\]") ~ "Coal products",
@@ -403,7 +401,7 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::filter(.data[[product.group]] != "Coal products") %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::select(-tidyselect::all_of(c(unit, e.dot))) %>% 
     dplyr::mutate(
       "{non_energy_uses}" := "Excluded"
     )
@@ -412,7 +410,7 @@ calc_shares_elec_by_ff_group <- function(.tidy_iea_df,
   shares_electricity_by_ff_group_2 <- .tidy_iea_df %>%
     dplyr::filter(matnames %in% supply_mats_list) %>%
     dplyr::filter(.data[[product_without_origin]] %in% c("Electricity [from Coal products]", "Electricity [from Oil products]", "Electricity [from Natural gas]")) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, product))) %>% 
     dplyr::mutate(
       "{product.group}" := stringr::str_extract(.data[[product]], "\\[.*\\]") %>%
         stringr::str_remove("\\[from ") %>%
@@ -505,8 +503,7 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
   shares_heat_by_ff <- .tidy_iea_df %>%
     dplyr::filter(matnames %in% supply_mats_list) %>%
     dplyr::filter(.data[[product_without_origin]] %in% c("Heat [from Coal products]", "Heat [from Oil products]", "Heat [from Natural gas]")) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                  .data[[unit]], .data[[product]], .data[[e.dot]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, unit, product, e.dot))) %>% 
     dplyr::mutate(
       "{product.group}" := "All fossil fuels",
       "{energy.stage}" := "Final (heat)"
@@ -525,7 +522,7 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
       "{share}" := .data[[e.dot]] / sum(.data[[e.dot]])
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::select(-tidyselect::all_of(c(unit, e.dot))) %>% 
     dplyr::mutate(
       "{non_energy_uses}" := "Excluded"
     )
@@ -534,8 +531,7 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
   shares_heat_by_ff_group <- .tidy_iea_df %>%
     dplyr::filter(matnames %in% supply_mats_list) %>%
     dplyr::filter(.data[[product_without_origin]] %in% c("Heat [from Coal products]", "Heat [from Oil products]", "Heat [from Natural gas]")) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                  .data[[unit]], .data[[product]], .data[[e.dot]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, unit, product, e.dot))) %>% 
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         stringr::str_detect(.data[[product]], "Heat \\[from Coal products\\]") ~ "Coal products",
@@ -559,7 +555,7 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
     ) %>%
     dplyr::filter(.data[[product.group]] != "Coal products") %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[unit]], -.data[[e.dot]]) %>% 
+    dplyr::select(-tidyselect::all_of(c(unit, e.dot))) %>% 
     dplyr::mutate(
       "{non_energy_uses}" := "Excluded"
     )
@@ -568,7 +564,7 @@ calc_shares_heat_by_ff_group <- function(.tidy_iea_df,
   shares_heat_by_ff_group_2 <- .tidy_iea_df %>%
     dplyr::filter(matnames %in% supply_mats_list) %>%
     dplyr::filter(.data[[product_without_origin]] %in% c("Heat [from Coal products]", "Heat [from Oil products]", "Heat [from Natural gas]")) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, product))) %>% 
     dplyr::mutate(
       "{product.group}" := stringr::str_extract(.data[[product]], "\\[.*\\]") %>%
         stringr::str_remove("\\[from ") %>%
@@ -722,7 +718,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = .data[[product.group]]
+      Origin.Product.Group = tidyselect::all_of(product.group)
     )
   
   share_elec_from_ff_by_ff_group_2 <- calc_share_elec_supply_by_ff_group(.tidy_iea_df) %>%
@@ -732,7 +728,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = .data[[product.group]]
+      Origin.Product.Group = tidyselect::all_of(product.group)
     )
   
   use_elec_by_ff_group_1 <- calc_fec_from_ff_as_elec_by_group(.tidy_iea_df) %>%
@@ -743,7 +739,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
     ) %>%
-    dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
+    dplyr::select(-tidyselect::all_of(c(share, "Origin.Product.Group"))) %>% 
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
       "{total_product_use}" := sum(abs(.data[[e_dot]]))
@@ -760,7 +756,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
     ) %>%
-    dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
+    dplyr::select(-tidyselect::all_of(c(share, "Origin.Product.Group"))) %>% 
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
       "{total_product_use}" := sum(abs(.data[[e_dot]]))
@@ -794,7 +790,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = .data[[product.group]]
+      Origin.Product.Group = tidyselect::all_of(product.group)
     )
   
   share_heat_from_ff_by_ff_group_2 <- calc_share_heat_supply_by_ff_group(.tidy_iea_df) %>%
@@ -804,7 +800,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{share}" := .data[[share]] / sum(.data[[share]])
     ) %>%
     dplyr::rename(
-      Origin.Product.Group = .data[[product.group]]
+      Origin.Product.Group = tidyselect::all_of(product.group)
     )
   
   use_heat_by_ff_group_1 <- calc_fec_from_ff_as_heat_by_group(.tidy_iea_df) %>%
@@ -815,7 +811,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
     ) %>%
-    dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
+    dplyr::select(-tidyselect::all_of(c(share, "Origin.Product.Group"))) %>% 
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
       "{total_product_use}" := sum(abs(.data[[e_dot]]))
@@ -832,7 +828,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
     ) %>%
-    dplyr::select(-.data[[share]], -.data[["Origin.Product.Group"]]) %>%
+    dplyr::select(-tidyselect::all_of(c(share, "Origin.Product.Group"))) %>% 
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[product.group]]) %>%
     dplyr::summarise(
       "{total_product_use}" := sum(abs(.data[[e_dot]]))
@@ -884,7 +880,7 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
         .data[[boolean_non_energy_uses]] == FALSE ~ "Excluded"
       )
     ) %>%
-    dplyr::select(-.data[[boolean_non_energy_uses]])
+    dplyr::select(-tidyselect::all_of(boolean_non_energy_uses))
   
   # Returning values:
   return(share_ff_use_by_product)

@@ -59,7 +59,7 @@
 #'  dplyr::mutate(
 #'    Eroi.method = "DTA"
 #'  ) %>% 
-#'  dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+#'  dplyr::relocate(.tidyselect::all_of(Eroi.method), .after = tidyselect::all_of(Year)) %>% 
 #' res_dta <- aggregate_primary_stage_erois(
 #'  .tidy_erois_df = tidy_AB_erois_dta,
 #'  .tidy_iea_df = tidy_AB_dta,
@@ -109,7 +109,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
   # Pulling out the list of countries contained in .tidy_iea_df
   list_countries_in_tidy_df <- .tidy_iea_df %>%
     dplyr::ungroup() %>%
-    dplyr::select(.data[[country]]) %>%
+    dplyr::select(tidyselect::all_of(country)) %>% 
     dplyr::distinct() %>%
     dplyr::pull()
   
@@ -136,7 +136,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
       dplyr::mutate(
         "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-.data[[Group.eroi.inversed]])
+      dplyr::select(-tidyselect::all_of(Group.eroi.inversed))
     
     return(aggregated_primary_stage_erois)
     
@@ -145,7 +145,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
     aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
       #dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
       dplyr::inner_join(.tidy_erois_df %>%
-                          dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+                          dplyr::select(-tidyselect::all_of(country)), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
@@ -154,7 +154,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
       dplyr::mutate(
         "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-.data[[Group.eroi.inversed]])
+      dplyr::select(-tidyselect::all_of(Group.eroi.inversed))
     
     return(aggregated_primary_stage_erois)
     
@@ -225,7 +225,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 #'  dplyr::mutate(
 #'    Eroi.method = "DTA"
 #'  ) %>% 
-#'  dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+#'  dplyr::relocate(.tidyselect::all_of(Eroi.method), .after = tidyselect::all_of(Year)) %>% 
 #' res_dta <- aggregate_final_stage_erois(
 #'  .tidy_erois_df = tidy_AB_erois_dta,
 #'  .tidy_iea_df = tidy_AB_dta,
@@ -287,7 +287,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
   # Pulling out the list of countries contained in .tidy_iea_df
   list_countries_in_tidy_df <- .tidy_iea_df %>%
     dplyr::ungroup() %>%
-    dplyr::select(.data[[country]]) %>%
+    dplyr::select(tidyselect::all_of(country)) %>% 
     dplyr::distinct() %>%
     dplyr::pull()
   
@@ -339,7 +339,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
       dplyr::mutate(
         "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-.data[[Group.eroi.inversed]])
+      dplyr::select(-tidyselect::all_of(Group.eroi.inversed))
     
     return(aggregated_final_stage_erois)
     
@@ -347,7 +347,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
    
     aggregated_final_stage_erois <- tidy_shares_df %>%
       dplyr::inner_join(.tidy_erois_df %>%
-                          dplyr::select(-.data[[country]]), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+                          dplyr::select(-tidyselect::all_of(country)), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
@@ -356,7 +356,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
       dplyr::mutate(
         "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-.data[[Group.eroi.inversed]])
+      dplyr::select(-tidyselect::all_of(Group.eroi.inversed))
     
     return(aggregated_final_stage_erois)
      
@@ -429,7 +429,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
 #'  dplyr::mutate(
 #'    Eroi.method = "DTA"
 #'  ) %>%
-#'  dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+#'  dplyr::relocate(.tidyselect::all_of(Eroi.method), .after = tidyselect::all_of(Year)) %>% 
 #' # Pushing to tidy useful stage EROIs
 #' length_to_use <- tidy_AB_erois_dta %>% 
 #'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 
@@ -499,7 +499,7 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
   # Pulling out the list of countries contained in .tidy_iea_df
   list_countries_in_tidy_df <- .tidy_iea_df %>%
     dplyr::ungroup() %>%
-    dplyr::select(.data[[country]]) %>%
+    dplyr::select(tidyselect::all_of(country)) %>%
     dplyr::distinct() %>%
     dplyr::pull()
   
@@ -567,7 +567,7 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
       dplyr::mutate(
         "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-.data[[Group.eroi.inversed]])
+      dplyr::select(-tidyselect::all_of(Group.eroi.inversed))
     
     return(aggregated_useful_erois)
     
@@ -583,7 +583,7 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
       dplyr::mutate(
         "{group.eroi}" := 1 / .data[[Group.eroi.inversed]]
       ) %>% 
-      dplyr::select(-.data[[Group.eroi.inversed]])
+      dplyr::select(-tidyselect::all_of(Group.eroi.inversed))
     
     return(aggregated_useful_erois)
     

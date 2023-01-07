@@ -14,7 +14,7 @@ test_that("calc_fec_from_ff_as_elec_by_group",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -192,7 +192,7 @@ test_that("calc_share_elec_supply_by_ff_group",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -303,7 +303,7 @@ test_that("calc_fec_from_ff_as_heat_by_group",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -321,7 +321,7 @@ test_that("calc_fec_from_ff_as_heat_by_group",{
   # Testing; first country A iron and steel
   res_dta %>% 
     dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "All fossil fuels") %>% 
-    magrittr::extract2("E.dot") %>% 
+    magrittr::extract2("E.dot") %>%
     expect_equal(40)
   res_dta %>% 
     dplyr::filter(Country == "A", Flow == "Iron and steel", Product.Group == "Oil products") %>% 
@@ -474,7 +474,7 @@ test_that("calc_share_heat_supply_by_ff_group",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -607,7 +607,7 @@ test_that("calc_fec_from_ff_by_group",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -740,7 +740,7 @@ test_that("calc_fec_from_ff_as_fuel_by_group",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -926,7 +926,7 @@ test_that("calc_share_elec_supply_by_ff_group works with losses",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing() %>% 
     ECCTools::specify_losses_as_industry()
@@ -1008,7 +1008,7 @@ test_that("calc_share_elec_supply_by_ff_group works with losses",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing() %>% 
     ECCTools::specify_losses_as_industry()
@@ -1129,7 +1129,7 @@ test_that("calc_share_heat_supply_by_ff_group works with losses modelling",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing() %>% 
     ECCTools::specify_losses_as_industry()
