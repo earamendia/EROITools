@@ -116,7 +116,7 @@ tidy_AB_erois_dta <- tidy_AB_erois_matrices_dta %>%
   dplyr::mutate(
     Eroi.method = "DTA"
   ) %>%
-  dplyr::relocate(.data[["Eroi.method"]], .after = Year) %>%
+  dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year) %>%
   dplyr::glimpse()
 ```
 
@@ -162,7 +162,7 @@ tidy_AB_erois_gma <- tidy_AB_erois_matrices_gma %>%
   dplyr::mutate(
     Eroi.method = "GMA"
   ) %>%
-  dplyr::relocate(.data[["Eroi.method"]], .after = Year) %>%
+  dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year) %>%
   dplyr::glimpse()
 ```
 

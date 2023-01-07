@@ -443,7 +443,7 @@ test_that("aggregate_useful_stage_erois works",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
 
