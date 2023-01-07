@@ -115,7 +115,7 @@ tidy_AB_erois_dta <- tidy_io_AB_dta \%>\%
  dplyr::mutate(
    Eroi.method = "DTA"
  ) \%>\% 
- dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+ dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = tidyselect::all_of("Year"))
 res_dta <- aggregate_final_stage_erois(
  .tidy_erois_df = tidy_AB_erois_dta,
  .tidy_iea_df = tidy_AB_dta,

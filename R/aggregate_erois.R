@@ -59,7 +59,7 @@
 #'  dplyr::mutate(
 #'    Eroi.method = "DTA"
 #'  ) %>% 
-#'  dplyr::relocate(.tidyselect::all_of(Eroi.method), .after = tidyselect::all_of(Year)) %>% 
+#'  dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = tidyselect::all_of("Year"))
 #' res_dta <- aggregate_primary_stage_erois(
 #'  .tidy_erois_df = tidy_AB_erois_dta,
 #'  .tidy_iea_df = tidy_AB_dta,
@@ -225,7 +225,7 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
 #'  dplyr::mutate(
 #'    Eroi.method = "DTA"
 #'  ) %>% 
-#'  dplyr::relocate(.tidyselect::all_of(Eroi.method), .after = tidyselect::all_of(Year)) %>% 
+#'  dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = tidyselect::all_of("Year"))
 #' res_dta <- aggregate_final_stage_erois(
 #'  .tidy_erois_df = tidy_AB_erois_dta,
 #'  .tidy_iea_df = tidy_AB_dta,
@@ -429,7 +429,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
 #'  dplyr::mutate(
 #'    Eroi.method = "DTA"
 #'  ) %>%
-#'  dplyr::relocate(.tidyselect::all_of(Eroi.method), .after = tidyselect::all_of(Year)) %>% 
+#'  dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = tidyselect::all_of("Year"))
 #' # Pushing to tidy useful stage EROIs
 #' length_to_use <- tidy_AB_erois_dta %>% 
 #'  dplyr::select(Country, Method, Energy.type, Year, Product) %>% 

@@ -89,23 +89,23 @@ Similarly, we construct the data frame containing the final-to-useful efficienci
 
 ```{r}
 # Constructing final-to-useful efficiencies data frame
-# length_to_use <- tidy_AB_erois_dta %>%
-#   dplyr::select(Country, Method, Energy.type, Year, Product) %>%
-#   dplyr::distinct() %>%
-#   nrow()
-# 
-# tidy_FU_efficiencies_gma <- tidy_AB_erois_gma %>% glimpse()
-#   dplyr::mutate(
-#     Country = stringr::str_extract(Product, "\\{.*\\}") %>%
-#       stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
-#     Product = stringr::str_remove(Product, "\\{.*\\}_")
-#   ) %>%
-#   dplyr::select(Country, Method, Energy.type, Year, Product) %>%
-#   dplyr::distinct() %>%
-#   dplyr::mutate(
-#     Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
-#   ) %>%
-#   dplyr::glimpse()
+length_to_use <- tidy_AB_erois_gma %>%
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>%
+  dplyr::distinct() %>%
+  nrow()
+
+tidy_FU_efficiencies_gma <- tidy_AB_erois_gma %>%
+  dplyr::mutate(
+    Country = stringr::str_extract(Product, "\\{.*\\}") %>%
+      stringr::str_remove("\\{") %>% stringr::str_remove("\\}"),
+    Product = stringr::str_remove(Product, "\\{.*\\}_")
+  ) %>%
+  dplyr::select(Country, Method, Energy.type, Year, Product) %>%
+  dplyr::distinct() %>%
+  dplyr::mutate(
+    Average_Efficiency_Col = seq(0.15, 1, 0.85/(length_to_use-1))
+  ) %>%
+  dplyr::glimpse()
 ```
 
 
@@ -113,26 +113,26 @@ Next, we make this data frame end-use specific assuming some specific final-to-u
 
 ```{r}
 # Making the data frame end-use specific
-# tidy_FU_efficiencies_gma_end_uses <- tidy_FU_efficiencies_gma %>% 
-#   tidyr::expand_grid(End_Use = c("Heating", "Mechanical Work", "Other end-uses")) %>% 
-#   dplyr::mutate(
-#     Average_Efficiency_Col = dplyr::case_when(
-#       Average_Efficiency_Col == "Mechanical Work" ~ Average_Efficiency_Col / 2,
-#       Average_Efficiency_Col == "Other end-uses" ~ Average_Efficiency_Col / 3,
-#       TRUE ~ Average_Efficiency_Col
-#     )
-#   ) %>% 
-#   dplyr::glimpse()
+tidy_FU_efficiencies_gma_end_uses <- tidy_FU_efficiencies_gma %>%
+  tidyr::expand_grid(End_Use = c("Heating", "Mechanical Work", "Other end-uses")) %>%
+  dplyr::mutate(
+    Average_Efficiency_Col = dplyr::case_when(
+      Average_Efficiency_Col == "Mechanical Work" ~ Average_Efficiency_Col / 2,
+      Average_Efficiency_Col == "Other end-uses" ~ Average_Efficiency_Col / 3,
+      TRUE ~ Average_Efficiency_Col
+    )
+  ) %>%
+  dplyr::glimpse()
 ```
 
 Finally, we construct the useful stage EROIs data frame using the `push_to_useful_erois` function.
 
 ```{r}
 # Constructing useful stage EROIs data frame
-# tidy_useful_erois_gma_end_uses <- push_to_useful_erois(
-#   .tidy_io_erois = tidy_AB_erois_gma,
-#   tidy_FU_efficiencies = tidy_FU_efficiencies_gma_end_uses,
-#   eroi_calc_method = "gma"
-#   ) %>% 
-#   dplyr::glimpse()
+tidy_useful_erois_gma_end_uses <- push_to_useful_erois(
+  .tidy_io_erois = tidy_AB_erois_gma,
+  tidy_FU_efficiencies = tidy_FU_efficiencies_gma_end_uses,
+  eroi_calc_method = "gma"
+  ) %>%
+  dplyr::glimpse()
 ```
