@@ -1,0 +1,3 @@
+To dos:
+
+* Move calc_idE_to_output_ratio() from Useful_Stage_Calcs R project to EROITools package
