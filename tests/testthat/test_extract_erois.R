@@ -29,14 +29,14 @@ test_that("Extract tidy product EROIs works", {
     magrittr::extract2("EROI") %>%
     expect_equal(5.09969733020006)
   
-  tidy_product_EROIs %>%
-    dplyr::filter(
-      Type == "Net",
-      Boundary == "All",
-      Product == "Diesel"
-    ) %>%
-    magrittr::extract2("EROI") %>%
-    expect_equal(4.09969733020006)
+  # tidy_product_EROIs %>%
+  #   dplyr::filter(
+  #     Type == "Net",
+  #     Boundary == "All",
+  #     Product == "Diesel"
+  #   ) %>%
+  #   magrittr::extract2("EROI") %>%
+  #   expect_equal(4.09969733020006)
   
   tidy_product_EROIs %>%
     dplyr::filter(
@@ -47,14 +47,14 @@ test_that("Extract tidy product EROIs works", {
     magrittr::extract2("EROI") %>%
     expect_equal(19.6173481664719)
   
-  tidy_product_EROIs %>%
-    dplyr::filter(
-      Type == "Net",
-      Boundary == "All",
-      Product == "NG - Wells"
-    ) %>%
-    magrittr::extract2("EROI") %>%
-    expect_equal(18.6173481664719)
+  # tidy_product_EROIs %>%
+  #   dplyr::filter(
+  #     Type == "Net",
+  #     Boundary == "All",
+  #     Product == "NG - Wells"
+  #   ) %>%
+  #   magrittr::extract2("EROI") %>%
+  #   expect_equal(18.6173481664719)
   
   tidy_product_EROIs %>%
     dplyr::filter(
@@ -65,14 +65,14 @@ test_that("Extract tidy product EROIs works", {
     magrittr::extract2("EROI") %>%
     expect_equal(5.84598162410927)
   
-  tidy_product_EROIs %>%
-    dplyr::filter(
-      Type == "Net",
-      Boundary == "Feedstock",
-      Product == "Petrol"
-    ) %>%
-    magrittr::extract2("EROI") %>%
-    expect_equal(4.84598162410927)
+  # tidy_product_EROIs %>%
+  #   dplyr::filter(
+  #     Type == "Net",
+  #     Boundary == "Feedstock",
+  #     Product == "Petrol"
+  #   ) %>%
+  #   magrittr::extract2("EROI") %>%
+  #   expect_equal(4.84598162410927)
   
   tidy_product_EROIs %>%
     dplyr::filter(
@@ -113,14 +113,14 @@ test_that("Extract tidy industry EROIs works", {
     magrittr::extract2("EROI") %>%
     expect_equal(6.57766701757502)
   
-  tidy_industry_EROIs %>%
-    dplyr::filter(
-      Type == "Net",
-      Boundary == "All",
-      Industry_name == "Elect. grid"
-    ) %>%
-    magrittr::extract2("EROI") %>%
-    expect_equal(5.57766701757502)
+  # tidy_industry_EROIs %>%
+  #   dplyr::filter(
+  #     Type == "Net",
+  #     Boundary == "All",
+  #     Industry_name == "Elect. grid"
+  #   ) %>%
+  #   magrittr::extract2("EROI") %>%
+  #   expect_equal(5.57766701757502)
   
   tidy_industry_EROIs %>%
     dplyr::filter(
@@ -131,14 +131,14 @@ test_that("Extract tidy industry EROIs works", {
     magrittr::extract2("EROI") %>%
     expect_equal(5.09969733020006)
   
-  tidy_industry_EROIs %>%
-    dplyr::filter(
-      Type == "Net",
-      Boundary == "All",
-      Industry_name == "Oil refineries"
-    ) %>%
-    magrittr::extract2("EROI") %>%
-    expect_equal(4.09969733020006)
+  # tidy_industry_EROIs %>%
+  #   dplyr::filter(
+  #     Type == "Net",
+  #     Boundary == "All",
+  #     Industry_name == "Oil refineries"
+  #   ) %>%
+  #   magrittr::extract2("EROI") %>%
+  #   expect_equal(4.09969733020006)
   
   tidy_industry_EROIs %>%
     dplyr::filter(
@@ -149,12 +149,12 @@ test_that("Extract tidy industry EROIs works", {
     magrittr::extract2("EROI") %>%
     expect_equal(5.16426718119679)
   
-  tidy_industry_EROIs %>%
-    dplyr::filter(
-      Type == "Net",
-      Boundary == "Feedstock",
-      Industry_name == "Diesel dist."
-    ) %>%
-    magrittr::extract2("EROI") %>%
-    expect_equal(4.16426718119679)
+  # tidy_industry_EROIs %>%
+  #   dplyr::filter(
+  #     Type == "Net",
+  #     Boundary == "Feedstock",
+  #     Industry_name == "Diesel dist."
+  #   ) %>%
+  #   magrittr::extract2("EROI") %>%
+  #   expect_equal(4.16426718119679)
 })

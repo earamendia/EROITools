@@ -389,7 +389,7 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]]
     ) %>%
-    dplyr::select(-.data[[share]])
+    dplyr::select(-tidyselect::all_of(share))
   
   return(elec_consumption_by_ff_group)
 }
@@ -498,7 +498,7 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
-    dplyr::select(-.data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::all_of(e_dot)) %>%
     dplyr::filter(.data[[product.group]] != "Others")
   
   # Second, for "Oil and gas products" and "Coal products"
@@ -527,7 +527,7 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
-    dplyr::select(-.data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::all_of(e_dot)) %>%
     dplyr::filter(.data[[product.group]] != "Others")
   
   # Third, for "Natural gas" and "Oil products"
@@ -557,7 +557,7 @@ calc_share_elec_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
-    dplyr::select(-.data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::all_of(e_dot)) %>%
     dplyr::filter(.data[[product.group]] != "Others") %>%
     dplyr::filter(.data[[product.group]] != "Coal products")
   
@@ -692,7 +692,7 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]]
     ) %>%
-    dplyr::select(-.data[[share]])
+    dplyr::select(-tidyselect::all_of(share))
   
   return(heat_consumption_by_ff_group)
 }
@@ -801,7 +801,7 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
-    dplyr::select(-.data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::all_of(e_dot)) %>%
     dplyr::filter(.data[[product.group]] != "Others")
   
   # Second, calculate shares of the "Oil and gas products" and "Coal products" group
@@ -830,7 +830,7 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
-    dplyr::select(-.data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::all_of(e_dot)) %>%
     dplyr::filter(.data[[product.group]] != "Others")
   
   # Third, calculate shares of the "Oil products" and "Natural gas" groups
@@ -860,7 +860,7 @@ calc_share_heat_supply_by_ff_group <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
-    dplyr::select(-.data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::all_of(e_dot)) %>%
     dplyr::filter(.data[[product.group]] != "Others") %>%
     dplyr::filter(.data[[product.group]] != "Coal products")
   

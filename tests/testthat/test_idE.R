@@ -13,7 +13,7 @@ test_that("add_indirect_energy_to_erois works as intended",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -34,7 +34,7 @@ test_that("add_indirect_energy_to_erois works as intended",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>% 
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
   
   
   # Primary stage EROIs:
@@ -199,7 +199,7 @@ test_that("add_indirect_energy_useful_erois_by works as intended",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
   
@@ -220,7 +220,7 @@ test_that("add_indirect_energy_useful_erois_by works as intended",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>% 
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
   
   
   # List of breakdown categories

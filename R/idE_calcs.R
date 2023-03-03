@@ -67,7 +67,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
     calc_fec_from_ff_by_group(.tidy_iea_df,
                               include_non_energy_uses = include_non_energy_uses) %>%
       dplyr::rename(
-        "{total_group_output}" := .data[[e_dot]]
+        "{total_group_output}" := tidyselect::all_of(e_dot)
       )
   )
 
@@ -81,9 +81,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
     ) %>%
     dplyr::ungroup() %>% 
-    dplyr::select(-.data[[country]], -.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
-                  -.data[[last_stage]], -.data[[unit]], -.data[[total_group_output]])
-
+    dplyr::select(-tidyselect::all_of(c(country, indirect_energy_ktoe, method, energy_type, last_stage, unit, total_group_output)))
 
   # Calculating the ratio of indirect energy by output, now at the final stage, for each group
   # This is needed because we need the ratio for each of Final (fuel), Final (elec), Final (heat), and Final (fuel+elec+heat)
@@ -95,30 +93,30 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       "{product.group}" := stringr::str_c(.data[[product.group]], stringr::str_extract(.data[[energy.stage]], " \\(.*\\)")),
       "{energy.stage}" := stringr::str_remove(.data[[energy.stage]], " \\(.*\\)")
     ) %>%
-    tidyr::pivot_wider(names_from = .data[[energy.stage]], values_from = .data[[group.eroi]]) %>%
+    tidyr::pivot_wider(names_from = tidyselect::all_of(energy.stage), values_from = tidyselect::all_of(group.eroi)) %>%
     dplyr::mutate(
       "{final_to_useful_eff}" := .data[["Useful"]] / .data[["Final"]]
     ) %>%
-    dplyr::select(-.data[["Final"]], -.data[["Useful"]]) %>%
+    dplyr::select(-tidyselect::all_of(c("Final", "Useful"))) %>% 
     dplyr::mutate(
       "{energy.stage}" := stringr::str_c("Useful", stringr::str_extract(.data[[product.group]], " \\(.*\\)")),
       "{product.group}" := stringr::str_remove(.data[[product.group]], " \\(.*\\)")
     ) %>%
     dplyr::inner_join(
-      indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-.data[[energy.stage]]),
+      indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-tidyselect::all_of(energy.stage)),
       by = c({year}, {product.group})
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[ratio_indirect_energy_per_output]] / .data[[final_to_useful_eff]]
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[method]], -.data[[energy_type]], -.data[[last_stage]], -.data[[eroi.method]], -.data[[type]], -.data[[boundary]], -.data[["Non_Energy_Uses"]], -.data[[final_to_useful_eff]])
+    dplyr::select(-tidyselect::all_of(c(method, energy_type, last_stage, eroi.method, type, boundary, "Non_Energy_Uses", final_to_useful_eff)))
 
   
   # List countries
   list_countries <- indirect_energy_per_output_useful %>%
     dplyr::ungroup() %>%
-    dplyr::select(.data[[country]]) %>%
+    dplyr::select(tidyselect::all_of(country)) %>%
     dplyr::distinct() %>%
     dplyr::pull()
   
@@ -131,7 +129,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       indirect_energy_per_output_primary_final %>%
         tidyr::expand_grid("{country}" := list_countries) %>% 
         dplyr::filter(.data[[energy.stage]] == "Final") %>%
-        dplyr::select(-.data[[energy.stage]]) %>%
+        dplyr::select(-tidyselect::all_of(energy.stage)) %>% 
         tidyr::expand_grid(Energy.stage = c("Final (fuel)", "Final (electricity)", "Final (heat)", "Final (fuel+elec+heat)")),
       indirect_energy_per_output_useful
     )
@@ -155,7 +153,7 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
       "{ratio_indirect_energy_per_output}" := tidyr::replace_na(.data[[ratio_indirect_energy_per_output]], 0),
       "{group.eroi}" := 1/(1/.data[[group.eroi]] + .data[[ratio_indirect_energy_per_output]])
     ) %>%
-    dplyr::select(-.data[[ratio_indirect_energy_per_output]])
+    dplyr::select(-tidyselect::all_of(ratio_indirect_energy_per_output))
 
   return(tidy_summarised_erois_with_idE)
 }
@@ -233,7 +231,7 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
     EROITools::calc_fec_from_ff_by_group(.tidy_iea_df,
                                          include_non_energy_uses = include_non_energy_uses) %>%
       dplyr::rename(
-        "{total_group_output}" := .data[[e_dot]]
+        "{total_group_output}" := tidyselect::all_of(e_dot)
       )
   )
   
@@ -247,8 +245,7 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
       "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
     ) %>%
     dplyr::ungroup() %>% 
-    dplyr::select(-.data[[country]], -.data[[indirect_energy_ktoe]], -.data[[method]], -.data[[energy_type]],
-                  -.data[[last_stage]], -.data[[unit]], -.data[[total_group_output]])
+    dplyr::select(-tidyselect::all_of(c(country, indirect_energy_ktoe, method, energy_type, last_stage, unit, total_group_output)))
   
   
   # Calculating the ratio of indirect energy by output, now at the final stage, for each group
@@ -261,24 +258,24 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
       "{product.group}" := stringr::str_c(.data[[product.group]], stringr::str_extract(.data[[energy.stage]], " \\(.*\\)")),
       "{energy.stage}" := stringr::str_remove(.data[[energy.stage]], " \\(.*\\)")
     ) %>%
-    tidyr::pivot_wider(names_from = .data[[energy.stage]], values_from = .data[[group.eroi]]) %>%
+    tidyr::pivot_wider(names_from = tidyselect::all_of(energy.stage), values_from = tidyselect::all_of(group.eroi)) %>%
     dplyr::mutate(
       "{final_to_useful_eff}" := .data[["Useful"]] / .data[["Final"]]
     ) %>%
-    dplyr::select(-.data[["Final"]], -.data[["Useful"]]) %>%
+    dplyr::select(-tidyselect::all_of(c("Final", "Useful"))) %>% 
     dplyr::mutate(
       "{energy.stage}" := stringr::str_c("Useful", stringr::str_extract(.data[[product.group]], " \\(.*\\)")),
       "{product.group}" := stringr::str_remove(.data[[product.group]], " \\(.*\\)")
     ) %>%
     dplyr::inner_join(
-      indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-.data[[energy.stage]]),
+      indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-tidyselect::all_of(energy.stage)),
       by = c({year}, {product.group})
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[ratio_indirect_energy_per_output]] / .data[[final_to_useful_eff]]
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[method]], -.data[[energy_type]], -.data[[eroi.method]], -.data[[type]], -.data[[boundary]], -.data[[final_to_useful_eff]])
+    dplyr::select(-tidyselect::all_of(c(method, energy_type, eroi.method, type, boundary, final_to_useful_eff)))
   
   # Now, adding indirect energy to EROIs:
   tidy_aggregated_erois_by_with_idE <- .tidy_aggregated_erois_by_df %>% 
@@ -300,7 +297,7 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
       "{ratio_indirect_energy_per_output}" := tidyr::replace_na(.data[[ratio_indirect_energy_per_output]], 0),
       "{group.eroi}" := 1/(1/.data[[group.eroi]] + .data[[ratio_indirect_energy_per_output]])
     ) %>% 
-    dplyr::select(-.data[[ratio_indirect_energy_per_output]])
+    dplyr::select(-tidyselect::all_of(ratio_indirect_energy_per_output))
   
   return(tidy_aggregated_erois_by_with_idE)
 }

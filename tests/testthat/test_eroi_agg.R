@@ -13,7 +13,7 @@ test_that("aggregate_primary_stage_erois works",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
 
@@ -37,7 +37,7 @@ test_that("aggregate_primary_stage_erois works",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>%
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
 
   res_dta <- aggregate_primary_stage_erois(
     .tidy_erois_df = tidy_AB_erois_dta,
@@ -91,8 +91,9 @@ test_that("aggregate_primary_stage_erois works",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>%
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
-
+    # dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
+  
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>%
     prepare_gma_for_shares()
 
@@ -149,7 +150,7 @@ test_that("aggregate_final_stage_erois works",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
 
@@ -173,7 +174,7 @@ test_that("aggregate_final_stage_erois works",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>%
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
 
   res_dta <- aggregate_final_stage_erois(
     .tidy_erois_df = tidy_AB_erois_dta,
@@ -314,7 +315,7 @@ test_that("aggregate_final_stage_erois works",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>%
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
 
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>%
     prepare_gma_for_shares()
@@ -442,7 +443,7 @@ test_that("aggregate_useful_stage_erois works",{
     ECCTools::specify_elect_heat_nuclear() %>%
     ECCTools::specify_other_elec_heat_production() %>%
     ECCTools::specify_elect_heat_markets() %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     ECCTools::stat_diffs_to_balancing() %>%
     ECCTools::stock_changes_to_balancing()
 
@@ -467,7 +468,7 @@ test_that("aggregate_useful_stage_erois works",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>%
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
 
   # Pushing to tidy useful stage EROIs
   length_to_use <- tidy_AB_erois_dta %>%
@@ -607,7 +608,7 @@ test_that("aggregate_useful_stage_erois works",{
     dplyr::mutate(
       Eroi.method = "DTA"
     ) %>%
-    dplyr::relocate(.data[["Eroi.method"]], .after = Year)
+    dplyr::relocate(tidyselect::all_of("Eroi.method"), .after = Year)
 
   # Prepare GMA data frame for shares calculations
   tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>%

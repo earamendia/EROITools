@@ -1,6 +1,7 @@
 Package: EROITools
 Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Version: 0.1.1
+Date: 02/02/2023
 Authors@R: 
     person(given = "First",
            family = "Last",
@@ -26,10 +27,16 @@ Imports:
     rlang,
     tibble,
     assertthat,
-    ECCTools
+    ECCTools,
+    tidyselect
 Suggests: 
     spelling,
     covr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
 Language: en-US
+Depends: 
+    R (>= 2.10)
+VignetteBuilder: knitr

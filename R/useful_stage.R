@@ -85,18 +85,18 @@ push_to_useful_erois <- function(.tidy_io_erois,
       dplyr::mutate(
         "{product_without_origin}" := stringr::str_remove(.data[[product]], "\\{.*\\}_")
       ) %>% 
-      dplyr::select(-.data[[country]])
+      dplyr::select(-tidyselect::all_of(country))
     
     # Calculate useful stage EROIs data frame
     tidy_useful_erois <- tidy_FU_efficiencies %>% 
       dplyr::rename(
-        "{product_without_origin}" := .data[[product]]
+        "{product_without_origin}" := tidyselect::all_of(product)
       ) %>% 
       dplyr::left_join(tidy_io_erois_adapted, by = c({method}, {energy_type}, {year}, {product_without_origin})) %>% 
       dplyr::mutate(
         "{useful_stage_eroi}" := .data[[eroi]] * .data[[average_efficiency]]
       ) %>% 
-      dplyr::select(-.data[[product_without_origin]]) %>% 
+      dplyr::select(-tidyselect::all_of(product_without_origin)) %>% 
       dplyr::filter(! is.na(.data[[useful_stage_eroi]]))
   }
   
@@ -212,7 +212,7 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
   # Pulling out the list of countries contained in .tidy_iea_df
   list_countries_in_tidy_df <- .tidy_iea_df %>%
     dplyr::ungroup() %>%
-    dplyr::select(.data[[country]]) %>%
+    dplyr::select(tidyselect::all_of(country)) %>%
     dplyr::distinct() %>%
     dplyr::pull()
   
@@ -292,7 +292,7 @@ calc_avg_efficiency_by_ff_group <- function(.tidy_efficiencies_df,
       # which are systematically ascribed to non-energy uses in the PFU database.
       # very careful here is this changes in the future in the PFU database....!
       dplyr::inner_join(.tidy_efficiencies_df %>% 
-                          dplyr::rename("{product_without_origin}" := .data[[product]]), 
+                          dplyr::rename("{product_without_origin}" := tidyselect::all_of(product)), 
                         by = c({country}, {method}, {energy_type}, {year}, {product_without_origin})) %>% 
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[energy.stage]], .data[[year]], .data[[product.group]]) %>% 
       dplyr::summarise(
