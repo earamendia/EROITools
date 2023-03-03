@@ -11,6 +11,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 <!-- [![R-CMD-check](https://github.com/earamendia/EROITools/workflows/R-CMD-check/badge.svg)](https://github.com/earamendia/EROITools/actions) -->
 <!-- [![Codecov test coverage](https://codecov.io/gh/earamendia/ECCTools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/ECCTools?branch=master) -->
 <!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5841962.svg)](https://doi.org/10.5281/zenodo.5841962) -->
+[![R-CMD-check](https://github.com/earamendia/EROITools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/earamendia/EROITools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # EROITools
