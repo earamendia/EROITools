@@ -31,6 +31,10 @@ The `R` package `EROITools` provides tools to aggregate Energy Return On Investm
 * At the useful stage, the package also allows analysts to conduct these aggregations respecting sectoral or end-use breakdowns, so that the average useful stage EROI of a product group can be calculated for a given final demand sector (for instance steelmaking) or for a given end-use category (for instance high temperature heating);
 * Last, the package allows analysts to add additional energy requirements (supposing that these are provided by the analyst) that cannot be quantified using the IEA's WEEB such as supply chain energy requirements --- see @brockwayEstimationGlobalFinalstage2019 or @brandcorreaDevelopingInputOutputBased2017 for examples of a quantification of such indirect energy flows.
 
+Vignettes providing examples of how to use the package will be released shortly.
+
+
+<!-- 
 
 # Available vignettes
 
@@ -169,3 +173,5 @@ tidy_AB_erois_gma <- tidy_AB_erois_matrices_gma %>%
 It can be seen that in the Global Market Assumption, there is only one region ("World"), and that the EROI of each product is specified in function of the region of **production** (not consumption!) of the product --- information contained in the product name ("Product" column).
 
 The rest of the vignettes will take will demonstrate the `EROITools` package based on the `tidy_AB_erois_dta` and `tidy_AB_erois_gma` data frames.
+
+--> 
