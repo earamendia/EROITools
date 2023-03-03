@@ -2,9 +2,12 @@
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, develop, release-*]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, develop]
+  schedule:
+    # Build main branch daily at 3 AM UTC.
+    - cron: "0 3 * * *"
 
 name: R-CMD-check
 
