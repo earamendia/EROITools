@@ -10,7 +10,7 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Codecov test
 coverage](https://codecov.io/gh/earamendia/EROITools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/EROITools?branch=master)
-<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5841962.svg)](https://doi.org/10.5281/zenodo.5841962) -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7696869.svg)](https://doi.org/10.5281/zenodo.7696869)
 [![R-CMD-check](https://github.com/earamendia/EROITools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/earamendia/EROITools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
