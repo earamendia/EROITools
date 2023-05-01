@@ -123,7 +123,8 @@ calc_share_primary_ff_supply_by_product_by_group <- function(.tidy_iea_df,
     #   calc_primary_ff_supply(.tidy_iea_df,
     #                          primary_production_mats = primary_production_mats)
     # ) %>% 
-    dplyr::left_join(supply_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group}, {energy.stage})) %>%
+    dplyr::left_join(supply_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group}, {energy.stage}),
+                     relationship = "many-to-many") %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_supply]] / .data[[total_group_supply]]
     )
@@ -270,7 +271,8 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
     #                                          include_non_energy_uses = include_non_energy_uses,
     #                                          final_use_mats = final_use_mats)
     # ) %>% 
-    dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group}, {energy.stage})) %>%
+    dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group}, {energy.stage}),
+                     relationship = "many-to-many") %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
       "{boolean_non_energy_uses}" := include_non_energy_uses,
@@ -734,7 +736,8 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
   use_elec_by_ff_group_1 <- calc_fec_from_ff_as_elec_by_group(.tidy_iea_df) %>%
     dplyr::filter(.data[[product.group]] == "All fossil fuels") %>%
     dplyr::left_join(share_elec_from_ff_by_ff_group_1,
-                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage})) %>%
+                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage}),
+                     relationship = "many-to-many") %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
@@ -751,7 +754,8 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
   use_elec_by_ff_group_2 <- calc_fec_from_ff_as_elec_by_group(.tidy_iea_df) %>%
     dplyr::filter(.data[[product.group]] == "Oil and gas products") %>%
     dplyr::left_join(share_elec_from_ff_by_ff_group_2,
-                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage})) %>%
+                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage}),
+                     relationship = "many-to-many") %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
@@ -806,7 +810,8 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
   use_heat_by_ff_group_1 <- calc_fec_from_ff_as_heat_by_group(.tidy_iea_df) %>%
     dplyr::filter(.data[[product.group]] == "All fossil fuels") %>%
     dplyr::left_join(share_heat_from_ff_by_ff_group_1,
-                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage})) %>%
+                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage}),
+                     relationship = "many-to-many") %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
@@ -823,7 +828,8 @@ calc_shares_ff_by_group_inc_elec_heat <- function(.tidy_iea_df,
   use_heat_by_ff_group_2 <- calc_fec_from_ff_as_heat_by_group(.tidy_iea_df) %>%
     dplyr::filter(.data[[product.group]] == "Oil and gas products") %>%
     dplyr::left_join(share_heat_from_ff_by_ff_group_2,
-                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage})) %>%
+                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {energy.stage}),
+                     relationship = "many-to-many") %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
       "{product}" := stringr::str_c(.data[[product]], " [from ", .data[["Origin.Product.Group"]], "]")
