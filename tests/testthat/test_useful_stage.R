@@ -162,7 +162,8 @@ test_that("push_to_useful_erois works",{
     dplyr::rename(product_without_origin = Product) %>% 
     dplyr::left_join(
       tidy_io_erois_adapted_gma,
-      by = c("Method", "Energy.type", "Year", "product_without_origin")
+      by = c("Method", "Energy.type", "Year", "product_without_origin"),
+      relationship = "many-to-many"
     ) %>% 
     dplyr::mutate(
       Useful_Stage_EROI = Average_Efficiency_Col * EROI
