@@ -44,7 +44,7 @@ tidy_FU_efficiencies_dta <- tidy_AB_erois_dta %>%
   dplyr::glimpse()
 ```
 
-Now, supposing that the analyst has access to different final-to-useful efficiencies for three different end-uses; "heating", "machanical work", and "other end-uses"; let's suppose that the final-to-useful efficiencies for mechanical work are half of those of heating, and those of other end-uses a third of those of heating. We can then construct the data frame of end-use specific final-to-useful efficiencies as follows:
+Now, supposing that the analyst has access to different final-to-useful efficiencies for three different end-uses; "heating", "mechanical work", and "other end-uses"; let's suppose that the final-to-useful efficiencies for mechanical work are half of those of heating, and those of other end-uses a third of those of heating. We can then construct the data frame of end-use specific final-to-useful efficiencies as follows:
 
 ```{r}
 # Making the data frame end-use specific
@@ -136,3 +136,4 @@ tidy_useful_erois_gma_end_uses <- push_to_useful_erois(
   ) %>%
   dplyr::glimpse()
 ```
+

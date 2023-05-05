@@ -20,7 +20,7 @@ library(dplyr)
 library(EROITools)
 ```
 
-In this vignette, we show how indirect energy requirements (or other energy requirements) can be added to the energy requirements of a given EROI, and the new EROI determined. Note that the analyst would have to provide the indirect energy requirements (or other energy requirements) to use the functions provided in the `EROITools` package.
+In this vignette, we show how indirect energy requirements (or other energy requirements) can be added to the energy requirements of a given EROI. Note that the analyst would have to provide the indirect energy requirements (or other energy requirements) to use the functions provided in the `EROITools` package.
 
 
 # Adding indirect energy requirements
@@ -84,7 +84,7 @@ all_aggregated_erois <- dplyr::bind_rows(
 ```
 
 
-Next, the analyst needs to provide aa data frame containing for each product, year, product group, and energy stage (primary, final), the indirect energy requirements quantified in the same unit that the `.tidy_iea_df` being used (here the `tidy_AB_dta` data frame). Here, we make up our own data to demonstrate the package and the structure of the input data frame that the analyst needs to provide.
+Next, the analyst needs to provide a data frame containing for each product, year, product group, and energy stage (primary, final), the indirect energy requirements quantified in the same unit that the `.tidy_iea_df` being used (here the `tidy_AB_dta` data frame). Here, we make up our own data to demonstrate the package and the structure of the input data frame that the analyst needs to provide.
 
 
 ```{r}
@@ -167,7 +167,7 @@ useful_stage_erois_by <- aggregate_useful_stage_erois(
 ```
 
 
-We need a data frame joining containing both EROIs at the final and at the useful stage:
+We need a data frame containing both EROIs at the final and at the useful stage:
 
 ```{r}
 # Final stage EROIs:

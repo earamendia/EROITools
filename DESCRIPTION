@@ -1,19 +1,26 @@
 Package: EROITools
-Title: What the Package Does (One Line, Title Case)
-Version: 0.1.1
-Date: 02/02/2023
+Title: EROITools
+Version: 0.1.2
+Date: 05/05/2023
 Authors@R: 
     person(given = "First",
            family = "Last",
            role = c("aut", "cre"),
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: EROITools assists with the calculation of EROIs.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
+Language: en-US
+Suggests: 
+    spelling,
+    covr,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 Imports:
     magrittr,
     dplyr,
@@ -29,14 +36,6 @@ Imports:
     assertthat,
     ECCTools,
     tidyselect
-Suggests: 
-    spelling,
-    covr,
-    testthat (>= 3.0.0),
-    knitr,
-    rmarkdown
-Config/testthat/edition: 3
-Language: en-US
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr

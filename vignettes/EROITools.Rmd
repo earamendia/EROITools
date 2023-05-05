@@ -31,23 +31,19 @@ The `R` package `EROITools` provides tools to aggregate Energy Return On Investm
 * At the useful stage, the package also allows analysts to conduct these aggregations respecting sectoral or end-use breakdowns, so that the average useful stage EROI of a product group can be calculated for a given final demand sector (for instance steelmaking) or for a given end-use category (for instance high temperature heating);
 * Last, the package allows analysts to add additional energy requirements (supposing that these are provided by the analyst) that cannot be quantified using the IEA's WEEB such as supply chain energy requirements --- see @brockwayEstimationGlobalFinalstage2019 or @brandcorreaDevelopingInputOutputBased2017 for examples of a quantification of such indirect energy flows.
 
-Vignettes providing examples of how to use the package will be released shortly.
-
-
-<!-- 
 
 # Available vignettes
 
 The vignettes available for this package detail how to conduct the following tasks:
 
-1.  [Aggregating EROIs by fossil fuel group](aggregating.html): Shows how EROIs can be aggregated by fossil fuel group at the primary, final, and useful energy stages. The product-level EROIs need to have been calculated and extracted first as described in the subsequent example section.
-2.  [Breaking down useful stage EROIs by sector or end-use](breakdown.html): Shows how to calculate useful stage EROIs while respecting a breakdown either by final demand sector or end-use category.
-3.  [Adding indirect or other energy requirements](indirect_energy.html): Shows how indirect or other energy requirements can be added to the EROI calculations.
+1.  [Aggregating EROIs by fossil fuel group](Aggregating.html): Shows how EROIs can be aggregated by fossil fuel group at the primary, final, and useful energy stages. The product-level EROIs need to have been calculated and extracted first as described in the subsequent example section.
+2.  [Breaking down useful stage EROIs by sector or end-use](Breakdown.html): Shows how to calculate useful stage EROIs while respecting a breakdown either by final demand sector or end-use category.
+3.  [Adding indirect or other energy requirements](Indirect_Energy.html): Shows how indirect or other energy requirements can be added to the EROI calculations.
 
 
 # Example for vignettes: the AB world
 
-We the same example than the one used to describe the `ECCTools` package: welcome back to the fictitious AB world (consisting of country A and country B)!
+We use the same example than the one used to describe the `ECCTools` package: welcome back to the fictitious AB world (consisting of country A and country B)!
 
 
 ## Country A
@@ -101,7 +97,7 @@ tidy_io_AB_dta <- tidy_AB_dta %>%
   dplyr::glimpse()
 ```
 
-Then, we calculate the product-level EROIs in a matric format.
+Then, we calculate the product-level EROIs in a matrix format.
 
 ```{r}
 # Calculating EROI vectors (matrix format)
@@ -172,6 +168,6 @@ tidy_AB_erois_gma <- tidy_AB_erois_matrices_gma %>%
 
 It can be seen that in the Global Market Assumption, there is only one region ("World"), and that the EROI of each product is specified in function of the region of **production** (not consumption!) of the product --- information contained in the product name ("Product" column).
 
-The rest of the vignettes will take will demonstrate the `EROITools` package based on the `tidy_AB_erois_dta` and `tidy_AB_erois_gma` data frames.
+The rest of the vignettes will demonstrate the `EROITools` package based on the `tidy_AB_erois_dta` and `tidy_AB_erois_gma` data frames.
 
---> 
+## References

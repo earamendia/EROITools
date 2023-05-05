@@ -7,7 +7,7 @@ test_that("calc_total_use_by_product works",{
   
   # Loading data
   tidy_AB_data <- A_B_path %>% 
-    IEATools::load_tidy_iea_df() %>% 
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>% 
     IEATools::specify_all() %>% 
     ECCTools::specify_elect_heat_renewables() %>% 
     ECCTools::specify_elect_heat_fossil_fuels() %>% 
@@ -308,7 +308,7 @@ test_that("calc_all_products_use_by_group works",{
   
   # Loading data
   tidy_AB_data <- A_B_path %>% 
-    IEATools::load_tidy_iea_df() %>% 
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>% 
     IEATools::specify_all() %>% 
     ECCTools::specify_elect_heat_renewables() %>% 
     ECCTools::specify_elect_heat_fossil_fuels() %>% 

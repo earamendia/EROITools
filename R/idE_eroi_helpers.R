@@ -384,7 +384,8 @@ calc_fec_from_ff_as_elec_by_group <- function(.tidy_iea_df,
                                          exports = exports,
                                          losses = losses
       ),
-      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})
+      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}),
+      relationship = "many-to-many"
     ) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]]
@@ -687,7 +688,8 @@ calc_fec_from_ff_as_heat_by_group <- function(.tidy_iea_df,
                                          list_gas_products = list_gas_products,
                                          exports = exports,
                                          losses = losses),
-      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})
+      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}),
+      relationship = "many-to-many"
     ) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]]

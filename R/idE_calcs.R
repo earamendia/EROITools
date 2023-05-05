@@ -75,7 +75,8 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
   indirect_energy_per_output_primary_final <- .tidy_indirect_energy %>%
     dplyr::inner_join(
       total_output_per_group,
-      by = c({country}, {year}, {product.group}, {energy.stage})
+      by = c({country}, {year}, {product.group}, {energy.stage}),
+      relationship = "many-to-many"
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
@@ -104,7 +105,8 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
     ) %>%
     dplyr::inner_join(
       indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-tidyselect::all_of(energy.stage)),
-      by = c({year}, {product.group})
+      by = c({year}, {product.group}),
+      relationship = "many-to-many"
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[ratio_indirect_energy_per_output]] / .data[[final_to_useful_eff]]
@@ -141,7 +143,8 @@ add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
     ) %>%
     dplyr::left_join(
       indirect_energy_per_output_expanded,
-      by = c({country}, {year}, "Indirect_Energy", {product.group}, {energy.stage})
+      by = c({country}, {year}, "Indirect_Energy", {product.group}, {energy.stage}),
+      relationship = "many-to-many"
     ) %>%
     dplyr::mutate(
       Indirect_Energy = dplyr::case_when(
@@ -239,7 +242,8 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
   indirect_energy_per_output_primary_final <- .tidy_indirect_energy %>%
     dplyr::inner_join(
       total_output_per_group,
-      by = c({country}, {year}, {product.group}, {energy.stage})
+      by = c({country}, {year}, {product.group}, {energy.stage}),
+      relationship = "many-to-many"
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[indirect_energy_ktoe]] / .data[[total_group_output]]
@@ -269,7 +273,8 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
     ) %>%
     dplyr::inner_join(
       indirect_energy_per_output_primary_final %>% dplyr::filter(stringr::str_detect(.data[[energy.stage]], "Final")) %>% dplyr::select(-tidyselect::all_of(energy.stage)),
-      by = c({year}, {product.group})
+      by = c({year}, {product.group}),
+      relationship = "many-to-many"
     ) %>%
     dplyr::mutate(
       "{ratio_indirect_energy_per_output}" := .data[[ratio_indirect_energy_per_output]] / .data[[final_to_useful_eff]]
@@ -285,7 +290,8 @@ add_indirect_energy_useful_erois_by <- function(.tidy_aggregated_erois_by_df,
     ) %>% 
     dplyr::left_join(
       indirect_energy_per_output_useful,
-      by = c({country}, {year}, "Indirect_Energy", {product.group}, {energy.stage}, {aggregation_category})
+      by = c({country}, {year}, "Indirect_Energy", {product.group}, {energy.stage}, {aggregation_category}),
+      relationship = "many-to-many"
     ) %>% 
     dplyr::mutate(
       Indirect_Energy = dplyr::case_when(

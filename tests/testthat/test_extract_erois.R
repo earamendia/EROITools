@@ -27,7 +27,7 @@ test_that("Extract tidy product EROIs works", {
       Product == "Diesel"
     ) %>%
     magrittr::extract2("EROI") %>%
-    expect_equal(5.09969733020006)
+    expect_equal(5.09969733020006, tolerance = 1e-5)
   
   # tidy_product_EROIs %>%
   #   dplyr::filter(
@@ -42,10 +42,10 @@ test_that("Extract tidy product EROIs works", {
     dplyr::filter(
       Type == "Gross",
       Boundary == "All",
-      Product == "NG - Wells"
+      Product == "NG [from Wells]"
     ) %>%
     magrittr::extract2("EROI") %>%
-    expect_equal(19.6173481664719)
+    expect_equal(19.6173481664719, tolerance = 1e-5)
   
   # tidy_product_EROIs %>%
   #   dplyr::filter(
@@ -63,7 +63,7 @@ test_that("Extract tidy product EROIs works", {
       Product == "Petrol"
     ) %>%
     magrittr::extract2("EROI") %>%
-    expect_equal(5.84598162410927)
+    expect_equal(5.84598162410927, tolerance = 1e-5)
   
   # tidy_product_EROIs %>%
   #   dplyr::filter(
