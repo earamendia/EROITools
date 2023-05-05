@@ -1,4 +1,6 @@
 To dos:
 
 * Move calc_idE_to_output_ratio() from Useful_Stage_Calcs R project to EROITools package
-* Finish vignettes (currently in inst/extdata)
+	* According to the Indirect_Energy vignette, the add_indirect_energy_to_erois function already
+	  does so.
+* Aggregation by end-use / final demand sector

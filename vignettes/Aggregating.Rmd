@@ -54,7 +54,7 @@ aggregated_final_stage_erois <- aggregate_final_stage_erois(
 
 Aggregating EROIs at the useful stage of energy use requires the analyst to provide the average final-to-useful energy efficiencies with which each energy product is used, in each country. Indeed, the `Recca` package that we have used to calculate EROIs is used on a data frame describing the Energy Conversion Chain until the final energy stage, so that EROIs can only be calculated for products corresponding to the primary extraction and final energy stages.
 
-Alternatively, the `Recca` package could also be used to calculate useful stage EROIs, but the matrices used should then describe the Energy Conversion Chain until the useful energy stage, which would require some preliminary work from the analyst anyway. To see example of how the Physical Supply Use Table and Input-Output matrices can be used to describe an Energy Conversion Chain until the useful energy stage, see @Heun:2018.
+Alternatively, the `Recca` package could also be used to calculate useful stage EROIs, but the matrices used should then describe the Energy Conversion Chain until the useful energy stage, which would require some preliminary work from the analyst anyway. To see an example of how the Physical Supply Use Table and Input-Output matrices can be used to describe an Energy Conversion Chain until the useful energy stage, see @Heun:2018.
 
 Here, we will create an artificial ad-hoc data frame containing made-up final-to-useful efficiencies to demonstrate the package.
 
@@ -114,7 +114,7 @@ tidy_AB_data_gma_prepared <- tidy_AB_data_gma %>%
   dplyr::glimpse()
 ```
 
-Note the difference with the previous data frame:
+Note the difference with the previous data frame (Country and Flow):
 
 
 ```{r}
@@ -145,6 +145,8 @@ aggregated_final_stage_erois_gma <- aggregate_final_stage_erois(
   ) %>% 
   dplyr::glimpse()
 ```
+
+Note that each product is specified by its location of production in the Multi-Regional version of the framework. The implication is that at the final and useful stage, when aggregating EROIs, the use shares of each product are determined for products which are specific by region of production. So the aggregations we conduct at the final and useful stage are based on the consumption mix of a country, not on its production mix (conversely to the primary stage, for which aggregations only make sense based on the production mix).
 
 
 ## Useful stage aggregations
@@ -196,3 +198,5 @@ aggregated_useful_stage_erois <- aggregate_useful_stage_erois(
 ) %>% 
   dplyr::glimpse()
 ```
+
+## References
