@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# EROITools 0.1.2
+# EROITools 0.1.2 (05/05/2023)
 
 * Compatibility with recent tidyverse packages sorted out.
 * 562 tests, all passing.
