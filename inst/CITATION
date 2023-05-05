@@ -6,10 +6,10 @@ citEntry(
   author       = personList(as.person("Emmanuel Aramendia"),
                             as.person("Matthew Kuperus Heun")),
   year     = "2023",
-  note     = "R package version 0.1.1.",
+  note     = "R package version 0.1.2.",
   url      = "https://github.com/earamendia/EROITools",
   textVersion =   paste(
   "Emmanuel Aramendia, Matthew K. Heun (2023).",
         "EROITools: Tools for calculating and aggregating Energy Return On Investment values",
-        "R package version 0.1.1.")
+        "R package version 0.1.2.")
 )

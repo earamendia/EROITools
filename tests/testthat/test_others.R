@@ -893,7 +893,7 @@ test_that("calc_share_elec_supply_by_ff_group works with losses",{
   
   # Loading data
   tidy_AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     tibble::add_row(
       Country = "A",
       Method = "PCM",
@@ -980,7 +980,7 @@ test_that("calc_share_elec_supply_by_ff_group works with losses",{
   # Only A because this is the country that changes
   # This time we add losses without increasing supply
   tidy_A_data_bis <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     dplyr::filter(Country == "A") %>% 
     tibble::add_row(
       Country = "A",
@@ -1101,7 +1101,7 @@ test_that("calc_share_heat_supply_by_ff_group works with losses modelling",{
   
   # Loading data
   tidy_AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     dplyr::filter(Country == "A") %>% 
     # Adding losses of Heat
     tibble::add_row(

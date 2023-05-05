@@ -127,7 +127,8 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
   if (eroi_calc_method == "dta"){
     
     aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
-      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}),
+                        relationship = "many-to-many") %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
@@ -143,9 +144,10 @@ aggregate_primary_stage_erois <- function(.tidy_erois_df,
   } else if (eroi_calc_method == "gma"){
     
     aggregated_primary_stage_erois <- tidy_shares_primary_df %>%
-      #dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      #dplyr::inner_(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
       dplyr::inner_join(.tidy_erois_df %>%
-                          dplyr::select(-tidyselect::all_of(country)), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+                          dplyr::select(-tidyselect::all_of(country)), by = c({method}, {energy_type}, {last_stage}, {year}, {product}),
+                        relationship = "many-to-many") %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
@@ -330,7 +332,7 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
   if (eroi_calc_method == "dta"){
   
     aggregated_final_stage_erois <- tidy_shares_df %>%
-      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}), relationship = "many-to-many") %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
@@ -347,7 +349,8 @@ aggregate_final_stage_erois <- function(.tidy_erois_df,
    
     aggregated_final_stage_erois <- tidy_shares_df %>%
       dplyr::inner_join(.tidy_erois_df %>%
-                          dplyr::select(-tidyselect::all_of(country)), by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+                          dplyr::select(-tidyselect::all_of(country)), by = c({method}, {energy_type}, {last_stage}, {year}, {product}),
+                        relationship = "many-to-many") %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
@@ -558,7 +561,7 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
   if (eroi_calc_method == "dta"){
     
     aggregated_useful_erois <- tidy_shares_df %>%
-      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}), relationship = "many-to-many") %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
@@ -574,7 +577,7 @@ aggregate_useful_stage_erois <- function(.tidy_erois_df,
   } else if (eroi_calc_method == "gma"){
     
     aggregated_useful_erois <- tidy_shares_df %>%
-      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+      dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}), relationship = "many-to-many") %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                       .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]], .data[[energy.stage]]) %>%
       dplyr::summarise(
