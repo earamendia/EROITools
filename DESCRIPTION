@@ -3,8 +3,8 @@ Title: EROITools
 Version: 0.1.2
 Date: 05/05/2023
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Emmanuel",
+           family = "Aramendia",
            role = c("aut", "cre"),
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
